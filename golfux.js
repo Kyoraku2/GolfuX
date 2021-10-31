@@ -1,128 +1,85 @@
-var bd;
 var golfux = function() {
     //constructor
+    this.bd=null;
+    this.body_ball=null;
+    this.click_down=null;
+    this.click_up=null;
 }
 
 golfux.prototype.setNiceViewCenter = function() {
     //called once when the user changes to this test from another test
     PTM = 32;
-    setViewCenterWorld( new b2Vec2(0,5), true );
+    setViewCenterWorld( new b2Vec2(0,7), true );
 }
 
 golfux.prototype.setup = function() {
-    {
-        var map = world.CreateBody(new b2BodyDef());
+    var map = world.CreateBody(new b2BodyDef());
 
-        var shapeWall1 = new b2EdgeShape();
-        shapeWall1.Set(new b2Vec2(10.0,0.0),new b2Vec2(10.0,10.0))
+    var shape0 = new b2EdgeShape();
+    // Bas
+    shape0.Set(new b2Vec2(9.5,0),new b2Vec2(-9.5,0))
+    map.CreateFixture(shape0, 0.0);
+    // Gauche  
+    shape0.Set(new b2Vec2(-9.5,0),new b2Vec2(-9.5,24))
+    map.CreateFixture(shape0, 0.0);
+    // Droite
+    shape0.Set( new b2Vec2(9.5,0),new b2Vec2(9.5,24));
+    map.CreateFixture(shape0, 0.0);
+    // Haut
+    shape0.Set(new b2Vec2(9.5,24), new b2Vec2(-9.5, 24));
+    map.CreateFixture(shape0, 0.0);
 
-        var shapeWall2 = new b2EdgeShape();
-        shapeWall2.Set(new b2Vec2(-9.0,0.0),new b2Vec2(-9.0,10.0))
 
-        var shape2 = new b2EdgeShape();
-        shape2.Set( new b2Vec2(-9.0,10.0),new b2Vec2(10.0,10.0));
+    // - Create the Physics
+    // The shape
+    var shape = new b2CircleShape();
+    shape.set_m_radius(1);
 
-        var shape = new b2EdgeShape();
-        shape.Set(new b2Vec2(-9.0, 0.0), new b2Vec2(10.0, 0.0));
+    // Create a static body definition
+    this.bd = new b2BodyDef();
+    this.bd.set_type(b2_dynamicBody);
+    this.bd.set_position(new b2Vec2(0,1));
 
-        map.CreateFixture(shape, 10.0);
-        map.CreateFixture(shape2,0.0);
-        map.CreateFixture(shapeWall1,0.0);
-        map.CreateFixture(shapeWall2,0.0);
-    }
+    // Create the body itself
+    this.body_ball = world.CreateBody(this.bd);
 
-    {
-        var a = 0.5;
-        var shape = new b2PolygonShape();
-        shape.SetAsBox(a, a);
+    // Create the fixture
+    var fix = new b2FixtureDef();
+    fix.set_shape(shape);
+    fix.set_density(1);
+    fix.set_friction(2);
+    fix.set_restitution(0.3);
 
-        var x = new b2Vec2(-7.5, 0.75);
-        var y = new b2Vec2();
-
-        bd = new b2BodyDef();
-        // bd.set_type( b2_dynamicBody );
-        bd.set_type( Module.b2_dynamicBody );
-        y = copyVec2(x);
-        bd.set_position(y);  
-        bd.Body = undefined;                      
-        bd.Body = world.CreateBody(bd).CreateFixture(shape, 5.0);
-
-        // - Create the Physics
-        // The shape
-        var shape = new b2CircleShape();
-        shape.set_m_radius( 24/2 / 12 );
-
-        // Create a static body definition
-        var bodydef = new b2BodyDef();
-        bodydef.set_type( b2_dynamicBody );
-        bodydef.set_position( new b2Vec2( 0, 0 ) );
-
-        // Create the body itself
-        var body = world.CreateBody( bodydef );
-
-        // Create the fixture
-        var fix = new b2FixtureDef();
-        fix.set_shape( shape );
-        fix.set_density( 1 );
-        fix.set_friction( 2 );
-        fix.set_restitution( 0.3 );
-
-        // Add fixture to the body
-        body.CreateFixture( fix );
-        body.SetAngularDamping( 0.9 );
-        body.SetLinearDamping( 0.25 );
-
-        bd.Body = body;
-
-    }
+    // Add fixture to the body
+    this.body_ball.CreateFixture(fix);
+    this.body_ball.SetAngularDamping(0.9);
+    this.body_ball.SetLinearDamping(0.25);
 }
 
-golfux.prototype.step = function() {
-    //this function will be called at the beginning of every time step
+golfux.prototype.onMouseDown = function(canvas, evt) {
+    let rect = canvas.getBoundingClientRect();
+    let x = evt.clientX - rect.left;
+    let y = evt.clientY - rect.top;
+    this.click_down={x:x,y:canvas.height-y};
+    this.click_down=getWorldPointFromPixelPoint(this.click_down);
+    console.log(this.click_down);
+    /*var mouse_click={x:x,y:canvas.height-y};
+    mouse_click=getWorldPointFromPixelPoint(mouse_click);
+    this.body_ball.ApplyLinearImpulse(new b2Vec2(0, 10),this.body_ball.GetPosition(),true);*/
 }
 
-golfux.prototype.onKeyDown = function(canvas, evt) {
-    if ( evt.keyCode == 65 ) { // 'a'
-        var wind = new b2Vec2(200,0.0);
-        console.log(bd);
-        
-        bd.Body.ApplyLinearImpulse( new b2Vec2( 0, 10 ) );
-    }
+golfux.prototype.onMouseUp = function(canvas, evt) {
+    let rect = canvas.getBoundingClientRect();
+    let x = evt.clientX - rect.left;
+    let y = evt.clientY - rect.top;
+    this.click_up={x:x,y:canvas.height-y};
+    this.click_up=getWorldPointFromPixelPoint(this.click_up);
+    console.log(this.click_up);
+
+    var impulse={
+        x:this.click_down.x-this.click_up.x,
+        y:this.click_down.y-this.click_up.y
+    };
+
+    this.body_ball.ApplyLinearImpulse(new b2Vec2(impulse.x, impulse.y),true);
 }
-
-golfux.prototype.onKeyUp = function(canvas, evt) {
-    if ( evt.keyCode == 65 ) { // 'a'
-        //do something when the 'a' key is released
-    }
-}
-
-    BuildPhysics = function() {
-        // - Create the Physics
-        // The shape
-        var shape = new MINIGOLF.Physics.Box2D.b2CircleShape();
-        shape.set_m_radius( 24/2 / this.Scale );
-
-        // Create a static body definition
-        var bodydef = new MINIGOLF.Physics.Box2D.b2BodyDef();
-        bodydef.set_type( MINIGOLF.Physics.Box2D.b2_dynamicBody );
-        bodydef.set_position( new MINIGOLF.Physics.Box2D.b2Vec2( 0, 0 ) );
-
-        // Create the body itself
-        var body = this.World.CreateBody( bodydef );
-
-        // Create the fixture
-        var fix = new MINIGOLF.Physics.Box2D.b2FixtureDef();
-        fix.set_shape( shape );
-        fix.set_density( 1 );
-        fix.set_friction( 2 );
-        fix.set_restitution( 0.3 );
-
-        // Add fixture to the body
-        body.CreateFixture( fix );
-        body.SetAngularDamping( 0.9 );
-        body.SetLinearDamping( 0.25 );
-
-        this.Body = body;
-    }
-
-

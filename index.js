@@ -120,9 +120,10 @@ function startMouseJoint() {
 
 function onMouseDown(canvas, evt) {            
     updateMousePos(canvas, evt);
-    if ( !mouseDown )
+    /*if ( !mouseDown )
         startMouseJoint();
-    mouseDown = true;
+    mouseDown = true;*/
+    currentTest.onMouseDown(canvas, evt);
     updateStats();
 }
 
@@ -130,14 +131,15 @@ function onMouseUp(canvas, evt) {
     mouseDown = false;
     updateMousePos(canvas, evt);
     updateStats();
-    if ( mouseJoint != null ) {
+    currentTest.onMouseUp(canvas, evt);
+    /*if ( mouseJoint != null ) {
         world.DestroyJoint(mouseJoint);
         mouseJoint = null;
-    }
+    }*/
 }
 
 function onMouseOut(canvas, evt) {
-    onMouseUp(canvas,evt);
+    //onMouseUp(canvas,evt);
 }
 
 function onKeyDown(canvas, evt) {
