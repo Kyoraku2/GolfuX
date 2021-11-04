@@ -87,42 +87,8 @@ function onMouseMove(canvas, evt) {
     }
 }
 
-function startMouseJoint() {
-    
-    if ( mouseJoint != null )
-        return;
-    
-    // Make a small box.
-    var aabb = new Box2D.b2AABB();
-    var d = 0.001;            
-    aabb.set_lowerBound(new b2Vec2(mousePosWorld.x - d, mousePosWorld.y - d));
-    aabb.set_upperBound(new b2Vec2(mousePosWorld.x + d, mousePosWorld.y + d));
-    
-    // Query the world for overlapping shapes.            
-    myQueryCallback.m_fixture = null;
-    myQueryCallback.m_point = new Box2D.b2Vec2(mousePosWorld.x, mousePosWorld.y);
-    world.QueryAABB(myQueryCallback, aabb);
-    
-    if (myQueryCallback.m_fixture)
-    {
-        var body = myQueryCallback.m_fixture.GetBody();
-        var md = new Box2D.b2MouseJointDef();
-        md.set_bodyA(mouseJointGroundBody);
-        md.set_bodyB(body);
-        md.set_target( new Box2D.b2Vec2(mousePosWorld.x, mousePosWorld.y) );
-        md.set_maxForce( 1000 * body.GetMass() );
-        md.set_collideConnected(true);
-        
-        mouseJoint = Box2D.castObject( world.CreateJoint(md), Box2D.b2MouseJoint );
-        body.SetAwake(true);
-    }
-}
-
 function onMouseDown(canvas, evt) {            
     updateMousePos(canvas, evt);
-    /*if ( !mouseDown )
-        startMouseJoint();
-    mouseDown = true;*/
     currentTest.onMouseDown(canvas, evt);
     updateStats();
 }
@@ -132,10 +98,6 @@ function onMouseUp(canvas, evt) {
     updateMousePos(canvas, evt);
     updateStats();
     currentTest.onMouseUp(canvas, evt);
-    /*if ( mouseJoint != null ) {
-        world.DestroyJoint(mouseJoint);
-        mouseJoint = null;
-    }*/
 }
 
 function onMouseOut(canvas, evt) {
@@ -143,7 +105,6 @@ function onMouseOut(canvas, evt) {
 }
 
 function onKeyDown(canvas, evt) {
-    //console.log(evt.keyCode);
     if ( evt.keyCode == 80 ) {//p
         pause();
     }
@@ -152,12 +113,6 @@ function onKeyDown(canvas, evt) {
     }
     else if ( evt.keyCode == 83 ) {//s
         step();
-    }
-    else if ( evt.keyCode == 88 ) {//x
-        zoomIn();
-    }
-    else if ( evt.keyCode == 90 ) {//z
-        zoomOut();
     }
     else if ( evt.keyCode == 37 ) {//left
         canvasOffset.x += 32;
@@ -190,23 +145,6 @@ function onKeyUp(canvas, evt) {
         currentTest.onKeyUp(canvas, evt);
 }
 
-function zoomIn() {
-    var currentViewCenterWorld = getWorldPointFromPixelPoint( viewCenterPixel );
-    PTM *= 1.1;
-    var newViewCenterWorld = getWorldPointFromPixelPoint( viewCenterPixel );
-    canvasOffset.x += (newViewCenterWorld.x-currentViewCenterWorld.x) * PTM;
-    canvasOffset.y -= (newViewCenterWorld.y-currentViewCenterWorld.y) * PTM;
-    draw();
-}
-
-function zoomOut() {
-    var currentViewCenterWorld = getWorldPointFromPixelPoint( viewCenterPixel );
-    PTM /= 1.1;
-    var newViewCenterWorld = getWorldPointFromPixelPoint( viewCenterPixel );
-    canvasOffset.x += (newViewCenterWorld.x-currentViewCenterWorld.x) * PTM;
-    canvasOffset.y -= (newViewCenterWorld.y-currentViewCenterWorld.y) * PTM;
-    draw();
-}
         
 function updateDebugDrawCheckboxesFromWorld() {
     var flags = myDebugDraw.GetFlags();
@@ -368,7 +306,7 @@ function draw() {
         drawAxes(context);
         
         context.fillStyle = 'rgb(255,255,0)';
-        world.DrawDebugData();
+        world.DrawDebugData(); // Affichage des éléments de débugage
         
         if ( mouseJoint != null ) {
             //mouse joint is not drawn with regular joints in debug draw
