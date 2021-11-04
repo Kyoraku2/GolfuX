@@ -25,16 +25,16 @@ golfux.prototype.setup = function() {
 
     // Bas
     shape0.Set(new b2Vec2(0,0),new b2Vec2(19,0))
-    map.CreateFixture(shape0, 10000.0);
+    map.CreateFixture(shape0, 0.0);
     // Droite 
     shape0.Set(new b2Vec2(19,0),new b2Vec2(19,24))
-    map.CreateFixture(shape0, 10000.0);
+    map.CreateFixture(shape0, 0.0);
     // Gauche
     shape0.Set(new b2Vec2(0,0),new b2Vec2(0,24));
-    map.CreateFixture(shape0, 10000.0);
+    map.CreateFixture(shape0, 0.0);
     // Haut
     shape0.Set(new b2Vec2(0,24), new b2Vec2(19, 24));
-    map.CreateFixture(shape0, 10000.0);
+    map.CreateFixture(shape0, 0.0);
     
 
     // - Create the Physics
