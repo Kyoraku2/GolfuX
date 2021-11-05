@@ -1,4 +1,4 @@
-function Stage(){
+function Level(){
     this.map = world.CreateBody(new b2BodyDef());
     this.wall=[];
     var shape0 = new b2EdgeShape();

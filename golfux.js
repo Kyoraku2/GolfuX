@@ -4,7 +4,9 @@ var golfux = function() {
     this.click_down=null;
     this.click_up=null;
     this.ball = new Ball();
-    this.level = new Stage();
+    this.level = new Level();
+    this.stage = new createjs.Stage(document.getElementById('canvas'));
+    this.stage.addChild(this.ball.view);
 }
 
 golfux.prototype.setNiceViewCenter = function() {
