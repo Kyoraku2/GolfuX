@@ -5,8 +5,6 @@ var golfux = function() {
     this.click_up=null;
     this.ball = new Ball();
     this.level = new Level();
-    this.stage = new createjs.Stage(document.getElementById('canvas'));
-    this.stage.addChild(this.ball.view);
 }
 
 golfux.prototype.setNiceViewCenter = function() {
@@ -16,7 +14,7 @@ golfux.prototype.setNiceViewCenter = function() {
 }
 
 golfux.prototype.setup = function() {
-    console.log(this.ball)
+
 }
 
 golfux.prototype.onMouseDown = function(canvas, evt) {
@@ -47,5 +45,15 @@ golfux.prototype.onMouseUp = function(canvas, evt) {
         intensifie=MAX_INTENSITIE;
     }
     // Impulsion
-    this.ball.body_ball.ApplyLinearImpulse(new b2Vec2(impulse.x*intensifie, impulse.y*intensifie),true);
+    this.ball.body.ApplyLinearImpulse(new b2Vec2(impulse.x*intensifie, impulse.y*intensifie),true);
+}
+
+golfux.prototype.step = function(){
+    this.ball.x=this.ball.body.GetPosition().x;
+    this.ball.y=this.ball.body.GetPosition().y;
+    var cvs=document.getElementById('canvas');
+    var context = cvs.getContext( '2d' );
+
+    var pos = getPixelPointFromWorldPoint({x:this.ball.x,y:this.ball.y});
+    context.drawImage(this.ball.sprite, pos.x, cvs.height-pos.y-64,64,64);
 }

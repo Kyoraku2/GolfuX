@@ -7,18 +7,12 @@ var e_centerOfMassBit = 0x0010;
 var PTM = 32;
 
 var world = null;
-var mouseJointGroundBody;
 var canvas;
 var context;
 var myDebugDraw;        
-var myQueryCallback;
-var mouseJoint = null;        
-var run = true;
-var frameTime60 = 0;
-var statusUpdateCounter = 0;
-var showStats = false;        
-var mouseDown = false;
-var shiftDown = false;        
+var myQueryCallback;      
+var run = true;      
+var mouseDown = false;    
 var mousePosPixel = {
     x: 0,
     y: 0
@@ -52,6 +46,13 @@ function getWorldPointFromPixelPoint(pixelPoint) {
     return {                
         x: (pixelPoint.x - canvasOffset.x)/PTM,
         y: (pixelPoint.y - (canvas.height - canvasOffset.y))/PTM
+    };
+}
+
+function getPixelPointFromWorldPoint(worldPoint) {
+    return {                
+        x: worldPoint.x*PTM-canvasOffset.x,
+        y: worldPoint.y*PTM-(canvas.height - canvasOffset.y)
     };
 }
 
@@ -135,13 +136,11 @@ function changeTest() {
 }
 
 function createWorld() {
-    
     if ( world != null ) 
         Box2D.destroy(world);
         
     world = new Box2D.b2World( new Box2D.b2Vec2(0.0, 0.0) );
     world.SetDebugDraw(myDebugDraw);
-    
 
     var e = document.getElementById("testSelection");
     var v = e.options[e.selectedIndex].value;
@@ -156,28 +155,10 @@ function resetScene() {
     draw();
 }
 
-function step(timestamp) {
-    
-    if ( currentTest && currentTest.step ) 
-        currentTest.step();
-    
-    if ( ! showStats ) {
-        world.Step(1/60, 3, 2);
-        draw();
-        return;
-    }
-    
-    var current = Date.now();
+function step() { // Equivalent d'update
     world.Step(1/60, 3, 2);
-    var frametime = (Date.now() - current);
-    frameTime60 = frameTime60 * (59/60) + frametime * (1/60);
-    
     draw();
-    statusUpdateCounter++;
-    if ( statusUpdateCounter > 20 ) {
-        updateStats();
-        statusUpdateCounter = 0;
-    }
+    currentTest.step();
 }
 
 function draw() {
