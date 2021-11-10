@@ -51,8 +51,8 @@ function getWorldPointFromPixelPoint(pixelPoint) {
 
 function getPixelPointFromWorldPoint(worldPoint) {
     return {                
-        x: worldPoint.x*PTM-canvasOffset.x,
-        y: worldPoint.y*PTM-(canvas.height - canvasOffset.y)
+        x: worldPoint.x*PTM+canvasOffset.x,
+        y: worldPoint.y*PTM+(canvas.height - canvasOffset.y)
     };
 }
 
@@ -164,7 +164,7 @@ function step() { // Equivalent d'update
 function draw() {
     
     //black background
-    context.fillStyle = 'rgb(0,0,0)';
+    context.fillStyle = 'rgb(0,153,0)';
     context.fillRect( 0, 0, canvas.width, canvas.height );
     
     context.save();            

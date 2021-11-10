@@ -5,6 +5,8 @@ var golfux = function() {
     this.click_up=null;
     this.ball = new Ball();
     this.level = new Level();
+    this.level.initBasicWalls();
+    this.level.test();
 }
 
 golfux.prototype.setNiceViewCenter = function() {
@@ -48,6 +50,8 @@ golfux.prototype.onMouseUp = function(canvas, evt) {
     this.ball.body.ApplyLinearImpulse(new b2Vec2(impulse.x*intensifie, impulse.y*intensifie),true);
 }
 
+var wall_sprite=new Image();
+wall_sprite.src = './textures/wall.jpg';
 golfux.prototype.step = function(){
     this.ball.x=this.ball.body.GetPosition().x;
     this.ball.y=this.ball.body.GetPosition().y;
@@ -55,5 +59,12 @@ golfux.prototype.step = function(){
     var context = cvs.getContext( '2d' );
 
     var pos = getPixelPointFromWorldPoint({x:this.ball.x,y:this.ball.y});
-    context.drawImage(this.ball.sprite, pos.x, cvs.height-pos.y-64,64,64);
+    context.drawImage(this.ball.sprite, pos.x-10, cvs.height-pos.y-10,20,20);
+
+    context.fillStyle = 'rgb(255,0,0)';
+    
+    for(let i=0,l=this.level.walls.length;i<l;++i){
+        var pos_wall=getPixelPointFromWorldPoint(this.level.walls[i].GetPosition());
+        context.fillRect(pos_wall.x, pos_wall.y, 4, 4);
+    }
 }
