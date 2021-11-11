@@ -77,6 +77,10 @@ function onMouseUp(canvas, evt) {
     currentTest.onMouseUp(canvas, evt);
 }
 
+function onMouseMove(canvas, evt) {
+    updateMousePos(canvas, evt);
+}
+
 function onTouchDown(canvas, evt) {            
     updateMousePos(canvas, evt);
     currentTest.onTouchDown(canvas, evt);
