@@ -69,6 +69,7 @@ function setViewCenterWorld(b2vecpos, instantaneous) {
 function onMouseDown(canvas, evt) {            
     updateMousePos(canvas, evt);
     currentTest.onMouseDown(canvas, evt);
+    console.log(mousePosWorld);
 }
 
 function onMouseUp(canvas, evt) {
@@ -124,6 +125,10 @@ function init() {
     
     canvas.addEventListener('mouseup', function(evt) {
         onMouseUp(canvas,evt);
+    }, false);
+
+    canvas.addEventListener('mousemove', function(evt) {
+        onMouseMove(canvas,evt);
     }, false);
 
     

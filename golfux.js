@@ -19,6 +19,38 @@ golfux.prototype.setup = function() {
 
 }
 
+golfux.prototype.onTouchDown = function(canvas, evt) {
+    // Récuperation de la position du click
+    let rect = canvas.getBoundingClientRect();
+    let x = evt.touches[0].clientX - rect.left;
+    let y = evt.touches[0].clientY - rect.top;
+    this.click_down={x:x,y:canvas.height-y};
+    this.click_down=getWorldPointFromPixelPoint(this.click_down);
+}
+
+
+golfux.prototype.onTouchUp = function(canvas, evt) {
+    // Récuperation de la position de relachement du click
+    let rect = canvas.getBoundingClientRect();
+    let x = evt.changedTouches[0].clientX  - rect.left;
+    let y = evt.changedTouches[0].clientY  - rect.top;
+    this.click_up={x:x,y:canvas.height-y};
+    this.click_up=getWorldPointFromPixelPoint(this.click_up);
+    
+    var impulse={
+        x:this.click_down.x-this.click_up.x,
+        y:this.click_down.y-this.click_up.y
+    };
+
+    // Intensification en fonction de l'éloignement par rapport au click initial (valuer à changer)
+    var intensifie=Math.sqrt(impulse.x*impulse.x + impulse.y*impulse.y);
+    if(intensifie>MAX_INTENSITIE){
+        intensifie=MAX_INTENSITIE;
+    }
+    // Impulsion
+    this.ball.body.ApplyLinearImpulse(new b2Vec2(impulse.x*intensifie, impulse.y*intensifie),true);
+}
+
 golfux.prototype.onMouseDown = function(canvas, evt) {
     // Récuperation de la position du click
     let rect = canvas.getBoundingClientRect();
@@ -80,6 +112,8 @@ golfux.prototype.onMouseUp = function(canvas, evt) {
     }
     // Impulsion
     this.ball.body.ApplyLinearImpulse(new b2Vec2(impulse.x*intensifie, impulse.y*intensifie),true);
+    this.click_up=null;
+    this.click_down=null;
 }
 
 var wall_sprite=new Image();
@@ -95,8 +129,16 @@ golfux.prototype.step = function(){
 
     context.fillStyle = 'rgb(255,0,0)';
     
+    // Walls
+    var pattern = context.createPattern(wall_sprite, 'repeat');
+    context.fillStyle = pattern;
     for(let i=0,l=this.level.walls.length;i<l;++i){
-        var pos_wall=getPixelPointFromWorldPoint(this.level.walls[i].GetPosition());
-        context.fillRect(pos_wall.x, pos_wall.y, 4, 4);
+        var world_pos_wall=this.level.walls[i].wall.GetPosition();
+        var leftup_corner={
+            x:world_pos_wall.x-this.level.walls[i].hx,
+            y:world_pos_wall.y-this.level.walls[i].hy
+        };
+        var wall_pos_canvas = getPixelPointFromWorldPoint(leftup_corner);
+        context.fillRect(wall_pos_canvas.x, wall_pos_canvas.y, this.level.walls[i].hx*PTM*2, this.level.walls[i].hy*PTM*2);
     }
 }
