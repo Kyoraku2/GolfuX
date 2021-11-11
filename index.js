@@ -69,12 +69,28 @@ function setViewCenterWorld(b2vecpos, instantaneous) {
 function onMouseDown(canvas, evt) {            
     updateMousePos(canvas, evt);
     currentTest.onMouseDown(canvas, evt);
+    console.log(mousePosWorld);
 }
 
 function onMouseUp(canvas, evt) {
     mouseDown = false;
     updateMousePos(canvas, evt);
     currentTest.onMouseUp(canvas, evt);
+}
+
+function onMouseMove(canvas, evt) {
+    updateMousePos(canvas, evt);
+}
+
+function onTouchDown(canvas, evt) {            
+    updateMousePos(canvas, evt);
+    currentTest.onTouchDown(canvas, evt);
+}
+
+function onTouchUp(canvas, evt) {
+    mouseDown = false;
+    updateMousePos(canvas, evt);
+    currentTest.onTouchUp(canvas, evt);
 }
 
 
@@ -96,11 +112,11 @@ function init() {
     canvasOffset.y = canvas.height/2;
 
     canvas.addEventListener("touchstart", function(evt){
-        onMouseDown(canvas,evt);
+        onTouchDown(canvas,evt);
     },false);
 
     canvas.addEventListener("touchend", function(evt){
-        onMouseUp(canvas,evt);
+        onTouchUp(canvas,evt);
     },false);
     
     canvas.addEventListener('mousedown', function(evt) {
@@ -109,6 +125,10 @@ function init() {
     
     canvas.addEventListener('mouseup', function(evt) {
         onMouseUp(canvas,evt);
+    }, false);
+
+    canvas.addEventListener('mousemove', function(evt) {
+        onMouseMove(canvas,evt);
     }, false);
 
     
