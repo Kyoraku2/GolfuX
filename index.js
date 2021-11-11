@@ -103,6 +103,11 @@ function updateMousePos(canvas, evt) {
     mousePosWorld = getWorldPointFromPixelPoint(mousePosPixel);
 }
 
+function onTouchMove(evt) {
+    currentTest.onTouchMove(evt);
+}
+
+
 function init() {
     
     canvas = document.getElementById("canvas");
@@ -118,6 +123,10 @@ function init() {
     canvas.addEventListener("touchend", function(evt){
         onTouchUp(canvas,evt);
     },false);
+
+    canvas.addEventListener('touchmove', function(evt){
+        onTouchMove(evt);
+    }, false); // mobile
     
     canvas.addEventListener('mousedown', function(evt) {
         onMouseDown(canvas,evt);

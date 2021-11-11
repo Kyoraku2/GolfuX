@@ -92,6 +92,10 @@ golfux.prototype.onTouchUp = function(canvas, evt) {
     this.ball.body.ApplyLinearImpulse(new b2Vec2(impulse.x*intensifie, impulse.y*intensifie),true);
 }
 
+golfux.prototype.onTouchMove = function(evt) {
+    evt.preventDefault();
+}
+
 golfux.prototype.onMouseUp = function(canvas, evt) {
     // Récuperation de la position de relachement du click
     let rect = canvas.getBoundingClientRect();
