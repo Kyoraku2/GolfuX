@@ -1,5 +1,6 @@
 var MAX_INTENSITIE=10;
 var shot = false;
+var click_start = {x: 0, y: 0};
 var golfux = function() {
     //constructor
     this.click_down=null;
@@ -59,6 +60,9 @@ golfux.prototype.onMouseDown = function(canvas, evt) {
     let y = evt.clientY - rect.top;
     this.click_down={x:x,y:canvas.height-y};
     this.click_down=getWorldPointFromPixelPoint(this.click_down);
+
+    click_start.x = x;
+    click_start.y = y;
 
     shot = true;
 }
@@ -164,17 +168,17 @@ golfux.prototype.step = function(){
         let segment = Array();
         let ball_pos = {x: pos.x, y: cvs.height-pos.y};
         let click_pos = {x: mousePosPixel.x, y: cvs.height-mousePosPixel.y};
-        let diff_pos = {x: Math.abs(click_pos.x - ball_pos.x), y: Math.abs(click_pos.y - ball_pos.y)};
+        let diff_pos = {x: Math.abs(click_pos.x - click_start.x), y: Math.abs(click_pos.y - click_start.y)};
         let final_pos = {x: ball_pos.x, y: ball_pos.y};
-        if (click_pos.x < ball_pos.x) {
-            final_pos.x += diff_pos.x;
-        } else {
+        if (click_pos.x > click_start.x) {
             final_pos.x -= diff_pos.x;
-        }
-        if (click_pos.y < ball_pos.y) {
-            final_pos.y += diff_pos.y;
         } else {
+            final_pos.x += diff_pos.x;
+        }
+        if (click_pos.y > click_start.y) {
             final_pos.y -= diff_pos.y;
+        } else {
+            final_pos.y += diff_pos.y;
         }
         segment[0] = ball_pos;
         segment[1] = final_pos;
@@ -194,5 +198,5 @@ golfux.prototype.step = function(){
         context.lineTo(tox - headlen * Math.cos(angle - Math.PI / 6), toy - headlen * Math.sin(angle - Math.PI / 6));
         context.moveTo(tox, toy);
         context.lineTo(tox - headlen * Math.cos(angle + Math.PI / 6), toy - headlen * Math.sin(angle + Math.PI / 6));
-      }
+    }
 }

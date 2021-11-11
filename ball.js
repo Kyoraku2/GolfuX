@@ -2,7 +2,7 @@ class Ball{
     constructor(){
         this.bodydef=null;
         this.body=null;
-        this.start_pos=new b2Vec2(9.5,3);
+        this.start_pos=new b2Vec2(9.5,5);
         this.view=null;
         this.sprite=new Image();
         this.sprite.src = './textures/ball.png';
