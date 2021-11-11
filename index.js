@@ -77,6 +77,17 @@ function onMouseUp(canvas, evt) {
     currentTest.onMouseUp(canvas, evt);
 }
 
+function onTouchDown(canvas, evt) {            
+    updateMousePos(canvas, evt);
+    currentTest.onTouchDown(canvas, evt);
+}
+
+function onTouchUp(canvas, evt) {
+    mouseDown = false;
+    updateMousePos(canvas, evt);
+    currentTest.onTouchUp(canvas, evt);
+}
+
 
 function updateMousePos(canvas, evt) {
     var rect = canvas.getBoundingClientRect();
@@ -96,11 +107,11 @@ function init() {
     canvasOffset.y = canvas.height/2;
 
     canvas.addEventListener("touchstart", function(evt){
-        onMouseDown(canvas,evt);
+        onTouchDown(canvas,evt);
     },false);
 
     canvas.addEventListener("touchend", function(evt){
-        onMouseUp(canvas,evt);
+        onTouchUp(canvas,evt);
     },false);
     
     canvas.addEventListener('mousedown', function(evt) {

@@ -28,6 +28,38 @@ golfux.prototype.onMouseDown = function(canvas, evt) {
     this.click_down=getWorldPointFromPixelPoint(this.click_down);
 }
 
+golfux.prototype.onTouchDown = function(canvas, evt) {
+    // Récuperation de la position du click
+    let rect = canvas.getBoundingClientRect();
+    let x = evt.touches[0].clientX - rect.left;
+    let y = evt.touches[0].clientY - rect.top;
+    this.click_down={x:x,y:canvas.height-y};
+    this.click_down=getWorldPointFromPixelPoint(this.click_down);
+}
+
+
+golfux.prototype.onTouchUp = function(canvas, evt) {
+    // Récuperation de la position de relachement du click
+    let rect = canvas.getBoundingClientRect();
+    let x = evt.changedTouches[0].clientX  - rect.left;
+    let y = evt.changedTouches[0].clientY  - rect.top;
+    this.click_up={x:x,y:canvas.height-y};
+    this.click_up=getWorldPointFromPixelPoint(this.click_up);
+    
+    var impulse={
+        x:this.click_down.x-this.click_up.x,
+        y:this.click_down.y-this.click_up.y
+    };
+
+    // Intensification en fonction de l'éloignement par rapport au click initial (valuer à changer)
+    var intensifie=Math.sqrt(impulse.x*impulse.x + impulse.y*impulse.y);
+    if(intensifie>MAX_INTENSITIE){
+        intensifie=MAX_INTENSITIE;
+    }
+    // Impulsion
+    this.ball.body.ApplyLinearImpulse(new b2Vec2(impulse.x*intensifie, impulse.y*intensifie),true);
+}
+
 golfux.prototype.onMouseUp = function(canvas, evt) {
     // Récuperation de la position de relachement du click
     let rect = canvas.getBoundingClientRect();
@@ -35,7 +67,7 @@ golfux.prototype.onMouseUp = function(canvas, evt) {
     let y = evt.clientY - rect.top;
     this.click_up={x:x,y:canvas.height-y};
     this.click_up=getWorldPointFromPixelPoint(this.click_up);
-
+    
     var impulse={
         x:this.click_down.x-this.click_up.x,
         y:this.click_down.y-this.click_up.y
