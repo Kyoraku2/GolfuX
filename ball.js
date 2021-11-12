@@ -27,6 +27,7 @@ class Ball{
         fix.set_density(10);
         fix.set_friction(0);
         fix.set_restitution(1); // Force restante après rebond
+        //fix.filter.maskBits = 0x0002;
     
         // Add fixture to the body
         this.body.CreateFixture(fix);

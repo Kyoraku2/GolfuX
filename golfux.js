@@ -7,6 +7,7 @@ var golfux = function() {
     this.level = new Level();
     this.level.initBasicWalls();
     this.level.test();
+    this.level.createHole(1, new b2Vec2(10,20));
 }
 
 golfux.prototype.setNiceViewCenter = function() {
