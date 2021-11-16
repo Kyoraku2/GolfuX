@@ -5,6 +5,7 @@ class Ball{
         this.start_pos=new b2Vec2(9.5,1);
         this.view=null;
         this.sprite=new Image();
+        this.collide = false;
         this.sprite.src = './textures/ball.png';
     
         // The shape
@@ -17,6 +18,7 @@ class Ball{
         this.bodydef = new b2BodyDef();
         this.bodydef.set_type(b2_dynamicBody);
         this.bodydef.set_position(this.start_pos);
+        this.bodydef.set_userData(1);
     
         // Create the body itself
         this.body = world.CreateBody(this.bodydef);
@@ -43,4 +45,14 @@ class Ball{
         //this.x = this.view.body.GetPosition().x;
         //this.y = this.view.body.GetPosition().y;   
     }
+
+    isColliding(hole){
+        
+        if(this.collide){
+            var x = hole.getPos().x-this.x;
+            var y = hole.getPos().y-this.y;
+            this.body.ApplyLinearImpulse(new b2Vec2(x, y), true);
+        }
+    }
+
 }

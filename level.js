@@ -6,33 +6,10 @@ class Level{
     }
 
     createHole(radius, middle_pos){
-        var shape = new b2CircleShape();
-        shape.set_m_radius(radius);
-        //this.view = new createjs.Bitmap("./textures/ball.png");
-        //this.view.regX=this.view.regY=50;
-        
-        // Create a static body definition
-        var holeDef  = new b2BodyDef();
-        holeDef.set_type(b2_dynamicBody);
-        holeDef.set_position(middle_pos);
-    
-        // Create the body itself
-        var bodyDef = world.CreateBody(holeDef);
-    
-        // Create the fixture
-        var fix = new b2FixtureDef();
-        fix.set_shape(shape);
-        fix.set_density(10);
-        fix.set_friction(0);
-        fix.set_restitution(1); // Force restante après rebond
-        
-        fix.isSensor = true;
-        // Add fixture to the body
-        bodyDef.CreateFixture(fix);
-        bodyDef.SetAngularDamping(100000); // La balle tourne sur elle même
-        bodyDef.SetLinearDamping(1); // Friction de base
-
-        this.hole
+        this.hole = new Hole();
+        this.hole.setPos(middle_pos);
+        this.hole.setRadius(radius);
+        this.hole.createHole();
 
     }
 
