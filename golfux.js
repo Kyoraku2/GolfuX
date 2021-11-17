@@ -1,6 +1,10 @@
 var MAX_INTENSITIE=10;
+var MAX_NORME = 255;
 var shot = false;
 var click_start = {x: 0, y: 0};
+var old_point = {x: 0, y: 0};
+var norme;
+
 var golfux = function() {
     //constructor
     this.click_down=null;
@@ -9,6 +13,7 @@ var golfux = function() {
     this.level = new Level();
     this.level.initBasicWalls();
     this.level.test();
+    
 }
 
 golfux.prototype.setNiceViewCenter = function() {
@@ -156,7 +161,17 @@ golfux.prototype.step = function(){
     }
 
     //Segment
-    var segment = compute_segment();
+    var segment = compute_segment(norme);
+    norme = Math.sqrt(Math.pow(segment[0].x - segment[1].x, 2) + Math.pow(segment[0].y - segment[1].y, 2));
+    
+    //console.log("norme="+norme);
+    //console.log("x1 ="+segment[0].x+"; x2 = "+segment[1].x+"; y1 = "+segment[0].y+"; y2 = "+segment[1].y);
+
+    if (norme > MAX_NORME) {
+        //console.log("OK");
+        segment[1] = old_point;
+    }
+
     //Si on tire en fait
     if (segment[0] && segment[1] && shot == true) {
         context.beginPath();
@@ -164,12 +179,12 @@ golfux.prototype.step = function(){
         context.stroke();
     }
 
-    function compute_segment() {
-        let segment = Array();
-        let ball_pos = {x: pos.x, y: cvs.height-pos.y};
-        let click_pos = {x: mousePosPixel.x, y: cvs.height-mousePosPixel.y};
-        let diff_pos = {x: Math.abs(click_pos.x - click_start.x), y: Math.abs(click_pos.y - click_start.y)};
-        let final_pos = {x: ball_pos.x, y: ball_pos.y};
+    function compute_segment(norme) {
+        var segment = Array();
+        var ball_pos = {x: pos.x, y: cvs.height-pos.y};
+        var click_pos = {x: mousePosPixel.x, y: cvs.height-mousePosPixel.y};
+        var diff_pos = {x: Math.abs(click_pos.x - click_start.x), y: Math.abs(click_pos.y - click_start.y)};
+        var final_pos = {x: ball_pos.x, y: ball_pos.y};
         if (click_pos.x > click_start.x) {
             final_pos.x -= diff_pos.x;
         } else {
@@ -180,15 +195,24 @@ golfux.prototype.step = function(){
         } else {
             final_pos.y += diff_pos.y;
         }
+        
         segment[0] = ball_pos;
         segment[1] = final_pos;
+
+        norme = Math.sqrt(Math.pow(segment[0].x - segment[1].x, 2) + Math.pow(segment[0].y - segment[1].y, 2));
+        
+        //console.log("norme="+norme);
+        if (norme <= MAX_NORME){
+            old_point = segment[1];
+        }
+        //console.log(old_point.x+" "+old_point.y);
         return segment;
     }
-
+    
     //Fonction pour print la flèche (trucs mystiques pour le bout tkt)
     function print_segment(fromx, fromy, tox, toy) {
         context.strokeStyle = "#FF0000";
-        context.lineWidth = 3;
+        context.lineWidth = 2;
         var headlen = 10; // length of head in pixels
         var dx = tox - fromx;
         var dy = toy - fromy;
@@ -199,4 +223,5 @@ golfux.prototype.step = function(){
         context.moveTo(tox, toy);
         context.lineTo(tox - headlen * Math.cos(angle + Math.PI / 6), toy - headlen * Math.sin(angle + Math.PI / 6));
     }
+    
 }
