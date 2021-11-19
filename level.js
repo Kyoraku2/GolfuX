@@ -1,6 +1,5 @@
 class Level{
     constructor(){
-        //this.map = world.CreateBody(new b2BodyDef());
         this.walls=[];
         this.hole = null;
     }
@@ -14,17 +13,8 @@ class Level{
     }
 
     createWall(hx,hy,middle_pos){
-        var wall_shape = new b2PolygonShape();
-        var wall = new b2BodyDef();
-        wall.set_type(b2_staticBody);
-        wall.set_position(middle_pos);
-        var body_wall = world.CreateBody(wall);
-        wall_shape.SetAsBox(hx, hy);
-        body_wall.CreateFixture(wall_shape, 0);
-        this.walls.push({wall:body_wall,hx:hx,hy:hy});
+        this.walls.push(new Wall(hx,hy,middle_pos));
     }
-
-
 
     initBasicWalls() {
         this.createWall(9.25, 0.25, new b2Vec2(9.5,0)); // Bas
@@ -38,7 +28,27 @@ class Level{
         console.log(this.walls[3]);
     }
 
+    createSand(hx,hy,middle_pos){
+        var shape = new b2PolygonShape();
+        shape.SetAsBox(hx, hy);
+        var bodydef = new b2BodyDef();
+        bodydef.set_type(b2_dynamicBody);
+        bodydef.set_position(middle_pos);
+        
+        var body = world.CreateBody(bodydef);
+        
+        var fix = new b2FixtureDef();
+        fix.set_shape(shape);
+        fix.isSensor=true;
+        fix.set_density(0);
+        fix.set_friction(0);
+        body.CreateFixture(fix);
+        body.SetLinearDamping(100);
+        // b2ContactListener
+    }
+
     test(){
-        this.createWall(5, 0.25,new b2Vec2(10, 12));
+        //this.createWall(5, 0.25,new b2Vec2(10, 12));
+        this.createSand(5, 5,new b2Vec2(10, 12));
     }
 }

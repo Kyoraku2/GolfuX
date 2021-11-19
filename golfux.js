@@ -166,8 +166,6 @@ golfux.prototype.onMouseUp = function(canvas, evt) {
     this.click_down=null;
 }
 
-var wall_sprite=new Image();
-wall_sprite.src = './textures/wall.jpg';
 golfux.prototype.step = function(){
     this.ball.x=this.ball.body.GetPosition().x;
     this.ball.y=this.ball.body.GetPosition().y;
@@ -182,15 +180,17 @@ golfux.prototype.step = function(){
     context.fillStyle = 'rgb(255,0,0)';
     
     // Walls
-    var pattern = context.createPattern(wall_sprite, 'repeat');
-    context.fillStyle = pattern;
-    for(let i=0,l=this.level.walls.length;i<l;++i){
-        var world_pos_wall=this.level.walls[i].wall.GetPosition();
-        var leftup_corner={
-            x:world_pos_wall.x-this.level.walls[i].hx,
-            y:world_pos_wall.y-this.level.walls[i].hy
-        };
-        var wall_pos_canvas = getPixelPointFromWorldPoint(leftup_corner);
-        context.fillRect(wall_pos_canvas.x, wall_pos_canvas.y, this.level.walls[i].hx*PTM*2, this.level.walls[i].hy*PTM*2);
+    if(this.level.walls.length>0){
+        var pattern = context.createPattern(this.level.walls[0].sprite, 'repeat');
+        context.fillStyle = pattern;
+        for(let i=0,l=this.level.walls.length;i<l;++i){
+            var world_pos_wall=this.level.walls[i].body.GetPosition();
+            var leftup_corner={
+                x:world_pos_wall.x-this.level.walls[i].hx,
+                y:world_pos_wall.y-this.level.walls[i].hy
+            };
+            var wall_pos_canvas = getPixelPointFromWorldPoint(leftup_corner);
+            context.fillRect(wall_pos_canvas.x, wall_pos_canvas.y, this.level.walls[i].hx*PTM*2, this.level.walls[i].hy*PTM*2);
+        }
     }
 }
