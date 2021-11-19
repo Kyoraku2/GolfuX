@@ -2,6 +2,15 @@ class Level{
     constructor(){
         //this.map = world.CreateBody(new b2BodyDef());
         this.walls=[];
+        this.hole = null;
+    }
+
+    createHole(radius, middle_pos){
+        this.hole = new Hole();
+        this.hole.setPos(middle_pos);
+        this.hole.setRadius(radius);
+        this.hole.createHole();
+
     }
 
     createWall(hx,hy,middle_pos){

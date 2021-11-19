@@ -1,12 +1,58 @@
+class golfux{
+    constructor(){
+        this.click_down=null;
+        this.click_up=null;
+        this.ball = new Ball();
+        this.level = new Level();
+        this.level.initBasicWalls();
+        this.level.test();
+        this.level.createHole(1, new b2Vec2(10,20));
+        console.log(this.level);
+        var x = this.level.hole.getPos().x-this.ball.x;
+        var y = this.level.hole.getPos().y-this.ball.y;
+        
+        addEventListener(this.ball,this.level.hole);
+    }
+
+
+
+}
 var MAX_INTENSITIE=10;
-var golfux = function() {
-    //constructor
-    this.click_down=null;
-    this.click_up=null;
-    this.ball = new Ball();
-    this.level = new Level();
-    this.level.initBasicWalls();
-    this.level.test();
+
+function addEventListener(ball, hole){
+    var listener = new Box2D.JSContactListener();
+    listener.BeginContact = function (contactPtr) {
+        var x = hole.getPos().x-ball.x;
+        var y = hole.getPos().y-ball.y;
+        var contact = Box2D.wrapPointer( contactPtr, b2Contact );
+        var fixtureA = contact.GetFixtureA();
+        var fixtureB = contact.GetFixtureB();
+        var bodyA = fixtureA.GetBody();
+        var bodyB = fixtureB.GetBody();
+        var idA = bodyA.GetUserData();
+        var idB = bodyB.GetUserData();
+        if((idA == 1 && idB == 2) || (idA == 2 && idB == 1)){
+            if(idA == 1){
+                ball.collide = true;
+                //bodyA.ApplyLinearImpulse(new b2Vec2(x, y), true);
+            }else{
+                ball.collide = true;
+                //bodyB.ApplyLinearImpulse(new b2Vec2(x, y), true);
+            }
+        }
+    // now do what you wish with the fixtures
+    }
+
+    // Empty implementations for unused methods.
+    listener.EndContact = function() {
+        ball.collide = false;
+    };
+    listener.PreSolve = function(contactPtr) {};
+    listener.PostSolve = function(contactPtr) {
+        var contact = Box2D.wrapPointer( contactPtr, b2Contact );
+        contact.SetEnabled(true);
+    };
+    world.SetContactListener(listener);
 }
 
 golfux.prototype.setNiceViewCenter = function() {
@@ -127,6 +173,8 @@ golfux.prototype.step = function(){
     this.ball.y=this.ball.body.GetPosition().y;
     var cvs=document.getElementById('canvas');
     var context = cvs.getContext( '2d' );
+
+    this.ball.isColliding(this.level.hole);
 
     var pos = getPixelPointFromWorldPoint({x:this.ball.x,y:this.ball.y});
     context.drawImage(this.ball.sprite, pos.x-10, cvs.height-pos.y-10,20,20);
