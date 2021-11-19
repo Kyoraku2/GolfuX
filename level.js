@@ -1,6 +1,6 @@
 class Level{
     constructor(){
-        this.walls=[];
+        this.obstacles=[];
         this.hole = null;
     }
 
@@ -13,7 +13,7 @@ class Level{
     }
 
     createWall(hx,hy,middle_pos){
-        this.walls.push(new Wall(hx,hy,middle_pos));
+        this.obstacles.push(new Wall(hx,hy,middle_pos));
     }
 
     initBasicWalls() {
@@ -22,29 +22,14 @@ class Level{
         this.createWall(0.25, 12.25, new b2Vec2(0, 12)); // Gauche 
         this.createWall(0.25, 12.25, new b2Vec2(19, 12)); // Droite
 
-        console.log(this.walls[0]);
-        console.log(this.walls[1]);
-        console.log(this.walls[2]);
-        console.log(this.walls[3]);
+        console.log(this.obstacles[0]);
+        console.log(this.obstacles[1]);
+        console.log(this.obstacles[2]);
+        console.log(this.obstacles[3]);
     }
 
     createSand(hx,hy,middle_pos){
-        var shape = new b2PolygonShape();
-        shape.SetAsBox(hx, hy);
-        var bodydef = new b2BodyDef();
-        bodydef.set_type(b2_dynamicBody);
-        bodydef.set_position(middle_pos);
-        
-        var body = world.CreateBody(bodydef);
-        
-        var fix = new b2FixtureDef();
-        fix.set_shape(shape);
-        fix.isSensor=true;
-        fix.set_density(0);
-        fix.set_friction(0);
-        body.CreateFixture(fix);
-        body.SetLinearDamping(100);
-        // b2ContactListener
+        this.obstacles.push(new Sand(hx, hy,middle_pos));
     }
 
     test(){
