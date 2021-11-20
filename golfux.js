@@ -1,8 +1,12 @@
 var MAX_INTENSITIE=10;
 var MAX_NORME = 255;
 var shot = false;
+var moving = false;
 var click_start = {x: 0, y: 0};
 var old_point = {x: 0, y: 0};
+var old_ball_pos = {x: 0, y: 0};
+var ball_pos;
+var click_pos;
 var norme;
 
 var golfux = function() {
@@ -91,11 +95,14 @@ golfux.prototype.onMouseUp = function(canvas, evt) {
         intensifie=MAX_INTENSITIE;
     }
     // Impulsion
-    this.ball.body.ApplyLinearImpulse(new b2Vec2(impulse.x*intensifie, impulse.y*intensifie),true);
+    if (moving == false) {
+        this.ball.body.ApplyLinearImpulse(new b2Vec2(impulse.x*intensifie, impulse.y*intensifie),true);
+    }
     this.click_up=null;
     this.click_down=null;
 
     shot = false;
+    moving = true;
 }
 
 golfux.prototype.onTouchDown = function(canvas, evt) {
@@ -126,7 +133,9 @@ golfux.prototype.onTouchUp = function(canvas, evt) {
         intensifie=MAX_INTENSITIE;
     }
     // Impulsion
-    this.ball.body.ApplyLinearImpulse(new b2Vec2(impulse.x*intensifie, impulse.y*intensifie),true);
+    if (moving == false) {
+        this.ball.body.ApplyLinearImpulse(new b2Vec2(impulse.x*intensifie, impulse.y*intensifie),true);
+    }
 }
 
 golfux.prototype.onTouchMove = function(evt) {
@@ -160,29 +169,45 @@ golfux.prototype.step = function(){
         context.fillRect(wall_pos_canvas.x, wall_pos_canvas.y, this.level.walls[i].hx*PTM*2, this.level.walls[i].hy*PTM*2);
     }
 
-    //Segment
-    var segment = compute_segment(norme);
-    norme = Math.sqrt(Math.pow(segment[0].x - segment[1].x, 2) + Math.pow(segment[0].y - segment[1].y, 2));
-    
-    //console.log("norme="+norme);
-    //console.log("x1 ="+segment[0].x+"; x2 = "+segment[1].x+"; y1 = "+segment[0].y+"; y2 = "+segment[1].y);
-
-    if (norme > MAX_NORME) {
-        //console.log("OK");
-        segment[1] = old_point;
+    ball_pos = {x: pos.x, y: cvs.height-pos.y};
+    //Si la balle ne bouge plus, on peut de nouveau tirer
+    if (ball_pos.x/*.toFixed(1)*/ == old_ball_pos.x/*.toFixed(1)*/ && ball_pos.y/*.toFixed(1)*/ == old_ball_pos.y/*.toFixed(1)*/) { //mettre les toFixed à 1 si on veut pas attendre 30 ans avant que la balle soit vrmt immobile
+        moving = false; 
     }
+    old_ball_pos = ball_pos; //mise à jour ancienne position de la balle
+
+    //Segment
+    var segment = compute_segment();
 
     //Si on tire en fait
-    if (segment[0] && segment[1] && shot == true) {
+    if (segment[0] && segment[1] && shot == true && moving == false) {
         context.beginPath();
         print_segment(segment[0].x, segment[0].y, segment[1].x, segment[1].y);
         context.stroke();
     }
 
-    function compute_segment(norme) {
+    function compute_segment() {
         var segment = Array();
-        var ball_pos = {x: pos.x, y: cvs.height-pos.y};
-        var click_pos = {x: mousePosPixel.x, y: cvs.height-mousePosPixel.y};
+
+        click_pos = {x: mousePosPixel.x, y: cvs.height-mousePosPixel.y};
+        var final_pos = compute_final_point(click_pos);
+
+        norme = Math.sqrt(Math.pow(click_start.x - click_pos.x, 2) + Math.pow(click_start.y - click_pos.y, 2));
+        if (norme <= MAX_NORME){
+            old_point = final_pos;
+        } else {
+            final_pos = old_point;
+            click_pos = old_point;
+            norme = MAX_NORME;
+        }
+        
+        segment[0] = ball_pos;
+        segment[1] = final_pos;
+
+        return segment;
+    }
+
+    function compute_final_point(click_pos) {
         var diff_pos = {x: Math.abs(click_pos.x - click_start.x), y: Math.abs(click_pos.y - click_start.y)};
         var final_pos = {x: ball_pos.x, y: ball_pos.y};
         if (click_pos.x > click_start.x) {
@@ -195,23 +220,17 @@ golfux.prototype.step = function(){
         } else {
             final_pos.y += diff_pos.y;
         }
-        
-        segment[0] = ball_pos;
-        segment[1] = final_pos;
-
-        norme = Math.sqrt(Math.pow(segment[0].x - segment[1].x, 2) + Math.pow(segment[0].y - segment[1].y, 2));
-        
-        //console.log("norme="+norme);
-        if (norme <= MAX_NORME){
-            old_point = segment[1];
-        }
-        //console.log(old_point.x+" "+old_point.y);
-        return segment;
+        return final_pos;
     }
     
     //Fonction pour print la flèche (trucs mystiques pour le bout tkt)
     function print_segment(fromx, fromy, tox, toy) {
-        context.strokeStyle = "#FF0000";
+        var percents = (100 * norme) / 255;
+        var color = "rgb(255, "+(255-norme)+", 0)";
+        context.fillStyle = color;
+        context.strokeStyle = color;
+        context.font = "bold 20px comic sans ms";
+        context.fillText(Math.trunc(percents)+"%", (tox + fromx)/2 - 15, (toy + fromy)/2 - 15);
         context.lineWidth = 2;
         var headlen = 10; // length of head in pixels
         var dx = tox - fromx;
@@ -223,5 +242,4 @@ golfux.prototype.step = function(){
         context.moveTo(tox, toy);
         context.lineTo(tox - headlen * Math.cos(angle + Math.PI / 6), toy - headlen * Math.sin(angle + Math.PI / 6));
     }
-    
 }
