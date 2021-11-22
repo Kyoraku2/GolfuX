@@ -1,12 +1,12 @@
 class Ball{
-    constructor(){
+    constructor(start_pos=new b2Vec2(9.5,1), index){
         this.bodydef=null;
         this.body=null;
-        this.start_pos=new b2Vec2(9.5,1);
-        this.view=null;
+        this.start_pos=start_pos;//new b2Vec2(9.5,1);
         this.sprite=new Image();
         this.collide = false;
         this.sprite.src = './textures/ball.png';
+        this.isInHole = false;
     
         // The shape
         var shape = new b2CircleShape();
@@ -18,7 +18,7 @@ class Ball{
         this.bodydef = new b2BodyDef();
         this.bodydef.set_type(b2_dynamicBody);
         this.bodydef.set_position(this.start_pos);
-        this.bodydef.set_userData(1);
+        this.bodydef.set_userData(index);
     
         // Create the body itself
         this.body = world.CreateBody(this.bodydef);
@@ -47,11 +47,12 @@ class Ball{
     }
 
     isColliding(hole){
-        
+        const FORCE = 25;
         if(this.collide){
             var x = hole.getPos().x-this.x;
             var y = hole.getPos().y-this.y;
-            this.body.ApplyLinearImpulse(new b2Vec2(x, y), true);
+            this.body.ApplyLinearImpulse(new b2Vec2(x*FORCE, y*FORCE), true);
+            this.isInHole= true;
         }
     }
 
