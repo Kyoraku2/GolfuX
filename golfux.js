@@ -15,6 +15,7 @@ class golfux{
         var y = this.level.hole.getPos().y-this.balls[0].y;
         
         addEventListener(this.balls,this.level.hole);
+        this.ballIndex = 0;
         //addEventListener(this.balls[0],this.level.hole);
     }
 
@@ -59,17 +60,17 @@ function addEventListener(balls, hole){
         if((idA >= 0 && idA < 99 && idB >= 100 && idB < 199) || (idA < 199 && idA >= 100 && idB < 99 && idB >= 0)){
             if(idA >= 0 && idA<99){
                 balls[idA].collide = false;
+                balls[idA].isInHole = false;
                 //bodyA.ApplyLinearImpulse(new b2Vec2(x, y), true);
             }else{
                 balls[idB].collide = false;
+                balls[idB].isInHole = false;
                 //bodyB.ApplyLinearImpulse(new b2Vec2(x, y), true);
             }
         }
     };
     listener.PreSolve = function(contactPtr) {};
     listener.PostSolve = function(contactPtr) {
-        var contact = Box2D.wrapPointer( contactPtr, b2Contact );
-        contact.SetEnabled(true);
     };
     world.SetContactListener(listener);
 }
@@ -166,7 +167,7 @@ golfux.prototype.onTouchMove = function(evt) {
     evt.preventDefault();
 }
 
-golfux.prototype.onMouseUp = function(canvas, evt) {
+golfux.prototype.onMouseUp = function(canvas,evt) {
     // Récuperation de la position de relachement du click
     let rect = canvas.getBoundingClientRect();
     let x = evt.clientX - rect.left;
@@ -185,9 +186,10 @@ golfux.prototype.onMouseUp = function(canvas, evt) {
         intensifie=MAX_INTENSITIE;
     }
     // Impulsion
-    for(var i = 0; i<this.balls.length; i++){
-        this.balls[i].body.ApplyLinearImpulse(new b2Vec2(impulse.x*intensifie, impulse.y*intensifie),true);
-    }
+    this.balls[this.ballIndex].body.ApplyLinearImpulse(new b2Vec2(impulse.x*intensifie, impulse.y*intensifie),true);
+    console.log(this.balls.length)
+    this.ballIndex = (this.ballIndex < this.balls.length-1) ? this.ballIndex+1 : 0;
+
     this.click_up=null;
     this.click_down=null;
 }
@@ -203,11 +205,15 @@ golfux.prototype.step = function(){
         this.balls[i].x=this.balls[i].body.GetPosition().x;
         this.balls[i].y=this.balls[i].body.GetPosition().y;
         this.balls[i].isColliding(this.level.hole);
-
+        if(this.balls[i].body.GetLinearVelocity().Length()<1){
+            this.balls[i].isMoving = false;
+        }else{
+            this.balls[i].isMoving = true;
+        }
         var pos = getPixelPointFromWorldPoint({x:this.balls[i].x,y:this.balls[i].y});
-        //if(!this.ball.isInHole){//TODO ajouter et moving == false
+        if(!this.balls[i].isInHole || this.balls[i].isMoving){
             context.drawImage(this.balls[i].sprite, pos.x-10, cvs.height-pos.y-10,20,20);
-        //}
+        }
     }
     context.fillStyle = 'rgb(255,0,0)';
     

@@ -7,6 +7,7 @@ class Ball{
         this.collide = false;
         this.sprite.src = './textures/ball.png';
         this.isInHole = false;
+        this.isMoving = false;
     
         // The shape
         var shape = new b2CircleShape();
