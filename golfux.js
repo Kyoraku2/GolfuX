@@ -5,7 +5,6 @@ class golfux{
         this.ball = new Ball();
         this.level = new Level();
         this.level.initBasicWalls();
-        this.level.test();
         this.level.createHole(1, new b2Vec2(10,20));
         console.log(this.level);
         var x = this.level.hole.getPos().x-this.ball.x;
@@ -38,8 +37,15 @@ function addEventListener(ball, hole){
                 //bodyB.ApplyLinearImpulse(new b2Vec2(x, y), true);
             }
         }
-        if((idA==1 && idB==3) || (idA==3 && idB==1)){
-            ball.sand=true;
+        if((idA==1 && idB==3) || (idA==3 && idB==1)){ // sand
+            ball.body.SetLinearDamping(14);
+        }
+        if((idA==1 && idB==4) || (idA==4 && idB==1)){ // bubble
+            ball.body.SetLinearDamping(18);
+        }
+        if((idA==1 && idB==5) || (idA==5 && idB==1)){ // void
+            //ball.bodydef.set_position();
+            //ball.body.SetTransform(b2Vec2(0,0),ball.body.GetAngle());
         }
     // now do what you wish with the fixtures
     }
@@ -63,10 +69,14 @@ function addEventListener(ball, hole){
         }
 
         if((idA==1 && idB==3) || (idA==3 && idB==1)){
-            ball.sand=false;
+            ball.body.SetLinearDamping(1); // TODO : Constante pour ça
+        }
+        if((idA==1 && idB==4) || (idA==4 && idB==1)){
+            ball.body.SetLinearDamping(1);
         }
     };
-    listener.PreSolve = function(contactPtr) {};
+    listener.PreSolve = function(contactPtr) {
+    };
     listener.PostSolve = function(contactPtr) {
         var contact = Box2D.wrapPointer( contactPtr, b2Contact );
         contact.SetEnabled(true);
@@ -191,23 +201,53 @@ golfux.prototype.step = function(){
     var cvs=document.getElementById('canvas');
     var context = cvs.getContext( '2d' );
 
-    // Walls
-    if(this.level.obstacles.length>0){
-        for(let i=0,l=this.level.obstacles.length;i<l;++i){
-            var pattern = context.createPattern(this.level.obstacles[i].sprite, 'repeat');
+    // Sand
+    if(this.level.obstacles["sand"].length>0){
+        for(let i=0,l=this.level.obstacles["sand"].length;i<l;++i){
+            var pattern = context.createPattern(this.level.obstacles["sand"][i].sprite, 'repeat');
             context.fillStyle = pattern;
-            var world_pos_wall=this.level.obstacles[i].body.GetPosition();
+            var world_pos_wall=this.level.obstacles["sand"][i].body.GetPosition();
             var leftup_corner={
-                x:world_pos_wall.x-this.level.obstacles[i].hx,
-                y:world_pos_wall.y-this.level.obstacles[i].hy
+                x:world_pos_wall.x-this.level.obstacles["sand"][i].hx,
+                y:world_pos_wall.y-this.level.obstacles["sand"][i].hy
             };
             var wall_pos_canvas = getPixelPointFromWorldPoint(leftup_corner);
-            context.fillRect(wall_pos_canvas.x, wall_pos_canvas.y, this.level.obstacles[i].hx*PTM*2, this.level.obstacles[i].hy*PTM*2);
+            context.fillRect(wall_pos_canvas.x, wall_pos_canvas.y, this.level.obstacles["sand"][i].hx*PTM*2, this.level.obstacles["sand"][i].hy*PTM*2);
+        }
+    }
+
+
+    // bubblegum
+    if(this.level.obstacles["bubblegum"].length>0){
+        for(let i=0,l=this.level.obstacles["bubblegum"].length;i<l;++i){
+            var pattern = context.createPattern(this.level.obstacles["bubblegum"][i].sprite, 'repeat');
+            context.fillStyle = pattern;
+            var world_pos_wall=this.level.obstacles["bubblegum"][i].body.GetPosition();
+            var leftup_corner={
+                x:world_pos_wall.x-this.level.obstacles["bubblegum"][i].hx,
+                y:world_pos_wall.y-this.level.obstacles["bubblegum"][i].hy
+            };
+            var wall_pos_canvas = getPixelPointFromWorldPoint(leftup_corner);
+            context.fillRect(wall_pos_canvas.x, wall_pos_canvas.y, this.level.obstacles["bubblegum"][i].hx*PTM*2, this.level.obstacles["bubblegum"][i].hy*PTM*2);
+        }
+    }
+
+    // Walls
+    if(this.level.obstacles["walls"].length>0){
+        for(let i=0,l=this.level.obstacles["walls"].length;i<l;++i){
+            var pattern = context.createPattern(this.level.obstacles["walls"][i].sprite, 'repeat');
+            context.fillStyle = pattern;
+            var world_pos_wall=this.level.obstacles["walls"][i].body.GetPosition();
+            var leftup_corner={
+                x:world_pos_wall.x-this.level.obstacles["walls"][i].hx,
+                y:world_pos_wall.y-this.level.obstacles["walls"][i].hy
+            };
+            var wall_pos_canvas = getPixelPointFromWorldPoint(leftup_corner);
+            context.fillRect(wall_pos_canvas.x, wall_pos_canvas.y, this.level.obstacles["walls"][i].hx*PTM*2, this.level.obstacles["walls"][i].hy*PTM*2);
         }
     }
 
     this.ball.isColliding(this.level.hole);
-    this.ball.isOnSand();
 
     var pos = getPixelPointFromWorldPoint({x:this.ball.x,y:this.ball.y});
     context.drawImage(this.ball.sprite, pos.x-10, cvs.height-pos.y-10,20,20);

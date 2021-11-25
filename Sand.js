@@ -8,7 +8,7 @@ class Sand{
         this.shape = new b2PolygonShape();
         this.shape.SetAsBox(this.hx, this.hy);
         this.bodydef = new b2BodyDef();
-        this.bodydef.set_type(b2_dynamicBody);
+        this.bodydef.set_type(b2_staticBody);
         this.bodydef.set_position(this.middle_pos);
         this. bodydef.set_userData(3);
         
