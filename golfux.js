@@ -44,13 +44,15 @@ function addEventListener(balls, hole){
                 //bodyB.ApplyLinearImpulse(new b2Vec2(x, y), true);
             }
         }
+        if((idA==1 && idB==3) || (idA==3 && idB==1)){
+            ball.sand=true;
+        }
     // now do what you wish with the fixtures
     }
 
     // Empty implementations for unused methods.
     listener.EndContact = function(contactPtr) {
         var contact = Box2D.wrapPointer( contactPtr, b2Contact );
-        console.log(contact)
         var fixtureA = contact.GetFixtureA();
         var fixtureB = contact.GetFixtureB();
         var bodyA = fixtureA.GetBody();
@@ -194,13 +196,9 @@ golfux.prototype.onMouseUp = function(canvas,evt) {
     this.click_down=null;
 }
 
-var wall_sprite=new Image();
-wall_sprite.src = './textures/wall.jpg';
 golfux.prototype.step = function(){
-    
     var cvs=document.getElementById('canvas');
     var context = cvs.getContext( '2d' );
-
     for(var i = 0; i<this.balls.length; i++){
         this.balls[i].x=this.balls[i].body.GetPosition().x;
         this.balls[i].y=this.balls[i].body.GetPosition().y;
@@ -215,18 +213,26 @@ golfux.prototype.step = function(){
             context.drawImage(this.balls[i].sprite, pos.x-10, cvs.height-pos.y-10,20,20);
         }
     }
-    context.fillStyle = 'rgb(255,0,0)';
-    
+
     // Walls
-    var pattern = context.createPattern(wall_sprite, 'repeat');
-    context.fillStyle = pattern;
-    for(let i=0,l=this.level.walls.length;i<l;++i){
-        var world_pos_wall=this.level.walls[i].wall.GetPosition();
-        var leftup_corner={
-            x:world_pos_wall.x-this.level.walls[i].hx,
-            y:world_pos_wall.y-this.level.walls[i].hy
-        };
-        var wall_pos_canvas = getPixelPointFromWorldPoint(leftup_corner);
-        context.fillRect(wall_pos_canvas.x, wall_pos_canvas.y, this.level.walls[i].hx*PTM*2, this.level.walls[i].hy*PTM*2);
+    if(this.level.obstacles.length>0){
+        for(let i=0,l=this.level.obstacles.length;i<l;++i){
+            var pattern = context.createPattern(this.level.obstacles[i].sprite, 'repeat');
+            context.fillStyle = pattern;
+            var world_pos_wall=this.level.obstacles[i].body.GetPosition();
+            var leftup_corner={
+                x:world_pos_wall.x-this.level.obstacles[i].hx,
+                y:world_pos_wall.y-this.level.obstacles[i].hy
+            };
+            var wall_pos_canvas = getPixelPointFromWorldPoint(leftup_corner);
+            context.fillRect(wall_pos_canvas.x, wall_pos_canvas.y, this.level.obstacles[i].hx*PTM*2, this.level.obstacles[i].hy*PTM*2);
+        }
     }
+
+    this.ball.isColliding(this.level.hole);
+    this.ball.isOnSand();
+
+    var pos = getPixelPointFromWorldPoint({x:this.ball.x,y:this.ball.y});
+    context.drawImage(this.ball.sprite, pos.x-10, cvs.height-pos.y-10,20,20);
+    context.fillStyle = 'rgb(255,0,0)';
 }

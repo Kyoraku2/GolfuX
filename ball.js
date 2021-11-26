@@ -5,6 +5,7 @@ class Ball{
         this.start_pos=start_pos;//new b2Vec2(9.5,1);
         this.sprite=new Image();
         this.collide = false;
+        this.sand = false;
         this.sprite.src = './textures/ball.png';
         this.isInHole = false;
         this.isMoving = false;
@@ -12,8 +13,6 @@ class Ball{
         // The shape
         var shape = new b2CircleShape();
         shape.set_m_radius(0.3);
-        //this.view = new createjs.Bitmap("./textures/ball.png");
-        //this.view.regX=this.view.regY=50;
         
         // Create a static body definition
         this.bodydef = new b2BodyDef();
@@ -38,13 +37,6 @@ class Ball{
         this.body.SetLinearDamping(1); // Friction de base
         this.x = this.body.GetPosition().x;
         this.y = this.body.GetPosition().y;
-    
-        //this.view.body = this.body_ball;
-        //this.view.body.CreateFixture(fix);
-        //this.view.body.SetAngularDamping(100000); // La balle tourne sur elle même
-        //this.view.body.SetLinearDamping(1); // Friction de base
-        //this.x = this.view.body.GetPosition().x;
-        //this.y = this.view.body.GetPosition().y;   
     }
 
     isColliding(hole){
@@ -54,6 +46,13 @@ class Ball{
             var y = hole.getPos().y-this.y;
             this.body.ApplyLinearImpulse(new b2Vec2(x*FORCE, y*FORCE), true);
             this.isInHole= true;
+        }
+    }
+
+    isOnSand(){
+        if(this.sand){
+            var sand_ratio = 0.3; // TODO : mettre en var const
+            this.body.ApplyLinearImpulse(new b2Vec2(-this.body.GetLinearVelocity().x*sand_ratio,-this.body.GetLinearVelocity().y*sand_ratio), true);
         }
     }
 
