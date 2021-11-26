@@ -9,13 +9,8 @@ class golfux{
         this.level = new Level();
         this.level.initBasicWalls();
         this.level.createHole(0.5, new b2Vec2(10,20));
-        console.log(this.level);
-        var x = this.level.hole.getPos().x-this.balls[0].x;
-        var y = this.level.hole.getPos().y-this.balls[0].y;
-        
         addEventListener(this.balls,this.level.hole);
         this.ballIndex = 0;
-        //addEventListener(this.balls[0],this.level.hole);
     }
 
 
@@ -43,11 +38,20 @@ function addEventListener(balls, hole){
                 //bodyB.ApplyLinearImpulse(new b2Vec2(x, y), true);
             }
         }
+        
         if((idA >= 0 && idA < 99 && idB >= 200 && idB < 299) || (idA < 299 && idA >= 200 && idB < 99 && idB >= 0)){ // sand
-            ball.body.SetLinearDamping(14);
+            if(idA >= 0 && idA<99){
+                balls[idA].body.SetLinearDamping(12);
+            }else{
+                balls[idB].body.SetLinearDamping(12);
+            }
         }
         if((idA >= 0 && idA < 99 && idB >= 300 && idB < 399) || (idA < 399 && idA >= 300 && idB < 99 && idB >= 0)){ // bubble
-            ball.body.SetLinearDamping(18);
+            if(idA >= 0 && idA<99){
+                balls[idA].body.SetLinearDamping(18);
+            }else{
+                balls[idB].body.SetLinearDamping(18);
+            }
         }
         if((idA >= 0 && idA < 99 && idB >= 400 && idB < 499) || (idA < 499 && idA >= 400 && idB < 99 && idB >= 0)){ // void
             //ball.bodydef.set_position();
@@ -69,18 +73,25 @@ function addEventListener(balls, hole){
             if(idA >= 0 && idA<99){
                 balls[idA].collide = false;
                 balls[idA].isInHole = false;
-                //bodyA.ApplyLinearImpulse(new b2Vec2(x, y), true);
             }else{
                 balls[idB].collide = false;
                 balls[idB].isInHole = false;
-                //bodyB.ApplyLinearImpulse(new b2Vec2(x, y), true);
             }
         }
         if((idA >= 0 && idA < 99 && idB >= 200 && idB < 299) || (idA < 299 && idA >= 200 && idB < 99 && idB >= 0)){
-            ball.body.SetLinearDamping(1); // TODO : Constante pour ça
+            // TODO : Constante pour ça
+            if(idA >= 0 && idA<99){
+                balls[idA].body.SetLinearDamping(1);
+            }else{
+                balls[idB].body.SetLinearDamping(1);
+            }
         }
         if((idA >= 0 && idA < 99 && idB >= 300 && idB < 399) || (idA < 399 && idA >= 300 && idB < 99 && idB >= 0)){
-            ball.body.SetLinearDamping(1);
+            if(idA >= 0 && idA<99){
+                balls[idA].body.SetLinearDamping(1);
+            }else{
+                balls[idB].body.SetLinearDamping(1);
+            }
         }
     };
     listener.PreSolve = function(contactPtr) {
@@ -274,10 +285,4 @@ golfux.prototype.step = function(){
             context.drawImage(this.balls[i].sprite, pos.x-10, cvs.height-pos.y-10,20,20);
         }
     }
-
-    this.ball.isColliding(this.level.hole);
-
-    var pos = getPixelPointFromWorldPoint({x:this.ball.x,y:this.ball.y});
-    context.drawImage(this.ball.sprite, pos.x-10, cvs.height-pos.y-10,20,20);
-    context.fillStyle = 'rgb(255,0,0)';
 }
