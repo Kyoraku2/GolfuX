@@ -41,36 +41,25 @@ function addEventListener(balls, hole){
             if(idA >= 0 && idA<99){
                 switch(idB){
                     case 200:
-                        balls[idA].sand=true;
+                        balls[idA].body.SetLinearDamping(12);
+                        break;
+                    case 201:
+                        balls[idA].body.SetLinearDamping(18);
+                    case 202:
                         break;
                 }
             }else{
                 switch(idA){
                     case 200:
-                        balls[idB].sand = true;
+                        balls[idB].body.SetLinearDamping(12);
+                        break;
+                    case 201:
+                        balls[idB].body.SetLinearDamping(18);
+                        break;
+                    case 202:
                         break;
                 }
             }
-            
-        
-        if((idA >= 0 && idA < 99 && idB >= 200 && idB < 299) || (idA < 299 && idA >= 200 && idB < 99 && idB >= 0)){ // sand
-            if(idA >= 0 && idA<99){
-                balls[idA].body.SetLinearDamping(12);
-            }else{
-                balls[idB].body.SetLinearDamping(12);
-            }
-        }
-        if((idA >= 0 && idA < 99 && idB >= 300 && idB < 399) || (idA < 399 && idA >= 300 && idB < 99 && idB >= 0)){ // bubble
-            if(idA >= 0 && idA<99){
-                balls[idA].body.SetLinearDamping(18);
-            }else{
-                balls[idB].body.SetLinearDamping(18);
-            }
-        }
-        if((idA >= 0 && idA < 99 && idB >= 400 && idB < 499) || (idA < 499 && idA >= 400 && idB < 99 && idB >= 0)){ // void
-            //ball.bodydef.set_position();
-            //ball.body.SetTransform(b2Vec2(0,0),ball.body.GetAngle());
-
         }
     // now do what you wish with the fixtures
     }
@@ -102,45 +91,22 @@ function addEventListener(balls, hole){
         if((idA >= 0 && idA < 99 && idB>=200 && idB <=299) || (idA >= 200 && idA <= 299 && idB >= 0 && idB <= 99)){
             if(idA >= 0 && idA<99){
                 switch(idB){
+                    case 201:
                     case 200:
-                        balls[idA].sand=false;
+                        balls[idA].body.SetLinearDamping(1);
                         break;
                 }
             }else{
                 switch(idA){
+                    case 201:
                     case 200:
-                        balls[idB].sand = false;
+                        balls[idB].body.SetLinearDamping(1);
                         break;
                 }
             }
         }
-
-
-
-
-            }else{
-                balls[idB].collide = false;
-                balls[idB].isInHole = false;
-            }
-        }
-        if((idA >= 0 && idA < 99 && idB >= 200 && idB < 299) || (idA < 299 && idA >= 200 && idB < 99 && idB >= 0)){
-            // TODO : Constante pour ça
-            if(idA >= 0 && idA<99){
-                balls[idA].body.SetLinearDamping(1);
-            }else{
-                balls[idB].body.SetLinearDamping(1);
-            }
-        }
-        if((idA >= 0 && idA < 99 && idB >= 300 && idB < 399) || (idA < 399 && idA >= 300 && idB < 99 && idB >= 0)){
-            if(idA >= 0 && idA<99){
-                balls[idA].body.SetLinearDamping(1);
-            }else{
-                balls[idB].body.SetLinearDamping(1);
-            }
-        }
     };
     listener.PreSolve = function(contactPtr) {
-      
     };
     listener.PostSolve = function(contactPtr) {
     };
@@ -155,40 +121,6 @@ golfux.prototype.setNiceViewCenter = function() {
 
 golfux.prototype.setup = function() {
 
-}
-
-golfux.prototype.onTouchDown = function(canvas, evt) {
-    // Récuperation de la position du click
-    let rect = canvas.getBoundingClientRect();
-    let x = evt.touches[0].clientX - rect.left;
-    let y = evt.touches[0].clientY - rect.top;
-    this.click_down={x:x,y:canvas.height-y};
-    this.click_down=getWorldPointFromPixelPoint(this.click_down);
-}
-
-
-golfux.prototype.onTouchUp = function(canvas, evt) {
-    // Récuperation de la position de relachement du click
-    let rect = canvas.getBoundingClientRect();
-    let x = evt.changedTouches[0].clientX  - rect.left;
-    let y = evt.changedTouches[0].clientY  - rect.top;
-    this.click_up={x:x,y:canvas.height-y};
-    this.click_up=getWorldPointFromPixelPoint(this.click_up);
-    
-    var impulse={
-        x:this.click_down.x-this.click_up.x,
-        y:this.click_down.y-this.click_up.y
-    };
-
-    // Intensification en fonction de l'éloignement par rapport au click initial (valuer à changer)
-    var intensifie=Math.sqrt(impulse.x*impulse.x + impulse.y*impulse.y);
-    if(intensifie>MAX_INTENSITIE){
-        intensifie=MAX_INTENSITIE;
-    }
-    // Impulsion
-    for(var i = 0; i<this.balls.length; i++){
-        this.balls[i].body.ApplyLinearImpulse(new b2Vec2(impulse.x*intensifie, impulse.y*intensifie),true);
-    }
 }
 
 golfux.prototype.onMouseDown = function(canvas, evt) {
@@ -229,9 +161,10 @@ golfux.prototype.onTouchUp = function(canvas, evt) {
         intensifie=MAX_INTENSITIE;
     }
     // Impulsion
-    for(var i = 0; i<this.balls.length; i++){
-        this.balls[i].body.ApplyLinearImpulse(new b2Vec2(impulse.x*intensifie, impulse.y*intensifie),true);
-    }
+    this.balls[this.ballIndex].body.ApplyLinearImpulse(new b2Vec2(impulse.x*intensifie, impulse.y*intensifie),true);
+
+    this.ballIndex = (this.ballIndex < this.balls.length-1) ? this.ballIndex+1 : 0;
+
     
 }
 
@@ -282,7 +215,7 @@ golfux.prototype.step = function(){
     
     // Walls
     if(this.level.obstacles.length>0){
-        for(let i=0,l=this.level.obstacles.length;i<l;++i){
+        for(var i=0,l=this.level.obstacles.length;i<l;++i){
             var pattern = context.createPattern(this.level.obstacles[i].sprite, 'repeat');
             context.fillStyle = pattern;
             var world_pos_wall=this.level.obstacles[i].body.GetPosition();
@@ -292,10 +225,12 @@ golfux.prototype.step = function(){
             };
             var wall_pos_canvas = getPixelPointFromWorldPoint(leftup_corner);
             context.fillRect(wall_pos_canvas.x, wall_pos_canvas.y, this.level.obstacles[i].hx*PTM*2, this.level.obstacles[i].hy*PTM*2);
+        }
+    }
 
     // Sand
     if(this.level.obstacles["sand"].length>0){
-        for(let i=0,l=this.level.obstacles["sand"].length;i<l;++i){
+        for(var i=0,l=this.level.obstacles["sand"].length;i<l;++i){
             var pattern = context.createPattern(this.level.obstacles["sand"][i].sprite, 'repeat');
             context.fillStyle = pattern;
             var world_pos_wall=this.level.obstacles["sand"][i].body.GetPosition();
@@ -315,7 +250,7 @@ golfux.prototype.step = function(){
 
     // bubblegum
     if(this.level.obstacles["bubblegum"].length>0){
-        for(let i=0,l=this.level.obstacles["bubblegum"].length;i<l;++i){
+        for(var i=0,l=this.level.obstacles["bubblegum"].length;i<l;++i){
             var pattern = context.createPattern(this.level.obstacles["bubblegum"][i].sprite, 'repeat');
             context.fillStyle = pattern;
             var world_pos_wall=this.level.obstacles["bubblegum"][i].body.GetPosition();
@@ -330,7 +265,7 @@ golfux.prototype.step = function(){
 
     // Walls
     if(this.level.obstacles["walls"].length>0){
-        for(let i=0,l=this.level.obstacles["walls"].length;i<l;++i){
+        for(var i=0,l=this.level.obstacles["walls"].length;i<l;++i){
             var pattern = context.createPattern(this.level.obstacles["walls"][i].sprite, 'repeat');
             context.fillStyle = pattern;
             var world_pos_wall=this.level.obstacles["walls"][i].body.GetPosition();
@@ -350,8 +285,6 @@ golfux.prototype.step = function(){
         this.balls[i].y=this.balls[i].body.GetPosition().y;
         this.balls[i].isColliding(this.level.hole);
 
-        this.balls[i].isOnSand();
-
 
 
         if(this.balls[i].body.GetLinearVelocity().Length()<1){
@@ -368,15 +301,6 @@ golfux.prototype.step = function(){
             
         }
     }
-
-
-
-
-
-    
 }
 
-        }
-    }
-}
 
