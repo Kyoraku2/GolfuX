@@ -43,13 +43,13 @@ function addEventListener(balls, hole){
                 //bodyB.ApplyLinearImpulse(new b2Vec2(x, y), true);
             }
         }
-        if((idA==1 && idB==3) || (idA==3 && idB==1)){ // sand
+        if((idA >= 0 && idA < 99 && idB >= 200 && idB < 299) || (idA < 299 && idA >= 200 && idB < 99 && idB >= 0)){ // sand
             ball.body.SetLinearDamping(14);
         }
-        if((idA==1 && idB==4) || (idA==4 && idB==1)){ // bubble
+        if((idA >= 0 && idA < 99 && idB >= 300 && idB < 399) || (idA < 399 && idA >= 300 && idB < 99 && idB >= 0)){ // bubble
             ball.body.SetLinearDamping(18);
         }
-        if((idA==1 && idB==5) || (idA==5 && idB==1)){ // void
+        if((idA >= 0 && idA < 99 && idB >= 400 && idB < 499) || (idA < 499 && idA >= 400 && idB < 99 && idB >= 0)){ // void
             //ball.bodydef.set_position();
             //ball.body.SetTransform(b2Vec2(0,0),ball.body.GetAngle());
         }
@@ -76,10 +76,10 @@ function addEventListener(balls, hole){
                 //bodyB.ApplyLinearImpulse(new b2Vec2(x, y), true);
             }
         }
-        if((idA==1 && idB==3) || (idA==3 && idB==1)){
+        if((idA >= 0 && idA < 99 && idB >= 200 && idB < 299) || (idA < 299 && idA >= 200 && idB < 99 && idB >= 0)){
             ball.body.SetLinearDamping(1); // TODO : Constante pour ça
         }
-        if((idA==1 && idB==4) || (idA==4 && idB==1)){
+        if((idA >= 0 && idA < 99 && idB >= 300 && idB < 399) || (idA < 399 && idA >= 300 && idB < 99 && idB >= 0)){
             ball.body.SetLinearDamping(1);
         }
     };
