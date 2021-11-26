@@ -35,14 +35,29 @@ function addEventListener(balls, hole){
         var bodyB = fixtureB.GetBody();
         var idA = bodyA.GetUserData();
         var idB = bodyB.GetUserData();
-        if((idA >= 0 && idA < 99 && idB >= 100 && idB < 199) || (idA < 199 && idA >= 100 && idB < 99 && idB >= 0)){
+        if((idA >= 0 && idA < 99 && idB >= 100 && idB < 199) || (idA < 199 && idA >= 100 && idB < 99 && idB >= 0)){ //EVENEMENT COLLISION TROU (100 à 199)
             if(idA >= 0 && idA<99){
                 balls[idA].collide = true;
-                //bodyA.ApplyLinearImpulse(new b2Vec2(x, y), true);
             }else{
                 balls[idB].collide = true;
-                //bodyB.ApplyLinearImpulse(new b2Vec2(x, y), true);
             }
+        }
+
+        if((idA >= 0 && idA < 99 && idB>=200 && idB <=299) || (idA >= 200 && idA <= 299 && idB >= 0 && idB <= 99)){ //EVENEMENT COLLISIONS OBSTACLES SOLS (de 200 à 299)
+            if(idA >= 0 && idA<99){
+                switch(idB){
+                    case 200:
+                        balls[idA].sand=true;
+                        break;
+                }
+            }else{
+                switch(idA){
+                    case 200:
+                        balls[idB].sand = true;
+                        break;
+                }
+            }
+            
         }
     // now do what you wish with the fixtures
     }
@@ -62,13 +77,11 @@ function addEventListener(balls, hole){
                 balls[idA].isInHole = false;
                 balls[idA].body.SetLinearDamping(1);
                 balls[idA].body.GetFixtureList().SetSensor(false);
-                //bodyA.ApplyLinearImpulse(new b2Vec2(x, y), true);
             }else{
                 balls[idB].collide = false;
                 balls[idB].isInHole = false;
                 balls[idB].body.SetLinearDamping(1);
                 balls[idB].body.GetFixtureList().SetSensor(false);
-                //bodyB.ApplyLinearImpulse(new b2Vec2(x, y), true);
             }
         }
     };
@@ -197,10 +210,7 @@ golfux.prototype.onMouseUp = function(canvas,evt) {
     this.click_down=null;
 }
 
-var wall_sprite=new Image();
-wall_sprite.src = './textures/wall.jpg';
 golfux.prototype.step = function(){
-    
     var cvs=document.getElementById('canvas');
     var context = cvs.getContext( '2d' );
 
@@ -217,6 +227,8 @@ golfux.prototype.step = function(){
         this.balls[i].x=this.balls[i].body.GetPosition().x;
         this.balls[i].y=this.balls[i].body.GetPosition().y;
         this.balls[i].isColliding(this.level.hole);
+        this.balls[i].isOnSand();
+
         if(this.balls[i].body.GetLinearVelocity().Length()<1){
             this.balls[i].isMoving = false;
         }else{
@@ -238,20 +250,17 @@ golfux.prototype.step = function(){
     context.fillStyle = 'rgb(255,0,0)';
     
     // Walls
-    var pattern = context.createPattern(wall_sprite, 'repeat');
-    context.fillStyle = pattern;
-    for(let i=0,l=this.level.walls.length;i<l;++i){
-        var world_pos_wall=this.level.walls[i].wall.GetPosition();
-        var leftup_corner={
-            x:world_pos_wall.x-this.level.walls[i].hx,
-            y:world_pos_wall.y-this.level.walls[i].hy
-        };
-        var wall_pos_canvas = getPixelPointFromWorldPoint(leftup_corner);
-        context.fillRect(wall_pos_canvas.x, wall_pos_canvas.y, this.level.walls[i].hx*PTM*2, this.level.walls[i].hy*PTM*2);
+    if(this.level.obstacles.length>0){
+        for(let i=0,l=this.level.obstacles.length;i<l;++i){
+            var pattern = context.createPattern(this.level.obstacles[i].sprite, 'repeat');
+            context.fillStyle = pattern;
+            var world_pos_wall=this.level.obstacles[i].body.GetPosition();
+            var leftup_corner={
+                x:world_pos_wall.x-this.level.obstacles[i].hx,
+                y:world_pos_wall.y-this.level.obstacles[i].hy
+            };
+            var wall_pos_canvas = getPixelPointFromWorldPoint(leftup_corner);
+            context.fillRect(wall_pos_canvas.x, wall_pos_canvas.y, this.level.obstacles[i].hx*PTM*2, this.level.obstacles[i].hy*PTM*2);
+        }
     }
-
-
-
-    
-
 }
