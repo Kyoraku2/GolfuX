@@ -2,6 +2,7 @@ class Hole{
     constructor(){
         this.pos = null;
         this.radius = null;
+        
     }
 
     setRadius(radius){
@@ -25,7 +26,7 @@ class Hole{
         holeDef.set_type(b2_staticBody);
         holeDef.set_position(this.pos);
         
-        holeDef.userData = 2;
+        holeDef.userData = 100;
         // Create the body itself
         var bodyDef = world.CreateBody(holeDef);
         console.log(bodyDef);
