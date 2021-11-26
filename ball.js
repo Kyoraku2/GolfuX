@@ -5,7 +5,6 @@ class Ball{
         this.start_pos=start_pos;//new b2Vec2(9.5,1);
         this.sprite=new Image();
         this.collide = false;
-        this.sand = false;
         this.sprite.src = './textures/ball.png';
         this.isInHole = false;
         this.isMoving = false;
@@ -48,12 +47,4 @@ class Ball{
             this.isInHole= true;
         }
     }
-
-    isOnSand(){
-        if(this.sand){
-            var sand_ratio = 0.3; // TODO : mettre en var const
-            this.body.ApplyLinearImpulse(new b2Vec2(-this.body.GetLinearVelocity().x*sand_ratio,-this.body.GetLinearVelocity().y*sand_ratio), true);
-        }
-    }
-
 }

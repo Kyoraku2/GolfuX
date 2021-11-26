@@ -1,4 +1,4 @@
-class Wall{
+/*class Wall{
     constructor(hx,hy,middle_pos){
         this.sprite=new Image();
         this.sprite.src = './textures/wall.jpg';
@@ -13,4 +13,4 @@ class Wall{
         this.shape.SetAsBox(this.hx, this.hy);
         this.fixture = this.body.CreateFixture(this.shape, 0);
     }
-}
+}*/
