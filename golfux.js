@@ -8,15 +8,9 @@ class golfux{
         //this.ball = new Ball();
         this.level = new Level();
         this.level.initBasicWalls();
-        this.level.test();
         this.level.createHole(0.5, new b2Vec2(10,20));
-        console.log(this.level);
-        var x = this.level.hole.getPos().x-this.balls[0].x;
-        var y = this.level.hole.getPos().y-this.balls[0].y;
-        
         addEventListener(this.balls,this.level.hole);
         this.ballIndex = 0;
-        //addEventListener(this.balls[0],this.level.hole);
     }
 
 
@@ -58,6 +52,25 @@ function addEventListener(balls, hole){
                 }
             }
             
+        
+        if((idA >= 0 && idA < 99 && idB >= 200 && idB < 299) || (idA < 299 && idA >= 200 && idB < 99 && idB >= 0)){ // sand
+            if(idA >= 0 && idA<99){
+                balls[idA].body.SetLinearDamping(12);
+            }else{
+                balls[idB].body.SetLinearDamping(12);
+            }
+        }
+        if((idA >= 0 && idA < 99 && idB >= 300 && idB < 399) || (idA < 399 && idA >= 300 && idB < 99 && idB >= 0)){ // bubble
+            if(idA >= 0 && idA<99){
+                balls[idA].body.SetLinearDamping(18);
+            }else{
+                balls[idB].body.SetLinearDamping(18);
+            }
+        }
+        if((idA >= 0 && idA < 99 && idB >= 400 && idB < 499) || (idA < 499 && idA >= 400 && idB < 99 && idB >= 0)){ // void
+            //ball.bodydef.set_position();
+            //ball.body.SetTransform(b2Vec2(0,0),ball.body.GetAngle());
+
         }
     // now do what you wish with the fixtures
     }
@@ -75,6 +88,7 @@ function addEventListener(balls, hole){
             if(idA >= 0 && idA<99){
                 balls[idA].collide = false;
                 balls[idA].isInHole = false;
+
                 balls[idA].body.SetLinearDamping(1);
                 balls[idA].body.GetFixtureList().SetSensor(false);
             }else{
@@ -104,8 +118,30 @@ function addEventListener(balls, hole){
 
 
 
+            }else{
+                balls[idB].collide = false;
+                balls[idB].isInHole = false;
+            }
+        }
+        if((idA >= 0 && idA < 99 && idB >= 200 && idB < 299) || (idA < 299 && idA >= 200 && idB < 99 && idB >= 0)){
+            // TODO : Constante pour ça
+            if(idA >= 0 && idA<99){
+                balls[idA].body.SetLinearDamping(1);
+            }else{
+                balls[idB].body.SetLinearDamping(1);
+            }
+        }
+        if((idA >= 0 && idA < 99 && idB >= 300 && idB < 399) || (idA < 399 && idA >= 300 && idB < 99 && idB >= 0)){
+            if(idA >= 0 && idA<99){
+                balls[idA].body.SetLinearDamping(1);
+            }else{
+                balls[idB].body.SetLinearDamping(1);
+            }
+        }
     };
-    listener.PreSolve = function(contactPtr) {};
+    listener.PreSolve = function(contactPtr) {
+      
+    };
     listener.PostSolve = function(contactPtr) {
     };
     world.SetContactListener(listener);
@@ -234,6 +270,7 @@ golfux.prototype.step = function(){
     var cvs=document.getElementById('canvas');
     var context = cvs.getContext( '2d' );
 
+
     context.fillStyle = "black";
     var pos = getPixelPointFromWorldPoint({x:this.level.hole.body.GetPosition().x,y:this.level.hole.body.GetPosition().y});
     context.beginPath();
@@ -255,16 +292,67 @@ golfux.prototype.step = function(){
             };
             var wall_pos_canvas = getPixelPointFromWorldPoint(leftup_corner);
             context.fillRect(wall_pos_canvas.x, wall_pos_canvas.y, this.level.obstacles[i].hx*PTM*2, this.level.obstacles[i].hy*PTM*2);
+
+    // Sand
+    if(this.level.obstacles["sand"].length>0){
+        for(let i=0,l=this.level.obstacles["sand"].length;i<l;++i){
+            var pattern = context.createPattern(this.level.obstacles["sand"][i].sprite, 'repeat');
+            context.fillStyle = pattern;
+            var world_pos_wall=this.level.obstacles["sand"][i].body.GetPosition();
+            var leftup_corner={
+                x:world_pos_wall.x-this.level.obstacles["sand"][i].hx,
+                y:world_pos_wall.y-this.level.obstacles["sand"][i].hy
+            };
+            var wall_pos_canvas = getPixelPointFromWorldPoint(leftup_corner);
+            context.fillRect(wall_pos_canvas.x, wall_pos_canvas.y, this.level.obstacles["sand"][i].hx*PTM*2, this.level.obstacles["sand"][i].hy*PTM*2);
+
         }
     }
 
 
 
+
+
+    // bubblegum
+    if(this.level.obstacles["bubblegum"].length>0){
+        for(let i=0,l=this.level.obstacles["bubblegum"].length;i<l;++i){
+            var pattern = context.createPattern(this.level.obstacles["bubblegum"][i].sprite, 'repeat');
+            context.fillStyle = pattern;
+            var world_pos_wall=this.level.obstacles["bubblegum"][i].body.GetPosition();
+            var leftup_corner={
+                x:world_pos_wall.x-this.level.obstacles["bubblegum"][i].hx,
+                y:world_pos_wall.y-this.level.obstacles["bubblegum"][i].hy
+            };
+            var wall_pos_canvas = getPixelPointFromWorldPoint(leftup_corner);
+            context.fillRect(wall_pos_canvas.x, wall_pos_canvas.y, this.level.obstacles["bubblegum"][i].hx*PTM*2, this.level.obstacles["bubblegum"][i].hy*PTM*2);
+        }
+    }
+
+    // Walls
+    if(this.level.obstacles["walls"].length>0){
+        for(let i=0,l=this.level.obstacles["walls"].length;i<l;++i){
+            var pattern = context.createPattern(this.level.obstacles["walls"][i].sprite, 'repeat');
+            context.fillStyle = pattern;
+            var world_pos_wall=this.level.obstacles["walls"][i].body.GetPosition();
+            var leftup_corner={
+                x:world_pos_wall.x-this.level.obstacles["walls"][i].hx,
+                y:world_pos_wall.y-this.level.obstacles["walls"][i].hy
+            };
+            var wall_pos_canvas = getPixelPointFromWorldPoint(leftup_corner);
+            context.fillRect(wall_pos_canvas.x, wall_pos_canvas.y, this.level.obstacles["walls"][i].hx*PTM*2, this.level.obstacles["walls"][i].hy*PTM*2);
+        }
+    }
+    
+    // Balls
+
     for(var i = 0; i<this.balls.length; i++){
         this.balls[i].x=this.balls[i].body.GetPosition().x;
         this.balls[i].y=this.balls[i].body.GetPosition().y;
         this.balls[i].isColliding(this.level.hole);
+
         this.balls[i].isOnSand();
+
+
 
         if(this.balls[i].body.GetLinearVelocity().Length()<1){
             this.balls[i].isMoving = false;
@@ -274,6 +362,7 @@ golfux.prototype.step = function(){
         var pos = getPixelPointFromWorldPoint({x:this.balls[i].x,y:this.balls[i].y});
         if(!this.balls[i].isInHole || this.balls[i].isMoving){
             context.drawImage(this.balls[i].sprite, pos.x-10, cvs.height-pos.y-10,20,20);
+
         }else{
             this.balls[i].body.GetFixtureList().SetSensor(true);
             
@@ -286,3 +375,8 @@ golfux.prototype.step = function(){
 
     
 }
+
+        }
+    }
+}
+

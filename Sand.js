@@ -1,4 +1,4 @@
-class Sand{
+/*class Sand{
     constructor(hx,hy,middle_pos){
         this.sprite=new Image();
         this.sprite.src = './textures/sand_original.jpg';
@@ -8,7 +8,7 @@ class Sand{
         this.shape = new b2PolygonShape();
         this.shape.SetAsBox(this.hx, this.hy);
         this.bodydef = new b2BodyDef();
-        this.bodydef.set_type(b2_dynamicBody);
+        this.bodydef.set_type(b2_staticBody);
         this.bodydef.set_position(this.middle_pos);
         this.bodydef.set_userData(200);
         
@@ -19,4 +19,4 @@ class Sand{
         this.fix.isSensor=true;
         this.body.CreateFixture(this.fix);
     }
-}
+}*/
