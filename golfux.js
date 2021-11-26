@@ -29,15 +29,29 @@ function addEventListener(balls, hole){
         var bodyB = fixtureB.GetBody();
         var idA = bodyA.GetUserData();
         var idB = bodyB.GetUserData();
-        if((idA >= 0 && idA < 99 && idB >= 100 && idB < 199) || (idA < 199 && idA >= 100 && idB < 99 && idB >= 0)){
+        if((idA >= 0 && idA < 99 && idB >= 100 && idB < 199) || (idA < 199 && idA >= 100 && idB < 99 && idB >= 0)){ //EVENEMENT COLLISION TROU (100 à 199)
             if(idA >= 0 && idA<99){
                 balls[idA].collide = true;
-                //bodyA.ApplyLinearImpulse(new b2Vec2(x, y), true);
             }else{
                 balls[idB].collide = true;
-                //bodyB.ApplyLinearImpulse(new b2Vec2(x, y), true);
             }
         }
+
+        if((idA >= 0 && idA < 99 && idB>=200 && idB <=299) || (idA >= 200 && idA <= 299 && idB >= 0 && idB <= 99)){ //EVENEMENT COLLISIONS OBSTACLES SOLS (de 200 à 299)
+            if(idA >= 0 && idA<99){
+                switch(idB){
+                    case 200:
+                        balls[idA].sand=true;
+                        break;
+                }
+            }else{
+                switch(idA){
+                    case 200:
+                        balls[idB].sand = true;
+                        break;
+                }
+            }
+            
         
         if((idA >= 0 && idA < 99 && idB >= 200 && idB < 299) || (idA < 299 && idA >= 200 && idB < 99 && idB >= 0)){ // sand
             if(idA >= 0 && idA<99){
@@ -56,6 +70,7 @@ function addEventListener(balls, hole){
         if((idA >= 0 && idA < 99 && idB >= 400 && idB < 499) || (idA < 499 && idA >= 400 && idB < 99 && idB >= 0)){ // void
             //ball.bodydef.set_position();
             //ball.body.SetTransform(b2Vec2(0,0),ball.body.GetAngle());
+
         }
     // now do what you wish with the fixtures
     }
@@ -73,6 +88,36 @@ function addEventListener(balls, hole){
             if(idA >= 0 && idA<99){
                 balls[idA].collide = false;
                 balls[idA].isInHole = false;
+
+                balls[idA].body.SetLinearDamping(1);
+                balls[idA].body.GetFixtureList().SetSensor(false);
+            }else{
+                balls[idB].collide = false;
+                balls[idB].isInHole = false;
+                balls[idB].body.SetLinearDamping(1);
+                balls[idB].body.GetFixtureList().SetSensor(false);
+            }
+        }
+
+        if((idA >= 0 && idA < 99 && idB>=200 && idB <=299) || (idA >= 200 && idA <= 299 && idB >= 0 && idB <= 99)){
+            if(idA >= 0 && idA<99){
+                switch(idB){
+                    case 200:
+                        balls[idA].sand=false;
+                        break;
+                }
+            }else{
+                switch(idA){
+                    case 200:
+                        balls[idB].sand = false;
+                        break;
+                }
+            }
+        }
+
+
+
+
             }else{
                 balls[idB].collide = false;
                 balls[idB].isInHole = false;
@@ -95,6 +140,7 @@ function addEventListener(balls, hole){
         }
     };
     listener.PreSolve = function(contactPtr) {
+      
     };
     listener.PostSolve = function(contactPtr) {
     };
@@ -213,7 +259,7 @@ golfux.prototype.onMouseUp = function(canvas,evt) {
     }
     // Impulsion
     this.balls[this.ballIndex].body.ApplyLinearImpulse(new b2Vec2(impulse.x*intensifie, impulse.y*intensifie),true);
-    console.log(this.balls.length)
+
     this.ballIndex = (this.ballIndex < this.balls.length-1) ? this.ballIndex+1 : 0;
 
     this.click_up=null;
@@ -223,6 +269,29 @@ golfux.prototype.onMouseUp = function(canvas,evt) {
 golfux.prototype.step = function(){
     var cvs=document.getElementById('canvas');
     var context = cvs.getContext( '2d' );
+
+
+    context.fillStyle = "black";
+    var pos = getPixelPointFromWorldPoint({x:this.level.hole.body.GetPosition().x,y:this.level.hole.body.GetPosition().y});
+    context.beginPath();
+    context.arc(pos.x, cvs.height-pos.y, this.level.hole.radius*PTM, 0, 2 * Math.PI);
+    context.fill();
+    context.stroke();
+
+    context.fillStyle = 'rgb(255,0,0)';
+    
+    // Walls
+    if(this.level.obstacles.length>0){
+        for(let i=0,l=this.level.obstacles.length;i<l;++i){
+            var pattern = context.createPattern(this.level.obstacles[i].sprite, 'repeat');
+            context.fillStyle = pattern;
+            var world_pos_wall=this.level.obstacles[i].body.GetPosition();
+            var leftup_corner={
+                x:world_pos_wall.x-this.level.obstacles[i].hx,
+                y:world_pos_wall.y-this.level.obstacles[i].hy
+            };
+            var wall_pos_canvas = getPixelPointFromWorldPoint(leftup_corner);
+            context.fillRect(wall_pos_canvas.x, wall_pos_canvas.y, this.level.obstacles[i].hx*PTM*2, this.level.obstacles[i].hy*PTM*2);
 
     // Sand
     if(this.level.obstacles["sand"].length>0){
@@ -236,8 +305,12 @@ golfux.prototype.step = function(){
             };
             var wall_pos_canvas = getPixelPointFromWorldPoint(leftup_corner);
             context.fillRect(wall_pos_canvas.x, wall_pos_canvas.y, this.level.obstacles["sand"][i].hx*PTM*2, this.level.obstacles["sand"][i].hy*PTM*2);
+
         }
     }
+
+
+
 
 
     // bubblegum
@@ -271,10 +344,16 @@ golfux.prototype.step = function(){
     }
     
     // Balls
+
     for(var i = 0; i<this.balls.length; i++){
         this.balls[i].x=this.balls[i].body.GetPosition().x;
         this.balls[i].y=this.balls[i].body.GetPosition().y;
         this.balls[i].isColliding(this.level.hole);
+
+        this.balls[i].isOnSand();
+
+
+
         if(this.balls[i].body.GetLinearVelocity().Length()<1){
             this.balls[i].isMoving = false;
         }else{
@@ -283,6 +362,21 @@ golfux.prototype.step = function(){
         var pos = getPixelPointFromWorldPoint({x:this.balls[i].x,y:this.balls[i].y});
         if(!this.balls[i].isInHole || this.balls[i].isMoving){
             context.drawImage(this.balls[i].sprite, pos.x-10, cvs.height-pos.y-10,20,20);
+
+        }else{
+            this.balls[i].body.GetFixtureList().SetSensor(true);
+            
+        }
+    }
+
+
+
+
+
+    
+}
+
         }
     }
 }
+

@@ -2,6 +2,7 @@ class Hole{
     constructor(){
         this.pos = null;
         this.radius = null;
+        this.body = null;
         
     }
 
@@ -30,6 +31,7 @@ class Hole{
         // Create the body itself
         var bodyDef = world.CreateBody(holeDef);
         console.log(bodyDef);
+        this.body = bodyDef;
         
     
         // Create the fixture

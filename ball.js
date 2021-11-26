@@ -29,7 +29,6 @@ class Ball{
         fix.set_friction(0);
         fix.set_restitution(1); // Force restante après rebond
         //fix.filter.maskBits = 0x0002;
-    
         // Add fixture to the body
         this.body.CreateFixture(fix);
         this.body.SetAngularDamping(100000); // La balle tourne sur elle même
@@ -40,10 +39,18 @@ class Ball{
 
     isColliding(hole){
         const FORCE = 25;
+        const BALL_FALLING_SPEED = 7.5
         if(this.collide){
+            var addedCoef = 1;
+            var velocity = this.body.GetLinearVelocity().Length();
+            if(velocity <= BALL_FALLING_SPEED){
+                this.body.SetLinearDamping(10);
+            }
+            //console.log(velocity);
             var x = hole.getPos().x-this.x;
             var y = hole.getPos().y-this.y;
             this.body.ApplyLinearImpulse(new b2Vec2(x*FORCE, y*FORCE), true);
+            //this.body.SetLinearVelocity()
             this.isInHole= true;
         }
     }
