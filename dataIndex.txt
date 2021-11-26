@@ -1,0 +1,5 @@
+0-99 : balles
+100-199 : trous
+200-299 : sable
+300-399 : bubblegume
+400-499 : void
