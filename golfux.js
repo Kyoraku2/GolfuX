@@ -60,8 +60,7 @@ function addEventListener(balls, hole){
                         break;
                 }
             }
-            
-        
+        }
     // now do what you wish with the fixtures
     }
 
@@ -92,12 +91,14 @@ function addEventListener(balls, hole){
         if((idA >= 0 && idA < 99 && idB>=200 && idB <=299) || (idA >= 200 && idA <= 299 && idB >= 0 && idB <= 99)){
             if(idA >= 0 && idA<99){
                 switch(idB){
+                    case 201:
                     case 200:
                         balls[idA].body.SetLinearDamping(1);
                         break;
                 }
             }else{
                 switch(idA){
+                    case 201:
                     case 200:
                         balls[idB].body.SetLinearDamping(1);
                         break;
@@ -257,6 +258,8 @@ golfux.prototype.step = function(){
             };
             var wall_pos_canvas = getPixelPointFromWorldPoint(leftup_corner);
             context.fillRect(wall_pos_canvas.x, wall_pos_canvas.y, this.level.obstacles[i].hx*PTM*2, this.level.obstacles[i].hy*PTM*2);
+        }
+    }
 
     // Sand
     if(this.level.obstacles["sand"].length>0){
@@ -315,8 +318,6 @@ golfux.prototype.step = function(){
         this.balls[i].y=this.balls[i].body.GetPosition().y;
         this.balls[i].isColliding(this.level.hole);
 
-        this.balls[i].isOnSand();
-
 
 
         if(this.balls[i].body.GetLinearVelocity().Length()<1){
@@ -333,15 +334,6 @@ golfux.prototype.step = function(){
             
         }
     }
-
-
-
-
-
-    
 }
 
-        }
-    }
-}
 
