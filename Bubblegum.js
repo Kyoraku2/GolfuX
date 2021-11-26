@@ -1,4 +1,4 @@
-class Bubblegum{
+/*class Bubblegum{
     constructor(hx,hy,middle_pos){
         this.sprite=new Image();
         this.sprite.src = './textures/bubblegum.jpg';
@@ -19,4 +19,4 @@ class Bubblegum{
         this.fix.isSensor=true;
         this.body.CreateFixture(this.fix);
     }
-}
+}*/

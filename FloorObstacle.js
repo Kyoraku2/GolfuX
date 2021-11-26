@@ -1,5 +1,5 @@
-class FloorObstacle extends Obstacle{
+/*class FloorObstacle extends Obstacle{
     constructor(){
 
     }
-}
+}*/

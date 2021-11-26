@@ -1,4 +1,4 @@
-class Void{
+/*class Void{
     constructor(hx,hy,middle_pos,userData){
         this.sprite=new Image();
         this.sprite.src = './textures/void.jpg';
@@ -19,4 +19,4 @@ class Void{
         this.fix.isSensor=true;
         this.body.CreateFixture(this.fix);
     }
-}
+}*/

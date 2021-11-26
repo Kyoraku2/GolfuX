@@ -1,4 +1,4 @@
-class Sand{
+/*class Sand{
     constructor(hx,hy,middle_pos){
         this.sprite=new Image();
         this.sprite.src = './textures/sand_original.jpg';
@@ -19,4 +19,4 @@ class Sand{
         this.fix.isSensor=true;
         this.body.CreateFixture(this.fix);
     }
-}
+}*/
