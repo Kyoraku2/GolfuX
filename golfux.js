@@ -41,37 +41,27 @@ function addEventListener(balls, hole){
             if(idA >= 0 && idA<99){
                 switch(idB){
                     case 200:
-                        balls[idA].sand=true;
+                        balls[idA].body.SetLinearDamping(12);
+                        break;
+                    case 201:
+                        balls[idA].body.SetLinearDamping(18);
+                    case 202:
                         break;
                 }
             }else{
                 switch(idA){
                     case 200:
-                        balls[idB].sand = true;
+                        balls[idB].body.SetLinearDamping(12);
+                        break;
+                    case 201:
+                        balls[idB].body.SetLinearDamping(18);
+                        break;
+                    case 202:
                         break;
                 }
             }
             
         
-        if((idA >= 0 && idA < 99 && idB >= 200 && idB < 299) || (idA < 299 && idA >= 200 && idB < 99 && idB >= 0)){ // sand
-            if(idA >= 0 && idA<99){
-                balls[idA].body.SetLinearDamping(12);
-            }else{
-                balls[idB].body.SetLinearDamping(12);
-            }
-        }
-        if((idA >= 0 && idA < 99 && idB >= 300 && idB < 399) || (idA < 399 && idA >= 300 && idB < 99 && idB >= 0)){ // bubble
-            if(idA >= 0 && idA<99){
-                balls[idA].body.SetLinearDamping(18);
-            }else{
-                balls[idB].body.SetLinearDamping(18);
-            }
-        }
-        if((idA >= 0 && idA < 99 && idB >= 400 && idB < 499) || (idA < 499 && idA >= 400 && idB < 99 && idB >= 0)){ // void
-            //ball.bodydef.set_position();
-            //ball.body.SetTransform(b2Vec2(0,0),ball.body.GetAngle());
-
-        }
     // now do what you wish with the fixtures
     }
 
@@ -103,44 +93,19 @@ function addEventListener(balls, hole){
             if(idA >= 0 && idA<99){
                 switch(idB){
                     case 200:
-                        balls[idA].sand=false;
+                        balls[idA].body.SetLinearDamping(1);
                         break;
                 }
             }else{
                 switch(idA){
                     case 200:
-                        balls[idB].sand = false;
+                        balls[idB].body.SetLinearDamping(1);
                         break;
                 }
             }
         }
-
-
-
-
-            }else{
-                balls[idB].collide = false;
-                balls[idB].isInHole = false;
-            }
-        }
-        if((idA >= 0 && idA < 99 && idB >= 200 && idB < 299) || (idA < 299 && idA >= 200 && idB < 99 && idB >= 0)){
-            // TODO : Constante pour ça
-            if(idA >= 0 && idA<99){
-                balls[idA].body.SetLinearDamping(1);
-            }else{
-                balls[idB].body.SetLinearDamping(1);
-            }
-        }
-        if((idA >= 0 && idA < 99 && idB >= 300 && idB < 399) || (idA < 399 && idA >= 300 && idB < 99 && idB >= 0)){
-            if(idA >= 0 && idA<99){
-                balls[idA].body.SetLinearDamping(1);
-            }else{
-                balls[idB].body.SetLinearDamping(1);
-            }
-        }
     };
     listener.PreSolve = function(contactPtr) {
-      
     };
     listener.PostSolve = function(contactPtr) {
     };
@@ -282,7 +247,7 @@ golfux.prototype.step = function(){
     
     // Walls
     if(this.level.obstacles.length>0){
-        for(let i=0,l=this.level.obstacles.length;i<l;++i){
+        for(var i=0,l=this.level.obstacles.length;i<l;++i){
             var pattern = context.createPattern(this.level.obstacles[i].sprite, 'repeat');
             context.fillStyle = pattern;
             var world_pos_wall=this.level.obstacles[i].body.GetPosition();
@@ -295,7 +260,7 @@ golfux.prototype.step = function(){
 
     // Sand
     if(this.level.obstacles["sand"].length>0){
-        for(let i=0,l=this.level.obstacles["sand"].length;i<l;++i){
+        for(var i=0,l=this.level.obstacles["sand"].length;i<l;++i){
             var pattern = context.createPattern(this.level.obstacles["sand"][i].sprite, 'repeat');
             context.fillStyle = pattern;
             var world_pos_wall=this.level.obstacles["sand"][i].body.GetPosition();
@@ -315,7 +280,7 @@ golfux.prototype.step = function(){
 
     // bubblegum
     if(this.level.obstacles["bubblegum"].length>0){
-        for(let i=0,l=this.level.obstacles["bubblegum"].length;i<l;++i){
+        for(var i=0,l=this.level.obstacles["bubblegum"].length;i<l;++i){
             var pattern = context.createPattern(this.level.obstacles["bubblegum"][i].sprite, 'repeat');
             context.fillStyle = pattern;
             var world_pos_wall=this.level.obstacles["bubblegum"][i].body.GetPosition();
@@ -330,7 +295,7 @@ golfux.prototype.step = function(){
 
     // Walls
     if(this.level.obstacles["walls"].length>0){
-        for(let i=0,l=this.level.obstacles["walls"].length;i<l;++i){
+        for(var i=0,l=this.level.obstacles["walls"].length;i<l;++i){
             var pattern = context.createPattern(this.level.obstacles["walls"][i].sprite, 'repeat');
             context.fillStyle = pattern;
             var world_pos_wall=this.level.obstacles["walls"][i].body.GetPosition();
