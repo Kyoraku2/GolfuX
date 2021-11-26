@@ -10,7 +10,7 @@ class Sand{
         this.bodydef = new b2BodyDef();
         this.bodydef.set_type(b2_dynamicBody);
         this.bodydef.set_position(this.middle_pos);
-        this. bodydef.set_userData(3);
+        this.bodydef.set_userData(200);
         
         this.body = world.CreateBody(this.bodydef);
         
