@@ -135,3 +135,8 @@ class Bubblegum extends FloorObstacle{
         this.sprite.src = './textures/bubblegum.jpg';
     }
 }
+
+
+class Wind{
+
+}
