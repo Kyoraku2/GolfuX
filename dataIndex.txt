@@ -1,5 +1,8 @@
 0-99 : balles
 100-199 : trous
-200-299 : sable
-300-399 : bubblegume
-400-499 : void
+200-299 : obstacles type sol
+	200 : sable
+	201 : bubblegum
+	202 : void
+	203 : water
+	204 : wind
