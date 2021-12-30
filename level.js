@@ -48,5 +48,25 @@ class Level{
     createVoid(middle_pos,shape,userdata,hx,hy,radius,vectrices){
         this.obstacles["void"].push(new Void(middle_pos,shape,userdata,hx,hy,radius,vectrices));
     }
+
+    async createFromJSON(level){
+        var response = await fetch("/"+level);
+        if (response.status == 200) {
+
+            var data = await response.json();
+            console.log(data);
+            this.createHole(data.hole.radius,new b2Vec2(data.hole.pos.x,data.hole.pos.y));
+            for(const [name,array] of Object.entries(data.obstacles)){
+                console.log(name);
+                console.log(array);
+                array.forEach(object => {
+                    if(name == "walls"){
+                        this.createWall(new b2Vec2(object.middle_pos.x,object.middle_pos.y), object.shape, object.userdata, object.isstatic, object.hx, object.hy, object.radius, object.vectrices);
+                    }
+                });
+                
+            }
+        }
+    }
     
 }
