@@ -11,7 +11,7 @@ class golfux{
         this.level.createFromJSON('level1')
         //this.level.initBasicWalls();
         //this.level.createHole(0.5, new b2Vec2(10,20));
-        addEventListener(this.balls,this.level.hole);
+        addEventListener(this.balls,this.level);
         this.ballIndex = 0;
         
     }
@@ -103,6 +103,7 @@ function addEventListener(balls, level){
                         var taken = level.obstacles['portal'].find(function(e){
                             return bodyA==e.enter.body || bodyA == e.exit.body;
                         },bodyA);
+                        
                         if(taken.entered){
                             taken.entered = false;
                             return;

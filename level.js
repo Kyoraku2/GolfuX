@@ -79,6 +79,9 @@ class Level{
                         case "bumper":
                             this.createBumper(new b2Vec2(object.middle_pos.x,object.middle_pos.y), object.shape, object.userdata, object.isstatic, object.hx, object.hy, object.radius, object.vectrices);
                         break;
+                        case "portal":
+                            this.createPortal(new b2Vec2(object.enter_pos.x, object.enter_pos.y), new b2Vec2(object.exit_pos.x, object.exit_pos.y), object.userdata, object.hx1, object.hy1, object.hx2, object.hy2);
+                        break;
                     }
                         
                 });
