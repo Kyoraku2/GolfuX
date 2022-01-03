@@ -52,7 +52,7 @@ function getWorldPointFromPixelPoint(pixelPoint) {
 function getPixelPointFromWorldPoint(worldPoint) {
     return {                
         x: worldPoint.x*PTM+canvasOffset.x,
-        y: worldPoint.y*PTM+(canvas.height - canvasOffset.y)
+        y: canvas.height -(worldPoint.y*PTM+(canvas.height - canvasOffset.y))
     };
 }
 

@@ -33,8 +33,8 @@ class Level{
         this.createWall(new b2Vec2(19, 12), 'box', -1, true, 0.25, 12.25, -1, -1); // Droite
         this.createWall(new b2Vec2(10, 12), 'box', -1, true, 4.25, 0.25, -1, -1); // Centre
         this.createBumper(new b2Vec2(10, 6), 'circle', -1, true, -1, -1, 1, -1);
-        this.createSand(new b2Vec2(3, 12), 'box', 200, 3, 2,-1,-1);
-        this.createBubblegum(new b2Vec2(16, 12), 'box', 201, 3, 2,-1,-1);
+        this.createSand(new b2Vec2(3, 14), 'box', 200, 3, 2,-1,-1);
+        this.createBubblegum(new b2Vec2(16, 10), 'box', 201, 3, 2,-1,-1);
         this.createVoid(new b2Vec2(9.5, 11), 'box', 202, 3.5, 1,-1,-1);
         //this.createPortal(new b2Vec2(0.4, 18),new b2Vec2(18.6, 18),203,0.1,1,0.1,1);
         this.createPortal(new b2Vec2(0.4, 18),new b2Vec2(18.6, 18),203,0.1,1,0.1,1);

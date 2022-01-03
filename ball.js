@@ -11,6 +11,7 @@ class Ball{
     
         // The shape
         var shape = new b2CircleShape();
+        this.radius = 0.3;
         shape.set_m_radius(0.3);
         
         // Create a static body definition

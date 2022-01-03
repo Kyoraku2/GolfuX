@@ -276,26 +276,11 @@ golfux.prototype.step = function(){
     context.fillStyle = "black";
     var pos = getPixelPointFromWorldPoint({x:this.level.hole.body.GetPosition().x,y:this.level.hole.body.GetPosition().y});
     context.beginPath();
-    context.arc(pos.x, cvs.height-pos.y, this.level.hole.radius*PTM, 0, 2 * Math.PI);
+    context.arc(pos.x, pos.y, this.level.hole.radius*PTM, 0, 2 * Math.PI);
     context.fill();
     context.stroke();
 
     context.fillStyle = 'rgb(255,0,0)';
-    
-    // Walls
-    if(this.level.obstacles.length>0){
-        for(var i=0,l=this.level.obstacles.length;i<l;++i){
-            var pattern = context.createPattern(this.level.obstacles[i].sprite, 'repeat');
-            context.fillStyle = pattern;
-            var world_pos_wall=this.level.obstacles[i].body.GetPosition();
-            var leftup_corner={
-                x:world_pos_wall.x-this.level.obstacles[i].hx,
-                y:world_pos_wall.y-this.level.obstacles[i].hy
-            };
-            var wall_pos_canvas = getPixelPointFromWorldPoint(leftup_corner);
-            context.fillRect(wall_pos_canvas.x, wall_pos_canvas.y, this.level.obstacles[i].hx*PTM*2, this.level.obstacles[i].hy*PTM*2);
-        }
-    }
 
     // Sand
     if(this.level.obstacles["sand"].length>0){
@@ -305,19 +290,17 @@ golfux.prototype.step = function(){
             var world_pos_wall=this.level.obstacles["sand"][i].body.GetPosition();
             var leftup_corner={
                 x:world_pos_wall.x-this.level.obstacles["sand"][i].hx,
-                y:world_pos_wall.y-this.level.obstacles["sand"][i].hy
+                y:world_pos_wall.y+this.level.obstacles["sand"][i].hy
             };
             var wall_pos_canvas = getPixelPointFromWorldPoint(leftup_corner);
+            //console.log("sand");
+            //console.log(wall_pos_canvas);
             context.fillRect(wall_pos_canvas.x, wall_pos_canvas.y, this.level.obstacles["sand"][i].hx*PTM*2, this.level.obstacles["sand"][i].hy*PTM*2);
 
         }
     }
 
-
-
-
-
-    // bubblegum
+    // Bubblegum
     if(this.level.obstacles["bubblegum"].length>0){
         for(var i=0,l=this.level.obstacles["bubblegum"].length;i<l;++i){
             var pattern = context.createPattern(this.level.obstacles["bubblegum"][i].sprite, 'repeat');
@@ -325,7 +308,7 @@ golfux.prototype.step = function(){
             var world_pos_wall=this.level.obstacles["bubblegum"][i].body.GetPosition();
             var leftup_corner={
                 x:world_pos_wall.x-this.level.obstacles["bubblegum"][i].hx,
-                y:world_pos_wall.y-this.level.obstacles["bubblegum"][i].hy
+                y:world_pos_wall.y+this.level.obstacles["bubblegum"][i].hy
             };
             var wall_pos_canvas = getPixelPointFromWorldPoint(leftup_corner);
             context.fillRect(wall_pos_canvas.x, wall_pos_canvas.y, this.level.obstacles["bubblegum"][i].hx*PTM*2, this.level.obstacles["bubblegum"][i].hy*PTM*2);
@@ -340,7 +323,7 @@ golfux.prototype.step = function(){
             var world_pos_wall=this.level.obstacles["walls"][i].body.GetPosition();
             var leftup_corner={
                 x:world_pos_wall.x-this.level.obstacles["walls"][i].hx,
-                y:world_pos_wall.y-this.level.obstacles["walls"][i].hy
+                y:world_pos_wall.y+this.level.obstacles["walls"][i].hy
             };
             var wall_pos_canvas = getPixelPointFromWorldPoint(leftup_corner);
             context.fillRect(wall_pos_canvas.x, wall_pos_canvas.y, this.level.obstacles["walls"][i].hx*PTM*2, this.level.obstacles["walls"][i].hy*PTM*2);
@@ -348,7 +331,6 @@ golfux.prototype.step = function(){
     }
     
     // Balls
-
     for(var i = 0; i<this.balls.length; i++){
         this.balls[i].x=this.balls[i].body.GetPosition().x;
         this.balls[i].y=this.balls[i].body.GetPosition().y;
@@ -361,9 +343,13 @@ golfux.prototype.step = function(){
         }else{
             this.balls[i].isMoving = true;
         }
-        var pos = getPixelPointFromWorldPoint({x:this.balls[i].x,y:this.balls[i].y});
+
+        var pos = getPixelPointFromWorldPoint({
+            x:this.balls[i].x-this.balls[i].radius,
+            y:this.balls[i].y+this.balls[i].radius
+        });
         if(!this.balls[i].isInHole || this.balls[i].isMoving){
-            context.drawImage(this.balls[i].sprite, pos.x-10, cvs.height-pos.y-10,20,20);
+            context.drawImage(this.balls[i].sprite, pos.x, pos.y,this.balls[i].radius*PTM*2,this.balls[i].radius*PTM*2);
 
         }else{
             this.balls[i].body.GetFixtureList().SetSensor(true);
