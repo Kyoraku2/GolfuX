@@ -5,7 +5,8 @@ class Level{
             sand:[],
             bubblegum:[],
             void:[],
-            bumper:[]
+            bumper:[],
+            portal:[]
         };
         this.hole = null;
     }
@@ -35,6 +36,8 @@ class Level{
         this.createSand(new b2Vec2(3, 12), 'box', 200, 3, 2,-1,-1);
         this.createBubblegum(new b2Vec2(16, 12), 'box', 201, 3, 2,-1,-1);
         this.createVoid(new b2Vec2(9.5, 11), 'box', 202, 3.5, 1,-1,-1);
+        //this.createPortal(new b2Vec2(0.4, 18),new b2Vec2(18.6, 18),203,0.1,1,0.1,1);
+        this.createPortal(new b2Vec2(0.4, 18),new b2Vec2(18.6, 18),203,0.1,1,0.1,1);
     }
 
     createSand(middle_pos,shape,userdata,hx,hy,radius,vectrices){//middle_pos,shape,userdata,hx,hy,radius,vectrices
@@ -47,6 +50,14 @@ class Level{
 
     createVoid(middle_pos,shape,userdata,hx,hy,radius,vectrices){
         this.obstacles["void"].push(new Void(middle_pos,shape,userdata,hx,hy,radius,vectrices));
+    }
+
+    createPortal(enter_pos,exit_pos,userdata,hx1,hy1,hx2,hy2){
+        if(userdata==204){
+            this.obstacles["portal"].push(new UniDirectionPortal(enter_pos,exit_pos,hx1,hy1,hx2,hy2));
+        }else{
+            this.obstacles["portal"].push(new BiDirectionPortal(enter_pos,exit_pos,hx1,hy1,hx2,hy2));
+        }
     }
     
 }

@@ -9,7 +9,7 @@ class golfux{
         this.level = new Level();
         this.level.initBasicWalls();
         this.level.createHole(0.5, new b2Vec2(10,20));
-        addEventListener(this.balls,this.level.hole);
+        addEventListener(this.balls,this.level);
         this.ballIndex = 0;
     }
 
@@ -18,11 +18,10 @@ class golfux{
 }
 var MAX_INTENSITIE=10;
 
-function addEventListener(balls, hole){
+function addEventListener(balls, level){
     var listener = new Box2D.JSContactListener();
     listener.BeginContact = function (contactPtr) {
         var contact = Box2D.wrapPointer( contactPtr, b2Contact );
-        console.log(contact)
         var fixtureA = contact.GetFixtureA();
         var fixtureB = contact.GetFixtureB();
         var bodyA = fixtureA.GetBody();
@@ -45,7 +44,42 @@ function addEventListener(balls, hole){
                         break;
                     case 201:
                         balls[idA].body.SetLinearDamping(18);
+                        break;
                     case 202:
+                        setTimeout(function(body,start){ // C'est une douille, paske l'environnement veut pas faire simplemennt l'instruction
+                            body.SetTransform(start,0);
+                        },0,balls[idA].body,balls[idA].start_pos);
+                        balls[idA].body.SetLinearVelocity(0);
+                        break;
+                    case 203:
+                        var taken = level.obstacles['portal'].find(function(e){
+                            return bodyB==e.enter.body || bodyB == e.exit.body;
+                        },bodyB);
+                        if(taken.entered){
+                            taken.entered = false;
+                            return;
+                        }
+                        taken.entered = true;
+                        if(taken.enter.body == bodyB){
+                            setTimeout(function(body,start){
+                                body.SetTransform(start,0);
+                            },0,balls[idA].body,taken.exit_pos);
+                        }else{
+                            setTimeout(function(body,start){
+                                body.SetTransform(start,0);
+                            },0,balls[idA].body,taken.enter_pos);
+                        }
+                        break;
+                    case 204:
+                        var taken = level.obstacles['portal'].find(function(e){
+                            return bodyB==e.enter.body;
+                        },bodyB);
+                        if(taken == undefined){
+                            return;
+                        }
+                        setTimeout(function(body,start){
+                            body.SetTransform(start,0);
+                        },0,balls[idA].body,taken.exit_pos);
                         break;
                 }
             }else{
@@ -57,11 +91,44 @@ function addEventListener(balls, hole){
                         balls[idB].body.SetLinearDamping(18);
                         break;
                     case 202:
+                        setTimeout(function(body,start){
+                            body.SetTransform(start,0);
+                        },0,balls[idB].body,balls[idB].start_pos); 
+                        balls[idB].body.SetLinearVelocity(0);  
+                        break;
+                    case 203:
+                        var taken = level.obstacles['portal'].find(function(e){
+                            return bodyA==e.enter.body || bodyA == e.exit.body;
+                        },bodyA);
+                        if(taken.entered){
+                            taken.entered = false;
+                            return;
+                        }
+                        taken.entered = true;
+                        if(taken.enter.body == bodyA){
+                            setTimeout(function(body,start){
+                                body.SetTransform(start,0);
+                            },0,balls[idB].body,taken.exit_pos);
+                        }else{
+                            setTimeout(function(body,start){
+                                body.SetTransform(start,0);
+                            },0,balls[idB].body,taken.enter_pos);
+                        }
+                        break;
+                    case 204:
+                        var taken = level.obstacles['portal'].find(function(e){
+                            return bodyA==e.enter.body;
+                        },bodyA);
+                        if(taken == undefined){
+                            return;
+                        }
+                        setTimeout(function(body,start){
+                            body.SetTransform(start,0);
+                        },0,balls[idB].body,taken.exit_pos);
                         break;
                 }
             }
         }
-    // now do what you wish with the fixtures
     }
 
     // Empty implementations for unused methods.
@@ -124,6 +191,8 @@ golfux.prototype.setup = function() {
 }
 
 golfux.prototype.onMouseDown = function(canvas, evt) {
+    //console.log(this.balls[0].start_pos);
+    
     // Récuperation de la position du click
     let rect = canvas.getBoundingClientRect();
     let x = evt.clientX - rect.left;
