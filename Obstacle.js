@@ -1,6 +1,6 @@
 class Obstacle{
     constructor(middle_pos,shape,userdata,isstatic,issensor,hx,hy,radius,vectrices){ // Constructeur
-        console.log(middle_pos,shape,userdata,isstatic,issensor,hx,hy,radius,vectrices);
+        //console.log(middle_pos,shape,userdata,isstatic,issensor,hx,hy,radius,vectrices);
         // other attribute
         this.middle_pos=middle_pos;
         this.static = isstatic;
@@ -43,24 +43,6 @@ class Obstacle{
         this.body = world.CreateBody(this.bodydef);
         this.body.CreateFixture(this.fix);
     }
-
-    /*class Sand{
-    constructor(hx,hy,middle_pos){
-        this.shape = new b2PolygonShape();
-        this.shape.SetAsBox(this.hx, this.hy);
-        this.bodydef = new b2BodyDef();
-        this.bodydef.set_type(b2_staticBody);
-        this.bodydef.set_position(this.middle_pos);
-        this. bodydef.set_userData(3);
-        
-        this.body = world.CreateBody(this.bodydef);
-        
-        this.fix = new b2FixtureDef();
-        this.fix.set_shape(this.shape);
-        this.fix.isSensor=true;
-        this.body.CreateFixture(this.fix);
-    }
-}*/
 }
 
 
@@ -139,4 +121,27 @@ class Bubblegum extends FloorObstacle{
 
 class Wind{
 
+}
+
+class Portal{
+    constructor(enter_pos,exit_pos,userdata,hx1,hy1,hx2,hy2){
+        this.enter = new Obstacle(enter_pos,"box",userdata,true,true,hx1,hy1,-1,-1); // 2O3
+        this.exit = new Obstacle(exit_pos,"box",userdata,true,true,hx2,hy2,-1,-1); // 2O3
+        this.enter_pos = enter_pos;
+        this.exit_pos = exit_pos;
+        this.bidirectional = (userdata == 203);
+    }
+}
+
+class BiDirectionPortal extends Portal{
+    constructor(enter_pos,exit_pos,hx1,hy1,hx2,hy2){
+        super(enter_pos,exit_pos,203,hx1,hy1,hx2,hy2);
+        this.entered = false;
+    }
+}
+
+class UniDirectionPortal extends Portal{
+    constructor(enter_pos,exit_pos,hx1,hy1,hx2,hy2){
+        super(enter_pos,exit_pos,204,hx1,hy1,hx2,hy2);
+    }
 }
