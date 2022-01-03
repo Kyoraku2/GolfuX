@@ -60,9 +60,24 @@ class Level{
                 console.log(name);
                 console.log(array);
                 array.forEach(object => {
-                    if(name == "walls"){
-                        this.createWall(new b2Vec2(object.middle_pos.x,object.middle_pos.y), object.shape, object.userdata, object.isstatic, object.hx, object.hy, object.radius, object.vectrices);
+                    switch(name){
+                        case "wall":
+                            this.createWall(new b2Vec2(object.middle_pos.x,object.middle_pos.y), object.shape, object.userdata, object.isstatic, object.hx, object.hy, object.radius, object.vectrices);
+                        break;
+                        case "sand":
+                            this.createSand(new b2Vec2(object.middle_pos.x,object.middle_pos.y), object.shape, object.userdata, object.hx, object.hy, object.radius, object.vectrices);
+                        break;
+                        case "bubblegum":
+                            this.createBubblegum(new b2Vec2(object.middle_pos.x,object.middle_pos.y), object.shape, object.userdata, object.hx, object.hy, object.radius, object.vectrices);
+                        break;
+                        case "void":
+                            this.createVoid(new b2Vec2(object.middle_pos.x,object.middle_pos.y), object.shape, object.userdata, object.hx, object.hy, object.radius, object.vectrices);
+                        break;
+                        case "bumper":
+                            this.createBumper(new b2Vec2(object.middle_pos.x,object.middle_pos.y), object.shape, object.userdata, object.isstatic, object.hx, object.hy, object.radius, object.vectrices);
+                        break;
                     }
+                        
                 });
                 
             }
