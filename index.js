@@ -57,7 +57,14 @@ function getPixelPointFromWorldPoint(worldPoint) {
 }
 
 function setViewCenterWorld(b2vecpos, instantaneous) {
+    var cvs=document.getElementById('canvas');
+    viewCenterPixel = {
+        x:cvs.width/2,
+        y:cvs.height/2
+    };
+
     var currentViewCenterWorld = getWorldPointFromPixelPoint( viewCenterPixel );
+    console.log(currentViewCenterWorld);
     var toMoveX = b2vecpos.get_x() - currentViewCenterWorld.x;
     var toMoveY = b2vecpos.get_y() - currentViewCenterWorld.y;
     var fraction = instantaneous ? 1 : 0.25;
@@ -159,8 +166,9 @@ function init() {
 
 function changeTest() {    
     resetScene();
-    if ( currentTest && currentTest.setNiceViewCenter )
+    if ( currentTest && currentTest.setNiceViewCenter ){
         currentTest.setNiceViewCenter();
+    }
     draw();
 }
 
@@ -171,10 +179,7 @@ function createWorld() {
     world = new Box2D.b2World( new Box2D.b2Vec2(0.0, 0.0) );
     world.SetDebugDraw(myDebugDraw);
 
-    var e = document.getElementById("testSelection");
-    var v = e.options[e.selectedIndex].value;
-    
-    eval( "currentTest = new "+v+"();" );
+    eval( "currentTest = new golfux();" );
     
     currentTest.setup();
 }
@@ -191,8 +196,6 @@ function step() { // Equivalent d'update
 }
 
 function draw() {
-    
-    //black background
     context.fillStyle = 'rgb(0,153,0)';
     context.fillRect( 0, 0, canvas.width, canvas.height );
     
