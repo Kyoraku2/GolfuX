@@ -3,7 +3,6 @@ var MAX_NORME = 255;
 var shot = false;
 var moving = false;
 var click_start = {x: 0, y: 0};
-var old_point = {x: 0, y: 0};
 var old_ball_pos = {x: 0, y: 0};
 var ball_pos;
 var click_pos;
@@ -171,10 +170,11 @@ golfux.prototype.step = function(){
 
     ball_pos = {x: pos.x, y: cvs.height-pos.y};
     //Si la balle ne bouge plus, on peut de nouveau tirer
-    if (ball_pos.x/*.toFixed(1)*/ == old_ball_pos.x/*.toFixed(1)*/ && ball_pos.y/*.toFixed(1)*/ == old_ball_pos.y/*.toFixed(1)*/) { //mettre les toFixed à 1 si on veut pas attendre 30 ans avant que la balle soit vrmt immobile
-        moving = false; 
+    if (this.ball.body.GetLinearVelocity().Length() < 1) {
+        moving = false;
+    } else {
+        moving = true;
     }
-    old_ball_pos = ball_pos; //mise à jour ancienne position de la balle
 
     //Segment
     var segment = compute_segment();
@@ -193,18 +193,37 @@ golfux.prototype.step = function(){
         var final_pos = compute_final_point(click_pos);
 
         norme = Math.sqrt(Math.pow(click_start.x - click_pos.x, 2) + Math.pow(click_start.y - click_pos.y, 2));
-        if (norme <= MAX_NORME){
-            old_point = final_pos;
-        } else {
-            final_pos = old_point;
-            click_pos = old_point;
-            norme = MAX_NORME;
-        }
-        
         segment[0] = ball_pos;
         segment[1] = final_pos;
 
+        //Restriction norme
+        if (norme > MAX_NORME){
+            var eq = get_equation_droite(segment[0], segment[1]);
+            var sol = solve_equation(eq, segment[0], segment[1]);
+            segment[1] = sol;
+        }
         return segment;
+    }
+
+    function get_equation_droite(p1, p2) {
+        var m = (p2.y - p1.y) / (p2.x - p1.x);
+        var p = p1.y - m * p1.x
+        return {m: m, p: p};
+    }
+
+    function solve_equation(eq, p1, p2) {
+        var xA = p1.x;
+        var yA = p1.y;
+        var d = MAX_NORME;
+        //Deux solutions
+        var xB_1 = (xA + yA*eq.m - eq.m*eq.p) / (eq.m*eq.m + 1) - Math.sqrt((-xA*xA*eq.m*eq.m + 2*xA*yA*eq.m - 2*xA*eq.m*eq.p - yA*yA + 2*yA*eq.p + d*d*eq.m*eq.m + d*d - eq.p*eq.p) / Math.pow(eq.m*eq.m + 1, 2));
+        var xB_2 = Math.sqrt((-xA*xA*eq.m*eq.m + 2*xA*yA*eq.m - 2*xA*eq.m*eq.p - yA*yA + 2*yA*eq.p + d*d*eq.m*eq.m + d*d - eq.p*eq.p) / Math.pow(eq.m*eq.m + 1, 2)) + (xA + yA*eq.m - eq.m*eq.p) / (eq.m*eq.m + 1);
+        var xC = p2.x;
+        //On choisi la bonne solution (celle la plus proche du point C)
+        var xB = (Math.abs(xC - xB_1) > Math.abs(xC - xB_2))? xB_2 : xB_1;
+        //On en déduit yB
+        var yB = eq.m * xB + eq.p;
+        return {x: xB, y: yB};
     }
 
     function compute_final_point(click_pos) {
@@ -225,8 +244,9 @@ golfux.prototype.step = function(){
     
     //Fonction pour print la flèche (trucs mystiques pour le bout tkt)
     function print_segment(fromx, fromy, tox, toy) {
-        var percents = (100 * norme) / 255;
-        var color = "rgb(255, "+(255-norme)+", 0)";
+        var final_norme = (norme > MAX_NORME)? MAX_NORME : norme;
+        var percents = (100 * final_norme) / 255;
+        var color = "rgb(255, "+(255 - final_norme)+", 0)";
         context.fillStyle = color;
         context.strokeStyle = color;
         context.font = "bold 20px comic sans ms";

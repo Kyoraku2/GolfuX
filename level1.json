@@ -1,0 +1,62 @@
+{
+    "obstacles":{
+        "walls":[
+            {
+                "middle_pos":{"x":9.5, "y":0},
+                "shape": "box",
+                "userdata": -1,
+                "isstatic": true,
+                "hx": 9.25,
+                "hy":0.25,
+                "radius": -1,
+                "vectrices": -1
+            },
+            {
+                "middle_pos":{"x":9.5, "y":24},
+                "shape": "box",
+                "userdata": -1,
+                "isstatic": true,
+                "hx": 9.25,
+                "hy":0.25,
+                "radius": -1,
+                "vectrices": -1
+            },
+            {
+                "middle_pos":{"x":0, "y":12},
+                "shape": "box",
+                "userdata": -1,
+                "isstatic": true,
+                "hx": 0.25,
+                "hy":12.25,
+                "radius": -1,
+                "vectrices": -1
+            },
+            {
+                "middle_pos":{"x":19, "y":12},
+                "shape": "box",
+                "userdata": -1,
+                "isstatic": true,
+                "hx": 0.25,
+                "hy":12.25,
+                "radius": -1,
+                "vectrices": -1
+            }
+        ],
+        "sand":[
+
+        ],
+        "bubblegum":[
+
+        ],
+        "void":[
+
+        ],
+        "bumper":[
+
+        ]
+    },
+    "hole":{
+        "pos":{"x":10, "y":20},
+        "radius":0.5
+    }
+}
