@@ -3,7 +3,6 @@ var MAX_NORME = 255;
 var shot = false;
 var moving = false;
 var click_start = {x: 0, y: 0};
-var old_ball_pos = {x: 0, y: 0};
 var ball_pos;
 var click_pos;
 var norme;
@@ -16,7 +15,6 @@ var golfux = function() {
     this.level = new Level();
     this.level.initBasicWalls();
     this.level.test();
-    
 }
 
 golfux.prototype.setNiceViewCenter = function() {
@@ -197,7 +195,7 @@ golfux.prototype.step = function(){
         segment[1] = final_pos;
 
         //Restriction norme
-        if (norme > MAX_NORME){
+        if (norme > MAX_NORME) {
             var eq = get_equation_droite(segment[0], segment[1]);
             var sol = solve_equation(eq, segment[0], segment[1]);
             segment[1] = sol;
