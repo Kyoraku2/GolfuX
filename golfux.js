@@ -17,7 +17,9 @@ class golfux{
 
 }
 var MAX_INTENSITIE=10;
-
+// Dimensions du monde pour déterminer le PTM (c'est le zoom un peu, le facteur de scale)
+var w_width = 20.25;
+var w_height = 27;
 function addEventListener(balls, level){
     var listener = new Box2D.JSContactListener();
     listener.BeginContact = function (contactPtr) {
@@ -181,9 +183,39 @@ function addEventListener(balls, level){
 }
 
 golfux.prototype.setNiceViewCenter = function() {
-    //called once when the user changes to this test from another test
-    PTM = 32;
-    setViewCenterWorld( new b2Vec2(9.5,7), true );
+    var cvs=document.getElementById('canvas');
+    var inFrame = (window.top != window.self);
+    var w = ((inFrame) ? window.top.innerWidth : window.innerWidth)
+    || document.documentElement.clientWidth
+    || document.body.clientWidth;
+    
+    var h = ((inFrame) ? window.top.innerHeight : window.innerHeight)
+    || document.documentElement.clientHeight
+    || document.body.clientHeight;
+
+    
+    if(0.75 * h > w){
+        h = w/0.75;
+        w = 0.75 * h;
+    }else{
+        w = 0.75 * h;
+    }
+    w=0.75*h;
+    cvs.height = h;
+    cvs.width = w;
+    console.log(h);
+    console.log(w); 
+    PTM = w/w_width;
+
+    var pos1 = getWorldPointFromPixelPoint({x:0,y:0});
+    var pos2 = getWorldPointFromPixelPoint({x:w,y:h});
+    var world_width = pos2.x - pos1.x;
+    var world_height = pos2.y - pos1.y;
+    console.log(world_height);
+    console.log(world_width); 
+    console.log(canvasOffset)
+    setViewCenterWorld(new b2Vec2(world_width/2-0.05*world_width/2,world_height/2-0.05*world_height/2), true);
+    console.log(canvasOffset)
 }
 
 golfux.prototype.setup = function() {
@@ -191,8 +223,6 @@ golfux.prototype.setup = function() {
 }
 
 golfux.prototype.onMouseDown = function(canvas, evt) {
-    //console.log(this.balls[0].start_pos);
-    
     // Récuperation de la position du click
     let rect = canvas.getBoundingClientRect();
     let x = evt.clientX - rect.left;
