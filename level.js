@@ -97,5 +97,9 @@ class Level{
             this.obstacles["portal"].push(new BiDirectionPortal(enter_pos,exit_pos,hx1,hy1,hx2,hy2));
         }
     }
+
+    /*randomLevel(){
+
+    }*/
     
 }

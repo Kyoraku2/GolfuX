@@ -8,7 +8,7 @@ class golfux{
         //this.ball = new Ball();
         this.level = new Level();
 
-        this.level.createFromJSON('level1')
+        this.level.createFromJSON('level2')
         //this.level.initBasicWalls();
         //this.level.createHole(0.5, new b2Vec2(10,20));
         addEventListener(this.balls,this.level);

@@ -18,12 +18,13 @@ app.get('/', function(req, res) {
 });
 
 
-app.get('/level1', function(req, res) {
-    console.log("Reçu : GET /level1");
+app.get('/level*', function(req, res) {
+    console.log("Reçu : GET "+req.url);
     res.setHeader('Content-type', 'application/json');
     //couleur = JSON.stringify(couleur);
     //res.json({ TODO: "à compléter "});
-    var level = readLevel('level1');
+
+    var level = readLevel(req.url.split('/')[1]);
     res.json(level);
 });
 
