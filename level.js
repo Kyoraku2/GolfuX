@@ -52,6 +52,44 @@ class Level{
         this.obstacles["void"].push(new Void(middle_pos,shape,userdata,hx,hy,radius,vectrices));
     }
 
+    async createFromJSON(level){
+        var response = await fetch("/"+level);
+        if (response.status == 200) {
+
+            var data = await response.json();
+            console.log(data);
+            this.createHole(data.hole.radius,new b2Vec2(data.hole.pos.x,data.hole.pos.y));
+            for(const [name,array] of Object.entries(data.obstacles)){
+                console.log(name);
+                console.log(array);
+                array.forEach(object => {
+                    switch(name){
+                        case "wall":
+                            this.createWall(new b2Vec2(object.middle_pos.x,object.middle_pos.y), object.shape, object.userdata, object.isstatic, object.hx, object.hy, object.radius, object.vectrices);
+                        break;
+                        case "sand":
+                            this.createSand(new b2Vec2(object.middle_pos.x,object.middle_pos.y), object.shape, object.userdata, object.hx, object.hy, object.radius, object.vectrices);
+                        break;
+                        case "bubblegum":
+                            this.createBubblegum(new b2Vec2(object.middle_pos.x,object.middle_pos.y), object.shape, object.userdata, object.hx, object.hy, object.radius, object.vectrices);
+                        break;
+                        case "void":
+                            this.createVoid(new b2Vec2(object.middle_pos.x,object.middle_pos.y), object.shape, object.userdata, object.hx, object.hy, object.radius, object.vectrices);
+                        break;
+                        case "bumper":
+                            this.createBumper(new b2Vec2(object.middle_pos.x,object.middle_pos.y), object.shape, object.userdata, object.isstatic, object.hx, object.hy, object.radius, object.vectrices);
+                        break;
+                        case "portal":
+                            this.createPortal(new b2Vec2(object.enter_pos.x, object.enter_pos.y), new b2Vec2(object.exit_pos.x, object.exit_pos.y), object.userdata, object.hx1, object.hy1, object.hx2, object.hy2);
+                        break;
+                    }
+                        
+                });
+                
+            }
+        }
+    }
+    
     createPortal(enter_pos,exit_pos,userdata,hx1,hy1,hx2,hy2){
         if(userdata==204){
             this.obstacles["portal"].push(new UniDirectionPortal(enter_pos,exit_pos,hx1,hy1,hx2,hy2));
@@ -59,5 +97,9 @@ class Level{
             this.obstacles["portal"].push(new BiDirectionPortal(enter_pos,exit_pos,hx1,hy1,hx2,hy2));
         }
     }
+
+    /*randomLevel(){
+
+    }*/
     
 }

@@ -1,0 +1,23 @@
+{
+  "name": "golfux",
+  "version": "1.0.0",
+  "description": "Projet minigolf, projet de fin de licence",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kyoraku2/GolfuX.github.io.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Kyoraku2/GolfuX.github.io/issues"
+  },
+  "homepage": "https://github.com/Kyoraku2/GolfuX.github.io#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "socket.io": "^4.3.1"
+  }
+}

@@ -1,0 +1,65 @@
+{
+	"obstacles":{
+		"wall":[
+			{
+				"middle_pos":{"x":9,"y":2},
+				"shape": "box",
+				"userdata": -1,
+				"isstatic": true,
+				"hx":0,
+				"hy":0,
+				"radius":-1,
+				"vectrices":-1
+				
+			},
+			{
+				"middle_pos":{"x":15,"y":4},
+				"shape": "box",
+				"userdata": -1,
+				"isstatic": true,
+				"hx":1,
+				"hy":3,
+				"radius":-1,
+				"vectrices":-1
+				
+			},
+			{
+				"middle_pos":{"x":5,"y":18},
+				"shape": "box",
+				"userdata": -1,
+				"isstatic": true,
+				"hx":2,
+				"hy":0,
+				"radius":-1,
+				"vectrices":-1
+				
+			},
+			{
+				"middle_pos":{"x":4,"y":12},
+				"shape": "box",
+				"userdata": -1,
+				"isstatic": true,
+				"hx":0,
+				"hy":3,
+				"radius":-1,
+				"vectrices":-1
+				
+			},
+			{
+				"middle_pos":{"x":9,"y":17},
+				"shape": "box",
+				"userdata": -1,
+				"isstatic": true,
+				"hx":2,
+				"hy":1,
+				"radius":-1,
+				"vectrices":-1
+				
+			}
+		]
+	},
+	"hole" : {
+		"pos":{"x":10,"y":20},
+		"radius":0.5
+	}
+}
