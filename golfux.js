@@ -8,7 +8,7 @@ class golfux{
         //this.ball = new Ball();
         this.level = new Level();
 
-        this.level.createFromJSON('level2')
+        this.level.createFromJSON('level1')
         //this.level.initBasicWalls();
         //this.level.createHole(0.5, new b2Vec2(10,20));
         addEventListener(this.balls,this.level);
@@ -16,7 +16,26 @@ class golfux{
         
     }
 
+    changeLevel(level) {
+        if ( world != null ) 
+            Box2D.destroy(world);
+            
+        world = new Box2D.b2World( new Box2D.b2Vec2(0.0, 0.0) );
+        world.SetDebugDraw(myDebugDraw);
+        
+        this.click_down=null;
+        this.click_up=null;
+        this.balls = [];
+        this.balls[0] = new Ball(new b2Vec2(0,2), 0);
+        this.balls[1] = new Ball(new b2Vec2(1,2), 1);
+        this.level = new Level();
 
+        this.level.createFromJSON('level'+level)
+        addEventListener(this.balls,this.level);
+        this.ballIndex = 0;
+
+        draw();
+    }
 
 }
 var MAX_INTENSITIE=10;
@@ -306,6 +325,8 @@ golfux.prototype.step = function(){
     var cvs=document.getElementById('canvas');
     var context = cvs.getContext( '2d' );
 
+    var endLevel = true
+
 
     context.fillStyle = "black";
     var pos = getPixelPointFromWorldPoint({x:this.level.hole.body.GetPosition().x,y:this.level.hole.body.GetPosition().y});
@@ -384,12 +405,19 @@ golfux.prototype.step = function(){
         });
         if(!this.balls[i].isInHole || this.balls[i].isMoving){
             context.drawImage(this.balls[i].sprite, pos.x, pos.y,this.balls[i].radius*PTM*2,this.balls[i].radius*PTM*2);
+            endLevel = false;
 
         }else{
             this.balls[i].body.GetFixtureList().SetSensor(true);
             
         }
     }
+
+    if(endLevel){
+        console.log("FINI");
+        this.changeLevel(2)
+    }
 }
+
 
 

@@ -18,6 +18,8 @@
         
         <script type="text/javascript">  
             var Box2D;
+            //var level = window.location.search.slice(4);
+            //if(level==""){level = 1}
             if (!Box2D) Box2D = (typeof Box2D !== 'undefined' ? Box2D : null) || Module; 
             Box2D().then(function(r){
                 Box2D = r;

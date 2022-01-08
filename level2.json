@@ -2,56 +2,100 @@
 	"obstacles":{
 		"wall":[
 			{
-				"middle_pos":{"x":9,"y":2},
+				"middle_pos":{"x":9.5,"y":0},
 				"shape": "box",
 				"userdata": -1,
 				"isstatic": true,
-				"hx":0,
-				"hy":0,
+				"hx":9.25,
+				"hy":0.25,
 				"radius":-1,
 				"vectrices":-1
 				
 			},
 			{
-				"middle_pos":{"x":15,"y":4},
+				"middle_pos":{"x":9.5,"y":24},
 				"shape": "box",
 				"userdata": -1,
 				"isstatic": true,
-				"hx":1,
-				"hy":3,
+				"hx":9.25,
+				"hy":0.25,
 				"radius":-1,
 				"vectrices":-1
 				
 			},
 			{
-				"middle_pos":{"x":5,"y":18},
+				"middle_pos":{"x":0,"y":12},
 				"shape": "box",
 				"userdata": -1,
 				"isstatic": true,
-				"hx":2,
-				"hy":0,
+				"hx":0.25,
+				"hy":12.25,
 				"radius":-1,
 				"vectrices":-1
 				
 			},
 			{
-				"middle_pos":{"x":4,"y":12},
+				"middle_pos":{"x":19,"y":12},
 				"shape": "box",
 				"userdata": -1,
 				"isstatic": true,
-				"hx":0,
-				"hy":3,
+				"hx":0.25,
+				"hy":12.25,
 				"radius":-1,
 				"vectrices":-1
 				
 			},
 			{
-				"middle_pos":{"x":9,"y":17},
+				"middle_pos":{"x":2,"y":11},
 				"shape": "box",
 				"userdata": -1,
 				"isstatic": true,
-				"hx":2,
-				"hy":1,
+				"hx":0.579124705898278,
+				"hy":2.3607027153530273,
+				"radius":-1,
+				"vectrices":-1
+				
+			},
+			{
+				"middle_pos":{"x":11,"y":19},
+				"shape": "box",
+				"userdata": -1,
+				"isstatic": true,
+				"hx":0.3600927712069838,
+				"hy":2.6952494198614323,
+				"radius":-1,
+				"vectrices":-1
+				
+			},
+			{
+				"middle_pos":{"x":4,"y":1},
+				"shape": "box",
+				"userdata": -1,
+				"isstatic": true,
+				"hx":0.26051373940357214,
+				"hy":1.6942684479826382,
+				"radius":-1,
+				"vectrices":-1
+				
+			},
+			{
+				"middle_pos":{"x":1,"y":15},
+				"shape": "box",
+				"userdata": -1,
+				"isstatic": true,
+				"hx":2.863581527222899,
+				"hy":1.3371552917336123,
+				"radius":-1,
+				"vectrices":-1
+				
+			},
+			{
+				"middle_pos":{"x":12,"y":5},
+				"shape": "box",
+				"userdata": -1,
+				"isstatic": true,
+				"hx":2.120758852858656,
+				"hy":0.15112231648288832,
 				"radius":-1,
 				"vectrices":-1
 				
