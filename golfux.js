@@ -16,7 +16,9 @@ class golfux{
 
 
 }
-var MAX_INTENSITIE=8;
+const MAX_INTENSITIE=8;
+const BUBBLEGUM_LINEAR_DAMPLING = 18;
+const SAND_LINEAR_DAMPLING = 12;
 // Dimensions du monde pour déterminer le PTM (c'est le zoom un peu, le facteur de scale)
 var w_width = 20.25;
 var w_height = 27;
@@ -42,10 +44,10 @@ function addEventListener(balls, level){
             if(idA >= 0 && idA<99){
                 switch(idB){
                     case 200:
-                        balls[idA].body.SetLinearDamping(12);
+                        balls[idA].body.SetLinearDamping(SAND_LINEAR_DAMPLING);
                         break;
                     case 201:
-                        balls[idA].body.SetLinearDamping(18);
+                        balls[idA].body.SetLinearDamping(BUBBLEGUM_LINEAR_DAMPLING);
                         break;
                     case 202:
                         setTimeout(function(body,start){ // C'est une douille, paske l'environnement veut pas faire simplemennt l'instruction
@@ -82,6 +84,16 @@ function addEventListener(balls, level){
                         setTimeout(function(body,start){
                             body.SetTransform(start,0);
                         },0,balls[idA].body,taken.exit_pos);
+                        break;
+                    case 205:
+                        var wind = level.obstacles['wind'].find(function(e){
+                            return bodyB==e.body;
+                        },bodyB);
+                        if(wind == undefined){
+                            return;
+                        }
+                        wind.enter = balls[idB].body;
+                        //balls[idA].body.ApplyLinearImpulse(new b2Vec2(wind.direction.x*wind.acceleration, wind.direction.y*wind.acceleration), true);
                         break;
                 }
             }else{
@@ -128,6 +140,16 @@ function addEventListener(balls, level){
                             body.SetTransform(start,0);
                         },0,balls[idB].body,taken.exit_pos);
                         break;
+                    case 205:
+                        var wind = level.obstacles['wind'].find(function(e){
+                            return bodyA==e.body;
+                        },bodyA);
+                        if(wind == undefined){
+                            return;
+                        }
+                        wind.enter = balls[idB].body;
+                        //balls[idB].body.ApplyLinearImpulse(new b2Vec2(wind.direction.x*wind.acceleration, wind.direction.y*wind.acceleration), true);
+                        break;
                 }
             }
         }
@@ -164,6 +186,16 @@ function addEventListener(balls, level){
                     case 200:
                         balls[idA].body.SetLinearDamping(1);
                         break;
+                    case 205:
+
+                        var wind = level.obstacles['wind'].find(function(e){
+                            return bodyB==e.body;
+                        },bodyB);
+                        if(wind == undefined){
+                            return;
+                        }
+                        wind.enter = undefined;
+                        break;
                 }
             }else{
                 switch(idA){
@@ -171,6 +203,14 @@ function addEventListener(balls, level){
                     case 200:
                         balls[idB].body.SetLinearDamping(1);
                         break;
+                    case 205:
+                        var wind = level.obstacles['wind'].find(function(e){
+                            return bodyA==e.body;
+                        },bodyA);
+                        if(wind == undefined){
+                            return;
+                        }
+                        wind.enter = undefined;
                 }
             }
         }
@@ -334,6 +374,23 @@ golfux.prototype.step = function(){
             };
             var wall_pos_canvas = getPixelPointFromWorldPoint(leftup_corner);
             context.fillRect(wall_pos_canvas.x, wall_pos_canvas.y, this.level.obstacles["bubblegum"][i].hx*PTM*2, this.level.obstacles["bubblegum"][i].hy*PTM*2);
+        }
+    }
+
+    // Wind
+    if(this.level.obstacles["wind"].length>0){
+        for(var i=0,l=this.level.obstacles["wind"].length;i<l;++i){
+            var world_pos_wall=this.level.obstacles["wind"][i].body.GetPosition();
+            var leftup_corner={
+                x:world_pos_wall.x-this.level.obstacles["wind"][i].hx,
+                y:world_pos_wall.y+this.level.obstacles["wind"][i].hy
+            };
+            context.fillStyle = 'rgb(0,200,0)';
+            if(this.level.obstacles["wind"][i].enter){
+                this.level.obstacles["wind"][i].enter.ApplyLinearImpulse(new b2Vec2(this.level.obstacles["wind"][i].direction.x*this.level.obstacles["wind"][i].acceleration, this.level.obstacles["wind"][i].direction.y*this.level.obstacles["wind"][i].acceleration), true);
+            }
+            var wall_pos_canvas = getPixelPointFromWorldPoint(leftup_corner);
+            context.fillRect(wall_pos_canvas.x, wall_pos_canvas.y, this.level.obstacles["wind"][i].hx*PTM*2, this.level.obstacles["wind"][i].hy*PTM*2);
         }
     }
 
