@@ -242,6 +242,10 @@ function addEventListener(balls, level){
     };
     listener.PostSolve = function(contactPtr) {
     };
+    // TODO : check si y'a mieux ici aussi
+    if(!world){
+        return;
+    }
     world.SetContactListener(listener);
 }
 
@@ -356,6 +360,10 @@ golfux.prototype.onMouseUp = function(canvas,evt) {
 }
 
 golfux.prototype.step = function(){
+    // TODO : voir si on peut pas faire mieux
+    if(!this.level.hole){
+        return;
+    }
     var cvs=document.getElementById('canvas');
     var context = cvs.getContext( '2d' );
 
