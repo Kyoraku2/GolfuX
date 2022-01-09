@@ -123,6 +123,7 @@ function updateMousePos(canvas, evt) {
 }
 
 function onTouchMove(evt) {
+    currentTest.onTouchMove(canvas, evt);
     updateMousePos(canvas, evt);
 }
 

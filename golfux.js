@@ -281,6 +281,10 @@ golfux.prototype.setup = function() {
 
 }
 
+golfux.prototype.onTouchMove = function(canvas, evt) {
+    evt.preventDefault();
+}
+
 golfux.prototype.onMouseDown = function(canvas, evt) {
     // Récuperation de la position du click
     let rect = canvas.getBoundingClientRect();
