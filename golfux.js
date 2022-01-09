@@ -7,38 +7,18 @@ class golfux{
         this.balls[1] = new Ball(new b2Vec2(1,2), 1);
         //this.ball = new Ball();
         this.level = new Level();
-
-        this.level.createFromJSON('level1')
-        //this.level.initBasicWalls();
-        //this.level.createHole(0.5, new b2Vec2(10,20));
+        this.level.initBasicWalls();
+        this.level.createHole(0.5, new b2Vec2(10,20));
         addEventListener(this.balls,this.level);
         this.ballIndex = 0;
-        
     }
 
-    changeLevel(level) {
-        if ( world != null ) 
-            Box2D.destroy(world);
-            
-        world = new Box2D.b2World( new Box2D.b2Vec2(0.0, 0.0) );
-        world.SetDebugDraw(myDebugDraw);
-        
-        this.click_down=null;
-        this.click_up=null;
-        this.balls = [];
-        this.balls[0] = new Ball(new b2Vec2(0,2), 0);
-        this.balls[1] = new Ball(new b2Vec2(1,2), 1);
-        this.level = new Level();
 
-        this.level.createFromJSON('level'+level)
-        addEventListener(this.balls,this.level);
-        this.ballIndex = 0;
-
-        draw();
-    }
 
 }
-var MAX_INTENSITIE=10;
+const MAX_INTENSITIE=8;
+const BUBBLEGUM_LINEAR_DAMPLING = 18;
+const SAND_LINEAR_DAMPLING = 12;
 // Dimensions du monde pour déterminer le PTM (c'est le zoom un peu, le facteur de scale)
 var w_width = 20.25;
 var w_height = 27;
@@ -64,10 +44,10 @@ function addEventListener(balls, level){
             if(idA >= 0 && idA<99){
                 switch(idB){
                     case 200:
-                        balls[idA].body.SetLinearDamping(12);
+                        balls[idA].body.SetLinearDamping(SAND_LINEAR_DAMPLING);
                         break;
                     case 201:
-                        balls[idA].body.SetLinearDamping(18);
+                        balls[idA].body.SetLinearDamping(BUBBLEGUM_LINEAR_DAMPLING);
                         break;
                     case 202:
                         setTimeout(function(body,start){ // C'est une douille, paske l'environnement veut pas faire simplemennt l'instruction
@@ -105,6 +85,16 @@ function addEventListener(balls, level){
                             body.SetTransform(start,0);
                         },0,balls[idA].body,taken.exit_pos);
                         break;
+                    case 205:
+                        var wind = level.obstacles['wind'].find(function(e){
+                            return bodyB==e.body;
+                        },bodyB);
+                        if(wind == undefined){
+                            return;
+                        }
+                        wind.enter = balls[idB].body;
+                        //balls[idA].body.ApplyLinearImpulse(new b2Vec2(wind.direction.x*wind.acceleration, wind.direction.y*wind.acceleration), true);
+                        break;
                 }
             }else{
                 switch(idA){
@@ -124,7 +114,6 @@ function addEventListener(balls, level){
                         var taken = level.obstacles['portal'].find(function(e){
                             return bodyA==e.enter.body || bodyA == e.exit.body;
                         },bodyA);
-                        
                         if(taken.entered){
                             taken.entered = false;
                             return;
@@ -150,6 +139,16 @@ function addEventListener(balls, level){
                         setTimeout(function(body,start){
                             body.SetTransform(start,0);
                         },0,balls[idB].body,taken.exit_pos);
+                        break;
+                    case 205:
+                        var wind = level.obstacles['wind'].find(function(e){
+                            return bodyA==e.body;
+                        },bodyA);
+                        if(wind == undefined){
+                            return;
+                        }
+                        wind.enter = balls[idB].body;
+                        //balls[idB].body.ApplyLinearImpulse(new b2Vec2(wind.direction.x*wind.acceleration, wind.direction.y*wind.acceleration), true);
                         break;
                 }
             }
@@ -187,6 +186,16 @@ function addEventListener(balls, level){
                     case 200:
                         balls[idA].body.SetLinearDamping(1);
                         break;
+                    case 205:
+
+                        var wind = level.obstacles['wind'].find(function(e){
+                            return bodyB==e.body;
+                        },bodyB);
+                        if(wind == undefined){
+                            return;
+                        }
+                        wind.enter = undefined;
+                        break;
                 }
             }else{
                 switch(idA){
@@ -194,6 +203,14 @@ function addEventListener(balls, level){
                     case 200:
                         balls[idB].body.SetLinearDamping(1);
                         break;
+                    case 205:
+                        var wind = level.obstacles['wind'].find(function(e){
+                            return bodyA==e.body;
+                        },bodyA);
+                        if(wind == undefined){
+                            return;
+                        }
+                        wind.enter = undefined;
                 }
             }
         }
@@ -226,19 +243,13 @@ golfux.prototype.setNiceViewCenter = function() {
     w=0.75*h;
     cvs.height = h;
     cvs.width = w;
-    console.log(h);
-    console.log(w); 
     PTM = w/w_width;
 
     var pos1 = getWorldPointFromPixelPoint({x:0,y:0});
     var pos2 = getWorldPointFromPixelPoint({x:w,y:h});
     var world_width = pos2.x - pos1.x;
     var world_height = pos2.y - pos1.y;
-    console.log(world_height);
-    console.log(world_width); 
-    console.log(canvasOffset)
     setViewCenterWorld(new b2Vec2(world_width/2-0.05*world_width/2,world_height/2-0.05*world_height/2), true);
-    console.log(canvasOffset)
 }
 
 golfux.prototype.setup = function() {
@@ -301,19 +312,19 @@ golfux.prototype.onMouseUp = function(canvas,evt) {
     let y = evt.clientY - rect.top;
     this.click_up={x:x,y:canvas.height-y};
     this.click_up=getWorldPointFromPixelPoint(this.click_up);
-    
+
     var impulse={
         x:this.click_down.x-this.click_up.x,
         y:this.click_down.y-this.click_up.y
     };
 
     // Intensification en fonction de l'éloignement par rapport au click initial (valuer à changer)
-    var intensifie=Math.sqrt(impulse.x*impulse.x + impulse.y*impulse.y);
-    if(intensifie>MAX_INTENSITIE){
-        intensifie=MAX_INTENSITIE;
+    var norm_impulse=Math.sqrt(impulse.x*impulse.x + impulse.y*impulse.y);
+    if(norm_impulse>MAX_INTENSITIE){
+        norm_impulse=MAX_INTENSITIE;
     }
     // Impulsion
-    this.balls[this.ballIndex].body.ApplyLinearImpulse(new b2Vec2(impulse.x*intensifie, impulse.y*intensifie),true);
+    this.balls[this.ballIndex].body.ApplyLinearImpulse(new b2Vec2(impulse.x*norm_impulse, impulse.y*norm_impulse),true);
 
     this.ballIndex = (this.ballIndex < this.balls.length-1) ? this.ballIndex+1 : 0;
 
@@ -324,8 +335,6 @@ golfux.prototype.onMouseUp = function(canvas,evt) {
 golfux.prototype.step = function(){
     var cvs=document.getElementById('canvas');
     var context = cvs.getContext( '2d' );
-
-    var endLevel = true
 
 
     context.fillStyle = "black";
@@ -348,8 +357,6 @@ golfux.prototype.step = function(){
                 y:world_pos_wall.y+this.level.obstacles["sand"][i].hy
             };
             var wall_pos_canvas = getPixelPointFromWorldPoint(leftup_corner);
-            //console.log("sand");
-            //console.log(wall_pos_canvas);
             context.fillRect(wall_pos_canvas.x, wall_pos_canvas.y, this.level.obstacles["sand"][i].hx*PTM*2, this.level.obstacles["sand"][i].hy*PTM*2);
 
         }
@@ -367,6 +374,23 @@ golfux.prototype.step = function(){
             };
             var wall_pos_canvas = getPixelPointFromWorldPoint(leftup_corner);
             context.fillRect(wall_pos_canvas.x, wall_pos_canvas.y, this.level.obstacles["bubblegum"][i].hx*PTM*2, this.level.obstacles["bubblegum"][i].hy*PTM*2);
+        }
+    }
+
+    // Wind
+    if(this.level.obstacles["wind"].length>0){
+        for(var i=0,l=this.level.obstacles["wind"].length;i<l;++i){
+            var world_pos_wall=this.level.obstacles["wind"][i].body.GetPosition();
+            var leftup_corner={
+                x:world_pos_wall.x-this.level.obstacles["wind"][i].hx,
+                y:world_pos_wall.y+this.level.obstacles["wind"][i].hy
+            };
+            context.fillStyle = 'rgb(0,200,0)';
+            if(this.level.obstacles["wind"][i].enter){
+                this.level.obstacles["wind"][i].enter.ApplyLinearImpulse(new b2Vec2(this.level.obstacles["wind"][i].direction.x*this.level.obstacles["wind"][i].acceleration, this.level.obstacles["wind"][i].direction.y*this.level.obstacles["wind"][i].acceleration), true);
+            }
+            var wall_pos_canvas = getPixelPointFromWorldPoint(leftup_corner);
+            context.fillRect(wall_pos_canvas.x, wall_pos_canvas.y, this.level.obstacles["wind"][i].hx*PTM*2, this.level.obstacles["wind"][i].hy*PTM*2);
         }
     }
 
@@ -405,7 +429,6 @@ golfux.prototype.step = function(){
         });
         if(!this.balls[i].isInHole || this.balls[i].isMoving){
             context.drawImage(this.balls[i].sprite, pos.x, pos.y,this.balls[i].radius*PTM*2,this.balls[i].radius*PTM*2);
-            endLevel = false;
 
         }else{
             this.balls[i].body.GetFixtureList().SetSensor(true);
@@ -413,11 +436,33 @@ golfux.prototype.step = function(){
         }
     }
 
-    if(endLevel){
-        console.log("FINI");
-        this.changeLevel(2)
-    }
+    /*if(this.click_down){
+        var click_pos = getPixelPointFromWorldPoint(this.click_down);
+        var ball_pos = getPixelPointFromWorldPoint(this.balls[this.ballIndex].body.GetPosition());
+        var mouse_pos = getPixelPointFromWorldPoint(mousePosWorld);
+        var vector = {
+            x:click_pos.x-mouse_pos.x,
+            y:click_pos.y-mouse_pos.y
+        }
+        var dest = {
+            y:ball_pos.y+vector.y,
+            x:ball_pos.x+vector.x
+        }
+        var norm = Math.sqrt(vector.x*vector.x + vector.y*vector.y);
+        var unit_vector = {
+            x:vector.x/norm,
+            y:vector.y/norm
+        }
+
+        if(norm > MAX_INTENSITIE*PTM){
+            dest.x=ball_pos.x+MAX_INTENSITIE*PTM*unit_vector.x
+            dest.y=ball_pos.y+MAX_INTENSITIE*PTM*unit_vector.y
+        }
+
+        context.beginPath();
+        context.moveTo(ball_pos.x,ball_pos.y);
+        context.lineTo(dest.x, dest.y);
+        context.stroke();
+    }*/
 }
-
-
 

@@ -30,7 +30,6 @@ class Hole{
         holeDef.userData = 100;
         // Create the body itself
         var bodyDef = world.CreateBody(holeDef);
-        console.log(bodyDef);
         this.body = bodyDef;
         
     
