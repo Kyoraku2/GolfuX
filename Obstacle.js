@@ -1,6 +1,5 @@
 class Obstacle{
     constructor(middle_pos,shape,userdata,isstatic,issensor,hx,hy,radius,vectrices){ // Constructeur
-        //console.log(middle_pos,shape,userdata,isstatic,issensor,hx,hy,radius,vectrices);
         // other attribute
         this.middle_pos=middle_pos;
         this.static = isstatic;
@@ -11,7 +10,6 @@ class Obstacle{
         }else{
             if(shape==="circle"){
                 this.shape = new b2CircleShape();
-                // à check
                 this.type = "circle";
                 this.radius=radius;
                 this.shape.set_m_radius(this.radius);
@@ -79,48 +77,53 @@ class SolidObstacle extends Obstacle{
 }
 
 class Wall extends SolidObstacle{
-    constructor(middle_pos,shape,userdata,isstatic,hx,hy,radius,vectrices){
-        super(middle_pos,shape,userdata,isstatic,hx,hy,radius,vectrices);
+    constructor(middle_pos,shape,isstatic,hx,hy,radius,vectrices){
+        super(middle_pos,shape,9999,isstatic,hx,hy,radius,vectrices);
         this.sprite=new Image();
         this.sprite.src = './textures/wall.jpg';
     }
 }
 
 class Bumper extends SolidObstacle{
-    constructor(middle_pos,shape,userdata,isstatic,hx,hy,radius,vectrices){
-        super(middle_pos,shape,userdata,isstatic,hx,hy,radius,vectrices);
+    constructor(middle_pos,shape,isstatic,hx,hy,radius,vectrices){
+        super(middle_pos,shape,9999,isstatic,hx,hy,radius,vectrices);
         this.sprite=new Image();
         this.sprite.src = '';
     }
 }
 
 class Sand extends FloorObstacle{
-    constructor(middle_pos,shape,userdata,hx,hy,radius,vectrices){
-        super(middle_pos,shape,userdata,hx,hy,radius,vectrices);
+    constructor(middle_pos,shape,hx,hy,radius,vectrices){
+        super(middle_pos,shape,200,hx,hy,radius,vectrices);
         this.sprite=new Image();
         this.sprite.src = './textures/sand.jpg';
     }
 }
 
 class Void extends FloorObstacle{
-    constructor(middle_pos,shape,userdata,hx,hy,radius,vectrices){
-        super(middle_pos,shape,userdata,hx,hy,radius,vectrices);
+    constructor(middle_pos,shape,hx,hy,radius,vectrices){
+        super(middle_pos,shape,202,hx,hy,radius,vectrices);
         this.sprite=new Image();
         this.sprite.src = './textures/void.jpg';
     }
 }
 
 class Bubblegum extends FloorObstacle{
-    constructor(middle_pos,shape,userdata,hx,hy,radius,vectrices){
-        super(middle_pos,shape,userdata,hx,hy,radius,vectrices);
+    constructor(middle_pos,shape,hx,hy,radius,vectrices){
+        super(middle_pos,shape,201,hx,hy,radius,vectrices);
         this.sprite=new Image();
         this.sprite.src = './textures/bubblegum.jpg';
     }
 }
 
 
-class Wind{
-
+class Wind extends FloorObstacle{
+    constructor(middle_pos,hx,hy,acceleration,direction){
+        super(middle_pos,"box",205,hx,hy,-1,-1);
+        this.direction = direction;
+        this.acceleration = acceleration;
+        this.enter = false;
+    }
 }
 
 class Portal{

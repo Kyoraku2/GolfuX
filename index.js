@@ -64,7 +64,6 @@ function setViewCenterWorld(b2vecpos, instantaneous) {
     };
 
     var currentViewCenterWorld = getWorldPointFromPixelPoint( viewCenterPixel );
-    console.log(currentViewCenterWorld);
     var toMoveX = b2vecpos.get_x() - currentViewCenterWorld.x;
     var toMoveY = b2vecpos.get_y() - currentViewCenterWorld.y;
     var fraction = instantaneous ? 1 : 0.25;
@@ -76,7 +75,6 @@ function setViewCenterWorld(b2vecpos, instantaneous) {
 function onMouseDown(canvas, evt) {            
     updateMousePos(canvas, evt);
     currentTest.onMouseDown(canvas, evt);
-    //console.log(mousePosWorld);
 }
 
 function onMouseUp(canvas, evt) {

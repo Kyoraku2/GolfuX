@@ -23,15 +23,13 @@ class Hole{
         shape.set_m_radius(this.radius);
         
         // Create a static body definition
-        var holeDef  = new b2BodyDef();
-        holeDef.set_type(b2_staticBody);
-        holeDef.set_position(this.pos);
+        this.bodyDef  = new b2BodyDef();
+        this.bodyDef.set_type(b2_staticBody);
+        this.bodyDef.set_position(this.pos);
         
-        holeDef.userData = 100;
+        this.bodyDef.userData = 100;
         // Create the body itself
-        var bodyDef = world.CreateBody(holeDef);
-        console.log(bodyDef);
-        this.body = bodyDef;
+        this.body = world.CreateBody(this.bodyDef);
         
     
         // Create the fixture
@@ -43,7 +41,7 @@ class Hole{
         
         fix.isSensor = true;
         // Add fixture to the body
-        bodyDef.CreateFixture(fix);
+        this.body.CreateFixture(fix);
         //bodyDef.SetAngularDamping(100000); // La balle tourne sur elle même
         //bodyDef.SetLinearDamping(1); // Friction de base
 
