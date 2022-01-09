@@ -205,7 +205,7 @@ golfux.prototype.step = function(){
 
     function get_equation_droite(p1, p2) {
         var m = (p2.y - p1.y) / (p2.x - p1.x);
-        var p = p1.y - m * p1.x
+        var p = p1.y - m * p1.x;
         return {m: m, p: p};
     }
 
