@@ -1,0 +1,117 @@
+{
+    "obstacles":{
+        "wall":[
+            {
+                "middle_pos":{"x":9.5, "y":0},
+                "shape": "box",
+                "userdata": -1,
+                "isstatic": true,
+                "hx": 9.25,
+                "hy":0.25,
+                "radius": -1,
+                "vectrices": -1
+            },
+            {
+                "middle_pos":{"x":9.5, "y":24},
+                "shape": "box",
+                "userdata": -1,
+                "isstatic": true,
+                "hx": 9.25,
+                "hy":0.25,
+                "radius": -1,
+                "vectrices": -1
+            },
+            {
+                "middle_pos":{"x":0, "y":12},
+                "shape": "box",
+                "userdata": -1,
+                "isstatic": true,
+                "hx": 0.25,
+                "hy":12.25,
+                "radius": -1,
+                "vectrices": -1
+            },
+            {
+                "middle_pos":{"x":19, "y":12},
+                "shape": "box",
+                "userdata": -1,
+                "isstatic": true,
+                "hx": 0.25,
+                "hy":12.25,
+                "radius": -1,
+                "vectrices": -1
+            },
+            {
+                "middle_pos":{"x":10, "y":12},
+                "shape": "box",
+                "userdata": -1,
+                "isstatic": true,
+                "hx": 4.25,
+                "hy":0.25,
+                "radius": -1,
+                "vectrices": -1
+            }
+        ],
+        "sand":[
+            {
+                "middle_pos":{"x":3, "y":12},
+                "shape": "box",
+                "userdata": 200,
+                "hx": 3,
+                "hy":2,
+                "radius": -1,
+                "vectrices": -1
+            }
+        ],
+        "bubblegum":[
+            {
+                "middle_pos":{"x":16, "y":12},
+                "shape": "box",
+                "userdata": 201,
+                "hx": 3,
+                "hy":2,
+                "radius": -1,
+                "vectrices": -1
+            }
+        ],
+        "void":[
+            {
+                "middle_pos":{"x":9.5, "y":11},
+                "shape": "box",
+                "userdata": 202,
+                "hx": 3.5,
+                "hy":1,
+                "radius": -1,
+                "vectrices": -1
+            }
+
+        ],
+        "bumper":[
+            {
+                "middle_pos":{"x":10, "y":6},
+                "shape": "circle",
+                "userdata": -1,
+                "isstatic":true,
+                "hx": -1,
+                "hy":1,
+                "radius": 1,
+                "vectrices": -1
+            }
+        ],
+        "portal":[
+            {
+                "enter_pos":{"x":0.4,"y":18},
+                "exit_pos":{"x":18.6,"y":18},
+                "userdata":203,
+                "hx1": 0.1,
+                "hy1": 1,
+                "hx2": 0.1,
+                "hy2": 1
+            }
+        ]
+    },
+    "hole":{
+        "pos":{"x":10, "y":20},
+        "radius":0.5
+    }
+}
