@@ -77,16 +77,16 @@ class SolidObstacle extends Obstacle{
 }
 
 class Wall extends SolidObstacle{
-    constructor(middle_pos,shape,userdata,isstatic,hx,hy,radius,vectrices){
-        super(middle_pos,shape,userdata,isstatic,hx,hy,radius,vectrices);
+    constructor(middle_pos,shape,isstatic,hx,hy,radius,vectrices){
+        super(middle_pos,shape,9999,isstatic,hx,hy,radius,vectrices);
         this.sprite=new Image();
         this.sprite.src = './textures/wall.jpg';
     }
 }
 
 class Bumper extends SolidObstacle{
-    constructor(middle_pos,shape,userdata,isstatic,hx,hy,radius,vectrices){
-        super(middle_pos,shape,userdata,isstatic,hx,hy,radius,vectrices);
+    constructor(middle_pos,shape,isstatic,hx,hy,radius,vectrices){
+        super(middle_pos,shape,9999,isstatic,hx,hy,radius,vectrices);
         this.sprite=new Image();
         this.sprite.src = '';
     }

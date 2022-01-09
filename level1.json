@@ -103,10 +103,20 @@
                 "enter_pos":{"x":0.4,"y":18},
                 "exit_pos":{"x":18.6,"y":18},
                 "userdata":203,
+                "bidirectional":true,
                 "hx1": 0.1,
                 "hy1": 1,
                 "hx2": 0.1,
                 "hy2": 1
+            }
+        ],
+        "wind":[
+            {
+                "middle_pos":{"x":10, "y":3},
+                "hx": 1,
+                "hy": 1,
+                "acceleration": 1.3,
+                "direction":{"x":0.5, "y":0.5}
             }
         ]
     },
