@@ -436,7 +436,7 @@ golfux.prototype.step = function(){
         }
     }
 
-    if(this.click_down){
+    /*if(this.click_down){
         var click_pos = getPixelPointFromWorldPoint(this.click_down);
         var ball_pos = getPixelPointFromWorldPoint(this.balls[this.ballIndex].body.GetPosition());
         var mouse_pos = getPixelPointFromWorldPoint(mousePosWorld);
@@ -463,6 +463,6 @@ golfux.prototype.step = function(){
         context.moveTo(ball_pos.x,ball_pos.y);
         context.lineTo(dest.x, dest.y);
         context.stroke();
-    }
+    }*/
 }
 
