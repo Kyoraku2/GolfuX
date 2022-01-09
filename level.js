@@ -70,11 +70,8 @@ class Level{
         if (response.status == 200) {
 
             var data = await response.json();
-            console.log(data);
             this.createHole(data.hole.radius,new b2Vec2(data.hole.pos.x,data.hole.pos.y));
             for(const [name,array] of Object.entries(data.obstacles)){
-                console.log(name);
-                console.log(array);
                 array.forEach(object => {
                     switch(name){
                         case "wall":
