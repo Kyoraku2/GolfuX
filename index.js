@@ -101,15 +101,29 @@ function onTouchUp(canvas, evt) {
 
 function updateMousePos(canvas, evt) {
     var rect = canvas.getBoundingClientRect();
-    mousePosPixel = {
-        x: evt.clientX - rect.left,
-        y: canvas.height - (evt.clientY - rect.top)
-    };
+    if(evt.clientX !== undefined){
+        mousePosPixel = {
+            x: evt.clientX - rect.left,
+            y: canvas.height - (evt.clientY - rect.top)
+        };
+    }else{
+        if(evt.clientX === undefined && evt.touches.length !== 0){
+            mousePosPixel = {
+                x: evt.touches[0].clientX - rect.left,
+                y: canvas.height - (evt.touches[0].clientY - rect.top)
+            };
+        }else{
+            mousePosPixel = {
+                x: evt.changedTouches[0].clientX - rect.left,
+                y: canvas.height - (evt.changedTouches[0].clientY - rect.top)
+            };
+        }
+    }
     mousePosWorld = getWorldPointFromPixelPoint(mousePosPixel);
 }
 
 function onTouchMove(evt) {
-    currentTest.onTouchMove(evt);
+    updateMousePos(canvas, evt);
 }
 
 

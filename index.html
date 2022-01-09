@@ -41,12 +41,12 @@
         
     </head>
     <body>
-        <div style="text-align:center;">      
-            <!--
-                If you change the size of the canvas, you'll also need to change 
-                the value of 'viewCenterPixel' in embox2d-html5canvas-testbed.js
-            -->         
-            <canvas id="canvas" width="640" height="800" tabindex='1'></canvas>
+        <div style="text-align:center;">           
+            <canvas id="canvas" width="640" height="800" tabindex='1' style="position: absolute; top: 50%; left: 50%;    -webkit-transform: translate(-50%, -50%);
+            -moz-transform: translate(-50%, -50%);
+            -ms-transform: translate(-50%, -50%);
+            -o-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);"></canvas>
         </div>
     </body>
 </html>
