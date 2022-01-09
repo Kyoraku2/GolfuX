@@ -16,7 +16,7 @@ class golfux{
 
 
 }
-var MAX_INTENSITIE=10;
+var MAX_INTENSITIE=8;
 // Dimensions du monde pour déterminer le PTM (c'est le zoom un peu, le facteur de scale)
 var w_width = 20.25;
 var w_height = 27;
@@ -203,19 +203,13 @@ golfux.prototype.setNiceViewCenter = function() {
     w=0.75*h;
     cvs.height = h;
     cvs.width = w;
-    console.log(h);
-    console.log(w); 
     PTM = w/w_width;
 
     var pos1 = getWorldPointFromPixelPoint({x:0,y:0});
     var pos2 = getWorldPointFromPixelPoint({x:w,y:h});
     var world_width = pos2.x - pos1.x;
     var world_height = pos2.y - pos1.y;
-    console.log(world_height);
-    console.log(world_width); 
-    console.log(canvasOffset)
     setViewCenterWorld(new b2Vec2(world_width/2-0.05*world_width/2,world_height/2-0.05*world_height/2), true);
-    console.log(canvasOffset)
 }
 
 golfux.prototype.setup = function() {
@@ -278,19 +272,19 @@ golfux.prototype.onMouseUp = function(canvas,evt) {
     let y = evt.clientY - rect.top;
     this.click_up={x:x,y:canvas.height-y};
     this.click_up=getWorldPointFromPixelPoint(this.click_up);
-    
+
     var impulse={
         x:this.click_down.x-this.click_up.x,
         y:this.click_down.y-this.click_up.y
     };
 
     // Intensification en fonction de l'éloignement par rapport au click initial (valuer à changer)
-    var intensifie=Math.sqrt(impulse.x*impulse.x + impulse.y*impulse.y);
-    if(intensifie>MAX_INTENSITIE){
-        intensifie=MAX_INTENSITIE;
+    var norm_impulse=Math.sqrt(impulse.x*impulse.x + impulse.y*impulse.y);
+    if(norm_impulse>MAX_INTENSITIE){
+        norm_impulse=MAX_INTENSITIE;
     }
     // Impulsion
-    this.balls[this.ballIndex].body.ApplyLinearImpulse(new b2Vec2(impulse.x*intensifie, impulse.y*intensifie),true);
+    this.balls[this.ballIndex].body.ApplyLinearImpulse(new b2Vec2(impulse.x*norm_impulse, impulse.y*norm_impulse),true);
 
     this.ballIndex = (this.ballIndex < this.balls.length-1) ? this.ballIndex+1 : 0;
 
@@ -323,8 +317,6 @@ golfux.prototype.step = function(){
                 y:world_pos_wall.y+this.level.obstacles["sand"][i].hy
             };
             var wall_pos_canvas = getPixelPointFromWorldPoint(leftup_corner);
-            //console.log("sand");
-            //console.log(wall_pos_canvas);
             context.fillRect(wall_pos_canvas.x, wall_pos_canvas.y, this.level.obstacles["sand"][i].hx*PTM*2, this.level.obstacles["sand"][i].hy*PTM*2);
 
         }
@@ -385,6 +377,35 @@ golfux.prototype.step = function(){
             this.balls[i].body.GetFixtureList().SetSensor(true);
             
         }
+    }
+
+    if(this.click_down){
+        var click_pos = getPixelPointFromWorldPoint(this.click_down);
+        var ball_pos = getPixelPointFromWorldPoint(this.balls[this.ballIndex].body.GetPosition());
+        var mouse_pos = getPixelPointFromWorldPoint(mousePosWorld);
+        var vector = {
+            x:click_pos.x-mouse_pos.x,
+            y:click_pos.y-mouse_pos.y
+        }
+        var dest = {
+            y:ball_pos.y+vector.y,
+            x:ball_pos.x+vector.x
+        }
+        var norm = Math.sqrt(vector.x*vector.x + vector.y*vector.y);
+        var unit_vector = {
+            x:vector.x/norm,
+            y:vector.y/norm
+        }
+
+        if(norm > MAX_INTENSITIE*PTM){
+            dest.x=ball_pos.x+MAX_INTENSITIE*PTM*unit_vector.x
+            dest.y=ball_pos.y+MAX_INTENSITIE*PTM*unit_vector.y
+        }
+
+        context.beginPath();
+        context.moveTo(ball_pos.x,ball_pos.y);
+        context.lineTo(dest.x, dest.y);
+        context.stroke();
     }
 }
 
