@@ -100,6 +100,12 @@ class Sand extends FloorObstacle{
     }
 }
 
+class SpawnArea extends FloorObstacle{
+    constructor(middle_pos,hx,hy){
+        super(middle_pos,'box',206,hx,hy,-1,-1);
+    }
+}
+
 class Void extends FloorObstacle{
     constructor(middle_pos,shape,hx,hy,radius,vectrices){
         super(middle_pos,shape,202,hx,hy,radius,vectrices);

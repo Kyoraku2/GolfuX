@@ -34,6 +34,7 @@ var viewCenterPixel = {
     y:240
 };
 var currentTest = null;
+var ballPlaced = false;
 
 function myRound(val,places) {
     var c = 1;
@@ -72,9 +73,38 @@ function setViewCenterWorld(b2vecpos, instantaneous) {
 }
 
 
-function onMouseDown(canvas, evt) {            
+function onMouseDown(canvas, evt) {
     updateMousePos(canvas, evt);
     currentTest.onMouseDown(canvas, evt);
+    if(!ballPlaced){
+        placeBallInSpawn();
+    }
+}
+
+function collideCircles(obj1,obj2){
+
+}
+
+function clickCollideRect(obj){
+    return mousePosWorld.x >= obj.middle_pos.x-obj.hx
+            && mousePosWorld.x <= obj.middle_pos.x+obj.hx
+            && mousePosWorld.y >= obj.middle_pos.y-obj.hy
+            && mousePosWorld.y <= obj.middle_pos.y+obj.hy;
+}
+
+function placeBallInSpawn(){
+    var spawn_area;
+    for(var i = 0 ; i < currentTest.level.obstacles['spawn'].length ; ++i){
+        if(clickCollideRect(currentTest.level.obstacles['spawn'][i])){
+            spawn_area = currentTest.level.obstacles['spawn'][i];
+            break;
+        }
+    }
+    if(spawn_area === undefined){
+        return;
+    }
+    currentTest.balls.push(new Ball(new b2Vec2(mousePosWorld.x,mousePosWorld.y), currentTest.balls.length));
+    ballPlaced = true;
 }
 
 function onMouseUp(canvas, evt) {

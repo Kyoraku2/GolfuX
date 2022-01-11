@@ -3,8 +3,8 @@ class golfux{
         this.click_down=null;
         this.click_up=null;
         this.balls = [];
-        this.balls[0] = new Ball(new b2Vec2(0,2), 0);
-        this.balls[1] = new Ball(new b2Vec2(1,2), 1);
+        //this.balls[0] = new Ball(new b2Vec2(0,2), 0);
+        //this.balls[1] = new Ball(new b2Vec2(0,2), 1);
         //this.ball = new Ball();
         this.level = new Level();
         this.level.createFromJSON('level1')
@@ -25,8 +25,8 @@ class golfux{
         this.click_down=null;
         this.click_up=null;
         this.balls = [];
-        this.balls[0] = new Ball(new b2Vec2(0,2), 0);
-        this.balls[1] = new Ball(new b2Vec2(1,2), 1);
+        //this.balls[0] = new Ball(new b2Vec2(0,2), 0);
+        //this.balls[1] = new Ball(new b2Vec2(1,2), 1);
         this.level = new Level();
 
         this.level.createFromJSON('level'+level)
@@ -286,6 +286,9 @@ golfux.prototype.onTouchMove = function(canvas, evt) {
 }
 
 golfux.prototype.onMouseDown = function(canvas, evt) {
+    if(this.balls.length == 0){
+        return;
+    }
     // Récuperation de la position du click
     let rect = canvas.getBoundingClientRect();
     let x = evt.clientX - rect.left;
@@ -295,13 +298,16 @@ golfux.prototype.onMouseDown = function(canvas, evt) {
 }
 
 golfux.prototype.onMouseUp = function(canvas, evt) {
+    if(this.balls.length == 0 || !this.click_down){
+        return;
+    }
     // Récuperation de la position de relachement du click
     let rect = canvas.getBoundingClientRect();
     let x = evt.clientX - rect.left;
     let y = evt.clientY - rect.top;
     this.click_up={x:x,y:canvas.height-y};
     this.click_up=getWorldPointFromPixelPoint(this.click_up);
-    
+
     var impulse={
         x:this.click_down.x-this.click_up.x,
         y:this.click_down.y-this.click_up.y
@@ -320,6 +326,9 @@ golfux.prototype.onMouseUp = function(canvas, evt) {
 }
 
 golfux.prototype.onTouchDown = function(canvas, evt) {
+    if(this.balls.length == 0){
+        return;
+    }
     // Récuperation de la position du click
     let rect = canvas.getBoundingClientRect();
     let x = evt.touches[0].clientX - rect.left;
@@ -329,6 +338,9 @@ golfux.prototype.onTouchDown = function(canvas, evt) {
 }
 
 golfux.prototype.onTouchUp = function(canvas, evt) {
+    if(this.balls.length == 0){
+        return;
+    }
     // Récuperation de la position de relachement du click
     let rect = canvas.getBoundingClientRect();
     let x = evt.changedTouches[0].clientX - rect.left;
@@ -362,7 +374,6 @@ golfux.prototype.step = function(){
     var context = cvs.getContext( '2d' );
 
     var endLevel = true;
-
 
     context.fillStyle = "black";
     context.strokeStyle = "black";
@@ -464,7 +475,7 @@ golfux.prototype.step = function(){
         }
     }
 
-    if(this.click_down){
+    if(this.click_down && this.balls.length != 0){
         var click_pos = getPixelPointFromWorldPoint(this.click_down);
         var ball_pos = getPixelPointFromWorldPoint(this.balls[this.ballIndex].body.GetPosition());
         var mouse_pos = getPixelPointFromWorldPoint(mousePosWorld);
@@ -491,6 +502,9 @@ golfux.prototype.step = function(){
     }
 
     if(endLevel){
+        endLevel = (this.balls.length !=0);
+    }
+    if(endLevel){
         console.log("FINI");
         this.changeLevel(2)
     }
@@ -509,6 +523,7 @@ function print_segment(norme, fromx, fromy, tox, toy) {
     var dx = tox - fromx;
     var dy = toy - fromy;
     var angle = Math.atan2(dy, dx);
+    context.beginPath();
     context.moveTo(fromx, fromy);
     context.lineTo(tox, toy);
     context.lineTo(tox - headlen * Math.cos(angle - Math.PI / 6), toy - headlen * Math.sin(angle - Math.PI / 6));

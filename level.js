@@ -7,7 +7,8 @@ class Level{
             void:[],
             bumper:[],
             portal:[],
-            wind:[]
+            wind:[],
+            spawn:[]
         };
         this.hole = null;
     }
@@ -65,6 +66,10 @@ class Level{
         }
     }
 
+    createSpawn(middle_pos,hx,hy){
+        this.obstacles["spawn"].push(new SpawnArea(middle_pos,hx,hy));
+    }
+
     async createFromJSON(level){
         var response = await fetch("/"+level);
         if (response.status == 200) {
@@ -94,6 +99,9 @@ class Level{
                         break;
                         case "wind":
                             this.createWind(new b2Vec2(object.middle_pos.x, object.middle_pos.y), object.hx, object.hy, object.acceleration, new b2Vec2(object.direction.x, object.direction.y));
+                        break;
+                        case "spawn":
+                            this.createSpawn(new b2Vec2(object.middle_pos.x, object.middle_pos.y), object.hx, object.hy);
                         break;
                     }
                         
