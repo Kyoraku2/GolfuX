@@ -88,7 +88,7 @@ class Bumper extends SolidObstacle{
     constructor(middle_pos,shape,isstatic,hx,hy,radius,vectrices){
         super(middle_pos,shape,9999,isstatic,hx,hy,radius,vectrices);
         this.sprite=new Image();
-        this.sprite.src = '';
+        this.sprite.src = './textures/wall.jpg';
     }
 }
 
@@ -129,6 +129,8 @@ class Wind extends FloorObstacle{
         this.direction = direction;
         this.acceleration = acceleration;
         this.enter = false;
+        this.sprite=new Image();
+        this.sprite.src = './textures/wind.png';
     }
 }
 

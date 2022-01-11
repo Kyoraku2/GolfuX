@@ -415,20 +415,18 @@ golfux.prototype.step = function(){
         }
     }
 
-    // Wind
-    if(this.level.obstacles["wind"].length>0){
-        for(var i=0,l=this.level.obstacles["wind"].length;i<l;++i){
-            var world_pos_wall=this.level.obstacles["wind"][i].body.GetPosition();
+    // Void
+    if(this.level.obstacles["void"].length>0){
+        for(var i=0,l=this.level.obstacles["void"].length;i<l;++i){
+            var pattern = context.createPattern(this.level.obstacles["void"][i].sprite, 'repeat');
+            context.fillStyle = pattern;
+            var world_pos_wall=this.level.obstacles["void"][i].body.GetPosition();
             var leftup_corner={
-                x:world_pos_wall.x-this.level.obstacles["wind"][i].hx,
-                y:world_pos_wall.y+this.level.obstacles["wind"][i].hy
+                x:world_pos_wall.x-this.level.obstacles["void"][i].hx,
+                y:world_pos_wall.y+this.level.obstacles["void"][i].hy
             };
-            context.fillStyle = 'rgb(0,200,0)';
-            if(this.level.obstacles["wind"][i].enter){
-                this.level.obstacles["wind"][i].enter.ApplyLinearImpulse(new b2Vec2(this.level.obstacles["wind"][i].direction.x*this.level.obstacles["wind"][i].acceleration, this.level.obstacles["wind"][i].direction.y*this.level.obstacles["wind"][i].acceleration), true);
-            }
             var wall_pos_canvas = getPixelPointFromWorldPoint(leftup_corner);
-            context.fillRect(wall_pos_canvas.x, wall_pos_canvas.y, this.level.obstacles["wind"][i].hx*PTM*2, this.level.obstacles["wind"][i].hy*PTM*2);
+            context.fillRect(wall_pos_canvas.x, wall_pos_canvas.y, this.level.obstacles["void"][i].hx*PTM*2, this.level.obstacles["void"][i].hy*PTM*2);
         }
     }
 
@@ -444,6 +442,89 @@ golfux.prototype.step = function(){
             };
             var wall_pos_canvas = getPixelPointFromWorldPoint(leftup_corner);
             context.fillRect(wall_pos_canvas.x, wall_pos_canvas.y, this.level.obstacles["walls"][i].hx*PTM*2, this.level.obstacles["walls"][i].hy*PTM*2);
+        }
+    }
+
+    // Bumper
+    if(this.level.obstacles["bumper"].length>0){
+        for(var i=0,l=this.level.obstacles["bumper"].length;i<l;++i){
+            var pattern = context.createPattern(this.level.obstacles["bumper"][i].sprite, 'repeat');
+            context.fillStyle = pattern;
+            var pos = getPixelPointFromWorldPoint(this.level.obstacles["bumper"][i].body.GetPosition());
+            context.beginPath();
+            context.arc(pos.x, pos.y, this.level.obstacles["bumper"][i].radius*PTM, 0, 2 * Math.PI);
+            context.fill();
+        }
+    }
+
+    // Portal
+    if(this.level.obstacles["portal"].length>0){
+        for(var i=0,l=this.level.obstacles["portal"].length;i<l;++i){
+            var tmp = this.level.obstacles["portal"][i].enter.body.GetPosition();
+            var pos_enter = {
+                x: tmp.x-this.level.obstacles["portal"][i].enter.hx,
+                y: tmp.y+this.level.obstacles["portal"][i].enter.hy
+            };
+            var world_enter = getPixelPointFromWorldPoint(pos_enter);
+
+            tmp = this.level.obstacles["portal"][i].exit.body.GetPosition();
+            var pos_exit = {
+                x: tmp.x-this.level.obstacles["portal"][i].exit.hx,
+                y: tmp.y+this.level.obstacles["portal"][i].exit.hy
+            };
+            var world_exit = getPixelPointFromWorldPoint(pos_exit);
+            if(!this.level.obstacles["portal"][i].bidirectional){
+                context.fillStyle = "aqua";
+                context.fillRect(world_enter.x, world_enter.y, this.level.obstacles["portal"][i].enter.hx*PTM*2, this.level.obstacles["portal"][i].enter.hy*PTM*2);
+                context.fillStyle = "orange";
+                context.fillRect(world_exit.x, world_exit.y, this.level.obstacles["portal"][i].exit.hx*PTM*2, this.level.obstacles["portal"][i].exit.hy*PTM*2);
+            }else{
+                context.fillStyle = "purple";
+                context.fillRect(world_enter.x, world_enter.y, this.level.obstacles["portal"][i].enter.hx*PTM*2, this.level.obstacles["portal"][i].enter.hy*PTM*2);
+                context.fillRect(world_exit.x, world_exit.y, this.level.obstacles["portal"][i].exit.hx*PTM*2, this.level.obstacles["portal"][i].exit.hy*PTM*2);
+            }
+        }
+    }
+
+    // Spawn area
+    if(this.level.obstacles["spawn"].length>0){
+        for(var i=0,l=this.level.obstacles["spawn"].length;i<l;++i){
+            var world_pos_wall=this.level.obstacles["spawn"][i].body.GetPosition();
+            var leftup_corner={
+                x:world_pos_wall.x-this.level.obstacles["spawn"][i].hx,
+                y:world_pos_wall.y+this.level.obstacles["spawn"][i].hy
+            };
+            var wall_pos_canvas = getPixelPointFromWorldPoint(leftup_corner);
+            context.fillStyle='rgb(0,100,0)';
+            context.fillRect(wall_pos_canvas.x, wall_pos_canvas.y, this.level.obstacles["spawn"][i].hx*PTM*2, this.level.obstacles["spawn"][i].hy*PTM*2);
+        }
+    }
+
+    // Wind
+    if(this.level.obstacles["wind"].length>0){
+        for(var i=0,l=this.level.obstacles["wind"].length;i<l;++i){
+            var world_pos_wall=this.level.obstacles["wind"][i].body.GetPosition();
+            var leftup_corner={
+                x:world_pos_wall.x-this.level.obstacles["wind"][i].hx,
+                y:world_pos_wall.y+this.level.obstacles["wind"][i].hy
+            };
+            context.fillStyle = 'rgb(0,130,0)';
+            var wall_pos_canvas = getPixelPointFromWorldPoint(leftup_corner);
+            var wall_pos_canvas_center = getPixelPointFromWorldPoint(world_pos_wall);
+            context.fillRect(wall_pos_canvas.x, wall_pos_canvas.y, this.level.obstacles["wind"][i].hx*PTM*2, this.level.obstacles["wind"][i].hy*PTM*2);
+            context.save();
+            context.translate(wall_pos_canvas_center.x,wall_pos_canvas_center.y);
+            var norme = Math.sqrt(Math.pow(this.level.obstacles["wind"][i].direction.x*PTM,2) + Math.pow(this.level.obstacles["wind"][i].direction.y*PTM,2));
+            var angle = 2*Math.atan(this.level.obstacles["wind"][i].direction.y/(this.level.obstacles["wind"][i].direction.x+Math.sqrt(Math.pow(this.level.obstacles["wind"][i].direction.x,2) + Math.pow(this.level.obstacles["wind"][i].direction.y,2))));
+            context.rotate(Math.PI*1.5);
+            context.rotate(-angle);
+            context.drawImage(this.level.obstacles["wind"][i].sprite, -this.level.obstacles["wind"][i].hx*PTM, -this.level.obstacles["wind"][i].hy*PTM , this.level.obstacles["wind"][i].hx*PTM*2, this.level.obstacles["wind"][i].hy*PTM*2);
+            context.restore();
+
+            if(this.level.obstacles["wind"][i].enter){
+                this.level.obstacles["wind"][i].enter.ApplyLinearImpulse(new b2Vec2(this.level.obstacles["wind"][i].direction.x*this.level.obstacles["wind"][i].acceleration, this.level.obstacles["wind"][i].direction.y*this.level.obstacles["wind"][i].acceleration), true);
+            }
+
         }
     }
     
