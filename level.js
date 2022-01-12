@@ -8,7 +8,9 @@ class Level{
             bumper:[],
             portal:[],
             wind:[],
-            spawn:[]
+            spawn:[],
+            ice:[],
+            water:[]
         };
         this.hole = null;
     }
@@ -50,12 +52,20 @@ class Level{
         this.obstacles["sand"].push(new Sand(middle_pos,shape,hx,hy,radius,vectrices));
     }
 
+    createIce(middle_pos,shape,hx,hy,radius,vectrices){
+        this.obstacles["sand"].push(new Ice(middle_pos,shape,hx,hy,radius,vectrices));
+    }
+
     createBubblegum(middle_pos,shape,hx,hy,radius,vectrices){
         this.obstacles["bubblegum"].push(new Bubblegum(middle_pos,shape,hx,hy,radius,vectrices));
     }
 
     createVoid(middle_pos,shape,hx,hy,radius,vectrices){
         this.obstacles["void"].push(new Void(middle_pos,shape,hx,hy,radius,vectrices));
+    }
+
+    createWater(middle_pos,shape,hx,hy,radius,vectrices){
+        this.obstacles["water"].push(new Water(middle_pos,shape,hx,hy,radius,vectrices));
     }
 
     createPortal(enter_pos,exit_pos,bidirectional,hx1,hy1,hx2,hy2){
@@ -95,13 +105,19 @@ class Level{
                             this.createBumper(new b2Vec2(object.middle_pos.x,object.middle_pos.y), object.shape, object.isstatic, object.hx, object.hy, object.radius, object.vectrices);
                         break;
                         case "portal":
-                            this.createPortal(new b2Vec2(object.enter_pos.x, object.enter_pos.y), new b2Vec2(object.exit_pos.x, object.exit_pos.y), true, object.hx1, object.hy1, object.hx2, object.hy2);
+                            this.createPortal(new b2Vec2(object.enter_pos.x, object.enter_pos.y), new b2Vec2(object.exit_pos.x, object.exit_pos.y), object.bidirectional, object.hx1, object.hy1, object.hx2, object.hy2);
                         break;
                         case "wind":
                             this.createWind(new b2Vec2(object.middle_pos.x, object.middle_pos.y), object.hx, object.hy, object.acceleration, new b2Vec2(object.direction.x, object.direction.y));
                         break;
                         case "spawn":
                             this.createSpawn(new b2Vec2(object.middle_pos.x, object.middle_pos.y), object.hx, object.hy);
+                        break;
+                        case 'ice':
+                            this.createIce(new b2Vec2(object.middle_pos.x,object.middle_pos.y), object.shape, object.hx, object.hy, object.radius, object.vectrices);
+                        break;
+                        case 'water':
+                            this.createWater(new b2Vec2(object.middle_pos.x,object.middle_pos.y), object.shape, object.hx, object.hy, object.radius, object.vectrices);
                         break;
                     }
                         

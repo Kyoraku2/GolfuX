@@ -1,0 +1,355 @@
+{
+    "obstacles":{
+        "wall":[
+            {
+                "middle_pos":{"x":11.5, "y":0},
+                "shape": "box",
+                "userdata": -1,
+                "isstatic": true,
+                "hx": 11.5,
+                "hy":0.25,
+                "radius": -1,
+                "vectrices": -1
+            },
+            {
+                "middle_pos":{"x":11.5, "y":31},
+                "shape": "box",
+                "userdata": -1,
+                "isstatic": true,
+                "hx": 11.5,
+                "hy":0.25,
+                "radius": -1,
+                "vectrices": -1
+            },
+            {
+                "middle_pos":{"x":0, "y":15.5},
+                "shape": "box",
+                "userdata": -1,
+                "isstatic": true,
+                "hx": 0.25,
+                "hy": 15.75,
+                "radius": -1,
+                "vectrices": -1
+            },
+            {
+                "middle_pos":{"x":23, "y":15.5},
+                "shape": "box",
+                "userdata": -1,
+                "isstatic": true,
+                "hx": 0.25,
+                "hy": 15.75,
+                "radius": -1,
+                "vectrices": -1
+            },
+            {
+                "middle_pos":{"x":11.5, "y":5},
+                "shape": "box",
+                "userdata": -1,
+                "isstatic": true,
+                "hx": 6.5,
+                "hy":0.25,
+                "radius": -1,
+                "vectrices": -1
+            },
+            {
+                "middle_pos":{"x":17.75, "y":18},
+                "shape": "box",
+                "userdata": -1,
+                "isstatic": true,
+                "hx": 0.25,
+                "hy": 13,
+                "radius": -1,
+                "vectrices": -1
+            },
+            {
+                "middle_pos":{"x":5.1, "y":18},
+                "shape": "box",
+                "userdata": -1,
+                "isstatic": true,
+                "hx": 0.25,
+                "hy": 13.25,
+                "radius": -1,
+                "vectrices": -1
+            }
+        ],
+        "sand":[
+            {
+                "middle_pos":{"x":2.5, "y":9},
+                "shape": "box",
+                "userdata": 200,
+                "hx": 2.5,
+                "hy":1.5,
+                "radius": -1,
+                "vectrices": -1
+            },
+            {
+                "middle_pos":{"x":2.5, "y":25},
+                "shape": "box",
+                "userdata": 200,
+                "hx": 2.5,
+                "hy": 1.5,
+                "radius": -1,
+                "vectrices": -1
+            }
+        ],
+        "bubblegum":[
+            {
+                "middle_pos":{"x":2.5, "y":17},
+                "shape": "box",
+                "userdata": 201,
+                "hx": 2.5,
+                "hy": 1,
+                "radius": -1,
+                "vectrices": -1
+            }
+        ],
+        "void":[
+            {
+                "middle_pos":{"x":11.4, "y":30.25},
+                "shape": "box",
+                "userdata": 202,
+                "hx": 6.1,
+                "hy":0.5,
+                "radius": -1,
+                "vectrices": -1
+            }
+
+        ],
+        "bumper":[
+            {
+                "middle_pos":{"x":8, "y":4},
+                "shape": "circle",
+                "userdata": -1,
+                "isstatic":true,
+                "hx": -1,
+                "hy": -1,
+                "radius": 0.75,
+                "vectrices": -1
+            },
+            {
+                "middle_pos":{"x":8, "y":1},
+                "shape": "circle",
+                "userdata": -1,
+                "isstatic":true,
+                "hx": -1,
+                "hy": -1,
+                "radius": 0.75,
+                "vectrices": -1
+            },
+            {
+                "middle_pos":{"x":6.25, "y":2.5},
+                "shape": "circle",
+                "userdata": -1,
+                "isstatic":true,
+                "hx": -1,
+                "hy": -1,
+                "radius": 0.75,
+                "vectrices": -1
+            },
+            {
+                "middle_pos":{"x":15, "y":4},
+                "shape": "circle",
+                "userdata": -1,
+                "isstatic":true,
+                "hx": -1,
+                "hy": -1,
+                "radius": 0.75,
+                "vectrices": -1
+            },
+            {
+                "middle_pos":{"x":15, "y":1},
+                "shape": "circle",
+                "userdata": -1,
+                "isstatic":true,
+                "hx": -1,
+                "hy": -1,
+                "radius": 0.75,
+                "vectrices": -1
+            },
+            {
+                "middle_pos":{"x":16.75, "y":2.5},
+                "shape": "circle",
+                "userdata": -1,
+                "isstatic":true,
+                "hx": -1,
+                "hy": -1,
+                "radius": 0.75,
+                "vectrices": -1
+            }
+        ],
+        "portal":[
+            {
+                "enter_pos":{"x":0.3,"y":20.75},
+                "exit_pos":{"x":20.3,"y":30.7},
+                "userdata":203,
+                "bidirectional":true,
+                "hx1": 0.1,
+                "hy1": 1,
+                "hx2": 1,
+                "hy2": 0.1
+            },
+            {
+                "exit_pos":{"x":11.5,"y":5.3},
+                "enter_pos":{"x":2.5,"y":30.7},
+                "userdata":203,
+                "bidirectional":false,
+                "hx1": 1,
+                "hy1": 0.1,
+                "hx2": 1,
+                "hy2": 0.1
+            }
+        ],
+        "wind":[
+            {
+                "middle_pos":{"x":1, "y":1},
+                "hx": 0.75,
+                "hy": 0.75,
+                "acceleration": 1.2,
+                "direction":{"x":0, "y":1}
+            },
+            {
+                "middle_pos":{"x":2.5, "y":1},
+                "hx": 0.75,
+                "hy": 0.75,
+                "acceleration": 1.2,
+                "direction":{"x":0, "y":1}
+            },
+            {
+                "middle_pos":{"x":4, "y":1},
+                "hx": 0.75,
+                "hy": 0.75,
+                "acceleration": 1.2,
+                "direction":{"x":0, "y":1}
+            },
+            {
+                "middle_pos":{"x":2.5, "y":2.5},
+                "hx": 0.75,
+                "hy": 0.75,
+                "acceleration": 1.2,
+                "direction":{"x":0, "y":1}
+            },
+            {
+                "middle_pos":{"x":1, "y":2.5},
+                "hx": 0.75,
+                "hy": 0.75,
+                "acceleration": 1.2,
+                "direction":{"x":0, "y":1}
+            },
+            {
+                "middle_pos":{"x":4, "y":2.5},
+                "hx": 0.75,
+                "hy": 0.75,
+                "acceleration": 1.2,
+                "direction":{"x":0, "y":1}
+            },
+            {
+                "middle_pos":{"x":2.5, "y":4},
+                "hx": 0.75,
+                "hy": 0.75,
+                "acceleration": 1.2,
+                "direction":{"x":0, "y":1}
+            },
+            {
+                "middle_pos":{"x":1, "y":4},
+                "hx": 0.75,
+                "hy": 0.75,
+                "acceleration": 1.2,
+                "direction":{"x":0, "y":1}
+            },
+            {
+                "middle_pos":{"x":4, "y":4},
+                "hx": 0.75,
+                "hy": 0.75,
+                "acceleration": 1.2,
+                "direction":{"x":0, "y":1}
+            },
+            {
+                "middle_pos":{"x":2.6, "y":13.25},
+                "hx": 0.75,
+                "hy": 0.75,
+                "acceleration": 1.2,
+                "direction":{"x":0, "y":1}
+            },
+            {
+                "middle_pos":{"x":1.1, "y":13.25},
+                "hx": 0.75,
+                "hy": 0.75,
+                "acceleration": 1.2,
+                "direction":{"x":0, "y":1}
+            },
+            {
+                "middle_pos":{"x":4.1, "y":13.25},
+                "hx": 0.75,
+                "hy": 0.75,
+                "acceleration": 1.2,
+                "direction":{"x":0, "y":1}
+            },
+            {
+                "middle_pos":{"x":2.6, "y":20.75},
+                "hx": 0.75,
+                "hy": 0.75,
+                "acceleration": 1.2,
+                "direction":{"x":0, "y":-1}
+            },
+            {
+                "middle_pos":{"x":1.1, "y":20.75},
+                "hx": 0.75,
+                "hy": 0.75,
+                "acceleration": 1.2,
+                "direction":{"x":0, "y":-1}
+            },
+            {
+                "middle_pos":{"x":4.1, "y":20.75},
+                "hx": 0.75,
+                "hy": 0.75,
+                "acceleration": 1.2,
+                "direction":{"x":0, "y":-1}
+            }
+        ],
+        "spawn":[
+            {
+                "middle_pos":{"x":11.5, "y":2.5},
+                "hx": 1.5,
+                "hy": 1
+            }
+        ],
+        "ice":[
+            {
+                "middle_pos":{"x":20.38, "y":18},
+                "shape": "box",
+                "userdata": -1,
+                "isstatic": true,
+                "hx": 1.38,
+                "hy": 13,
+                "radius": -1,
+                "vectrices": -1
+            }
+        ],
+        "water":[
+            {
+                "middle_pos":{"x":18.5, "y":18},
+                "shape": "box",
+                "userdata": -1,
+                "isstatic": true,
+                "hx": 0.5,
+                "hy": 13,
+                "radius": -1,
+                "vectrices": -1
+            },
+            {
+                "middle_pos":{"x":22.25, "y":18},
+                "shape": "box",
+                "userdata": -1,
+                "isstatic": true,
+                "hx": 0.5,
+                "hy": 13,
+                "radius": -1,
+                "vectrices": -1
+            }
+        ]
+    },
+    "hole":{
+        "pos":{"x":11.5, "y":28},
+        "radius":0.5
+    }
+}

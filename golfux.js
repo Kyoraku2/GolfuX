@@ -7,7 +7,7 @@ class golfux{
         //this.balls[1] = new Ball(new b2Vec2(0,2), 1);
         //this.ball = new Ball();
         this.level = new Level();
-        this.level.createFromJSON('level1')
+        this.level.createFromJSON('level3')
         //this.level.initBasicWalls();
         //this.level.createHole(0.5, new b2Vec2(10,20));
         addEventListener(this.balls,this.level);
@@ -40,9 +40,10 @@ class golfux{
 const MAX_INTENSITIE=8;
 const BUBBLEGUM_LINEAR_DAMPLING = 18;
 const SAND_LINEAR_DAMPLING = 12;
+const ICE_LINEAR_DAMPLING = 0.8;
 // Dimensions du monde pour déterminer le PTM (c'est le zoom un peu, le facteur de scale)
-var w_width = 20.25;
-var w_height = 27;
+var w_width = 24.3;
+var w_height = 32.4;
 function addEventListener(balls, level){
     var listener = new Box2D.JSContactListener();
     listener.BeginContact = function (contactPtr) {
@@ -114,16 +115,25 @@ function addEventListener(balls, level){
                             return;
                         }
                         wind.enter = balls[idB].body;
-                        //balls[idA].body.ApplyLinearImpulse(new b2Vec2(wind.direction.x*wind.acceleration, wind.direction.y*wind.acceleration), true);
                         break;
+                    case 207:
+                        balls[idA].body.SetLinearDamping(ICE_LINEAR_DAMPLING);
+                        break;
+                    case 208:
+                        setTimeout(function(body,lastPos){
+                            body.SetTransform(new b2Vec2(lastPos.x,lastPos.y),0);
+                            body.SetLinearVelocity(new b2Vec2(0,0));
+                            body.SetAngularVelocity(0);
+                        },0,balls[idA].body,balls[idA].lastPos);
+                    break;
                 }
             }else{
                 switch(idA){
                     case 200:
-                        balls[idB].body.SetLinearDamping(12);
+                        balls[idB].body.SetLinearDamping(SAND_LINEAR_DAMPLING);
                         break;
                     case 201:
-                        balls[idB].body.SetLinearDamping(18);
+                        balls[idB].body.SetLinearDamping(BUBBLEGUM_LINEAR_DAMPLING);
                         break;
                     case 202:
                         setTimeout(function(body,start){
@@ -170,8 +180,17 @@ function addEventListener(balls, level){
                             return;
                         }
                         wind.enter = balls[idB].body;
-                        //balls[idB].body.ApplyLinearImpulse(new b2Vec2(wind.direction.x*wind.acceleration, wind.direction.y*wind.acceleration), true);
                         break;
+                    case 207:
+                        balls[idB].body.SetLinearDamping(ICE_LINEAR_DAMPLING);
+                        break;
+                    case 208:
+                        setTimeout(function(body,lastPos){
+                            body.SetTransform(new b2Vec2(lastPos.x,lastPos.y),0);
+                            body.SetLinearVelocity(new b2Vec2(0,0));
+                            body.SetAngularVelocity(0);
+                        },0,balls[idB].body,balls[idB].lastPos);
+                    break;
                 }
             }
         }
@@ -206,6 +225,7 @@ function addEventListener(balls, level){
                 switch(idB){
                     case 201:
                     case 200:
+                    case 207:
                         balls[idA].body.SetLinearDamping(1);
                         break;
                     case 205:
@@ -223,6 +243,7 @@ function addEventListener(balls, level){
                 switch(idA){
                     case 201:
                     case 200:
+                    case 207:
                         balls[idB].body.SetLinearDamping(1);
                         break;
                     case 205:
@@ -319,6 +340,10 @@ golfux.prototype.onMouseUp = function(canvas, evt) {
         intensifie=MAX_INTENSITIE;
     }
     // Impulsion
+    this.balls[this.ballIndex].lastPos = {
+        x:this.balls[this.ballIndex].body.GetPosition().x,
+        y:this.balls[this.ballIndex].body.GetPosition().y
+    }
     this.balls[this.ballIndex].body.ApplyLinearImpulse(new b2Vec2(impulse.x*intensifie, impulse.y*intensifie),true);
     this.ballIndex = (this.ballIndex < this.balls.length-1) ? this.ballIndex+1 : 0;
     this.click_up=null;
@@ -359,6 +384,10 @@ golfux.prototype.onTouchUp = function(canvas, evt) {
         intensifie=MAX_INTENSITIE;
     }
     // Impulsion
+    this.balls[this.ballIndex].lastPos = {
+        x:this.balls[this.ballIndex].body.GetPosition().x,
+        y:this.balls[this.ballIndex].body.GetPosition().y
+    }
     this.balls[this.ballIndex].body.ApplyLinearImpulse(new b2Vec2(impulse.x*intensifie, impulse.y*intensifie),true);
     this.ballIndex = (this.ballIndex < this.balls.length-1) ? this.ballIndex+1 : 0;
     this.click_up=null;
@@ -385,120 +414,25 @@ golfux.prototype.step = function(){
 
     context.fillStyle = '#FF0000';
     // Sand
-    if(this.level.obstacles["sand"].length>0){
-        for(var i=0,l=this.level.obstacles["sand"].length;i<l;++i){
-            var pattern = context.createPattern(this.level.obstacles["sand"][i].sprite, 'repeat');
-            context.fillStyle = pattern;
-            var world_pos_wall=this.level.obstacles["sand"][i].body.GetPosition();
-            var leftup_corner={
-                x:world_pos_wall.x-this.level.obstacles["sand"][i].hx,
-                y:world_pos_wall.y+this.level.obstacles["sand"][i].hy
-            };
-            var wall_pos_canvas = getPixelPointFromWorldPoint(leftup_corner);
-            context.fillRect(wall_pos_canvas.x, wall_pos_canvas.y, this.level.obstacles["sand"][i].hx*PTM*2, this.level.obstacles["sand"][i].hy*PTM*2);
+    renderObjectType("sand",this.level,"white");
 
-        }
-    }
+    // Ice
+    renderObjectType("ice",this.level,"lime");
 
     // Bubblegum
-    if(this.level.obstacles["bubblegum"].length>0){
-        for(var i=0,l=this.level.obstacles["bubblegum"].length;i<l;++i){
-            var pattern = context.createPattern(this.level.obstacles["bubblegum"][i].sprite, 'repeat');
-            context.fillStyle = pattern;
-            var world_pos_wall=this.level.obstacles["bubblegum"][i].body.GetPosition();
-            var leftup_corner={
-                x:world_pos_wall.x-this.level.obstacles["bubblegum"][i].hx,
-                y:world_pos_wall.y+this.level.obstacles["bubblegum"][i].hy
-            };
-            var wall_pos_canvas = getPixelPointFromWorldPoint(leftup_corner);
-            context.fillRect(wall_pos_canvas.x, wall_pos_canvas.y, this.level.obstacles["bubblegum"][i].hx*PTM*2, this.level.obstacles["bubblegum"][i].hy*PTM*2);
-        }
-    }
+    renderObjectType("bubblegum",this.level,"black");
 
     // Void
-    if(this.level.obstacles["void"].length>0){
-        for(var i=0,l=this.level.obstacles["void"].length;i<l;++i){
-            var pattern = context.createPattern(this.level.obstacles["void"][i].sprite, 'repeat');
-            context.fillStyle = pattern;
-            var world_pos_wall=this.level.obstacles["void"][i].body.GetPosition();
-            var leftup_corner={
-                x:world_pos_wall.x-this.level.obstacles["void"][i].hx,
-                y:world_pos_wall.y+this.level.obstacles["void"][i].hy
-            };
-            var wall_pos_canvas = getPixelPointFromWorldPoint(leftup_corner);
-            context.fillRect(wall_pos_canvas.x, wall_pos_canvas.y, this.level.obstacles["void"][i].hx*PTM*2, this.level.obstacles["void"][i].hy*PTM*2);
-        }
-    }
+    renderObjectType("void",this.level,"grey");
 
-    // Walls
-    if(this.level.obstacles["walls"].length>0){
-        for(var i=0,l=this.level.obstacles["walls"].length;i<l;++i){
-            var pattern = context.createPattern(this.level.obstacles["walls"][i].sprite, 'repeat');
-            context.fillStyle = pattern;
-            var world_pos_wall=this.level.obstacles["walls"][i].body.GetPosition();
-            var leftup_corner={
-                x:world_pos_wall.x-this.level.obstacles["walls"][i].hx,
-                y:world_pos_wall.y+this.level.obstacles["walls"][i].hy
-            };
-            var wall_pos_canvas = getPixelPointFromWorldPoint(leftup_corner);
-            context.fillRect(wall_pos_canvas.x, wall_pos_canvas.y, this.level.obstacles["walls"][i].hx*PTM*2, this.level.obstacles["walls"][i].hy*PTM*2);
-        }
-    }
+    // Water
+    renderObjectType("water",this.level,"yellow");
 
     // Bumper
-    if(this.level.obstacles["bumper"].length>0){
-        for(var i=0,l=this.level.obstacles["bumper"].length;i<l;++i){
-            var pattern = context.createPattern(this.level.obstacles["bumper"][i].sprite, 'repeat');
-            context.fillStyle = pattern;
-            var pos = getPixelPointFromWorldPoint(this.level.obstacles["bumper"][i].body.GetPosition());
-            context.beginPath();
-            context.arc(pos.x, pos.y, this.level.obstacles["bumper"][i].radius*PTM, 0, 2 * Math.PI);
-            context.fill();
-        }
-    }
-
-    // Portal
-    if(this.level.obstacles["portal"].length>0){
-        for(var i=0,l=this.level.obstacles["portal"].length;i<l;++i){
-            var tmp = this.level.obstacles["portal"][i].enter.body.GetPosition();
-            var pos_enter = {
-                x: tmp.x-this.level.obstacles["portal"][i].enter.hx,
-                y: tmp.y+this.level.obstacles["portal"][i].enter.hy
-            };
-            var world_enter = getPixelPointFromWorldPoint(pos_enter);
-
-            tmp = this.level.obstacles["portal"][i].exit.body.GetPosition();
-            var pos_exit = {
-                x: tmp.x-this.level.obstacles["portal"][i].exit.hx,
-                y: tmp.y+this.level.obstacles["portal"][i].exit.hy
-            };
-            var world_exit = getPixelPointFromWorldPoint(pos_exit);
-            if(!this.level.obstacles["portal"][i].bidirectional){
-                context.fillStyle = "aqua";
-                context.fillRect(world_enter.x, world_enter.y, this.level.obstacles["portal"][i].enter.hx*PTM*2, this.level.obstacles["portal"][i].enter.hy*PTM*2);
-                context.fillStyle = "orange";
-                context.fillRect(world_exit.x, world_exit.y, this.level.obstacles["portal"][i].exit.hx*PTM*2, this.level.obstacles["portal"][i].exit.hy*PTM*2);
-            }else{
-                context.fillStyle = "purple";
-                context.fillRect(world_enter.x, world_enter.y, this.level.obstacles["portal"][i].enter.hx*PTM*2, this.level.obstacles["portal"][i].enter.hy*PTM*2);
-                context.fillRect(world_exit.x, world_exit.y, this.level.obstacles["portal"][i].exit.hx*PTM*2, this.level.obstacles["portal"][i].exit.hy*PTM*2);
-            }
-        }
-    }
+    renderObjectType("bumper",this.level,"blue");
 
     // Spawn area
-    if(this.level.obstacles["spawn"].length>0){
-        for(var i=0,l=this.level.obstacles["spawn"].length;i<l;++i){
-            var world_pos_wall=this.level.obstacles["spawn"][i].body.GetPosition();
-            var leftup_corner={
-                x:world_pos_wall.x-this.level.obstacles["spawn"][i].hx,
-                y:world_pos_wall.y+this.level.obstacles["spawn"][i].hy
-            };
-            var wall_pos_canvas = getPixelPointFromWorldPoint(leftup_corner);
-            context.fillStyle='rgb(0,100,0)';
-            context.fillRect(wall_pos_canvas.x, wall_pos_canvas.y, this.level.obstacles["spawn"][i].hx*PTM*2, this.level.obstacles["spawn"][i].hy*PTM*2);
-        }
-    }
+    renderObjectType("spawn",this.level,"pink");
 
     // Wind
     if(this.level.obstacles["wind"].length>0){
@@ -514,7 +448,6 @@ golfux.prototype.step = function(){
             context.fillRect(wall_pos_canvas.x, wall_pos_canvas.y, this.level.obstacles["wind"][i].hx*PTM*2, this.level.obstacles["wind"][i].hy*PTM*2);
             context.save();
             context.translate(wall_pos_canvas_center.x,wall_pos_canvas_center.y);
-            var norme = Math.sqrt(Math.pow(this.level.obstacles["wind"][i].direction.x*PTM,2) + Math.pow(this.level.obstacles["wind"][i].direction.y*PTM,2));
             var angle = 2*Math.atan(this.level.obstacles["wind"][i].direction.y/(this.level.obstacles["wind"][i].direction.x+Math.sqrt(Math.pow(this.level.obstacles["wind"][i].direction.x,2) + Math.pow(this.level.obstacles["wind"][i].direction.y,2))));
             context.rotate(Math.PI*1.5);
             context.rotate(-angle);
@@ -527,14 +460,27 @@ golfux.prototype.step = function(){
 
         }
     }
+
+    // Portal
+    if(this.level.obstacles["portal"].length>0){
+        for(var i=0,l=this.level.obstacles["portal"].length;i<l;++i){
+            if(!this.level.obstacles["portal"][i].bidirectional){
+                renderSquareObject(this.level.obstacles["portal"][i].enter,"aqua");
+                renderSquareObject(this.level.obstacles["portal"][i].exit,"orange");
+            }else{
+                renderSquareObject(this.level.obstacles["portal"][i].enter,"purple");
+                renderSquareObject(this.level.obstacles["portal"][i].exit,"purple");
+            }
+        }
+    }
+    // Walls
+    renderObjectType("walls",this.level,"red");
     
     // Balls
     for(var i = 0; i<this.balls.length; i++){
         this.balls[i].x=this.balls[i].body.GetPosition().x;
         this.balls[i].y=this.balls[i].body.GetPosition().y;
         this.balls[i].isColliding(this.level.hole);
-
-
 
         if(this.balls[i].body.GetLinearVelocity().Length()<1){
             this.balls[i].isMoving = false;
@@ -589,6 +535,50 @@ golfux.prototype.step = function(){
         console.log("FINI");
         this.changeLevel(2)
     }
+}
+
+function renderObjectType(type,level,debugColor){
+    if(level.obstacles[type].length>0){
+        for(var i=0,l=level.obstacles[type].length;i<l;++i){
+            switch(level.obstacles[type][i].type){
+                case "circle":
+                    renderRoundObject(level.obstacles[type][i],debugColor);
+                break;
+                case "box":
+                    renderSquareObject(level.obstacles[type][i],debugColor);
+                break;
+            }
+        }
+    }
+}
+
+function renderRoundObject(obj,debugColor){
+    if(obj.sprite !== undefined){
+        var pattern = context.createPattern(obj.sprite, 'repeat');
+        context.fillStyle = pattern;
+    }else{
+        context.fillStyle = debugColor;
+    }
+    var pos = getPixelPointFromWorldPoint(obj.body.GetPosition());
+    context.beginPath();
+    context.arc(pos.x, pos.y, obj.radius*PTM, 0, 2 * Math.PI);
+    context.fill();
+}
+
+function renderSquareObject(obj,debugColor){
+    if(obj.sprite !== undefined){
+        var pattern = context.createPattern(obj.sprite, 'repeat');
+        context.fillStyle = pattern;
+    }else{
+        context.fillStyle = debugColor;
+    }
+    var world_pos=obj.body.GetPosition();
+    var leftup_corner={
+        x:world_pos.x-obj.hx,
+        y:world_pos.y+obj.hy
+    };
+    var canvas_pos = getPixelPointFromWorldPoint(leftup_corner);
+    context.fillRect(canvas_pos.x, canvas_pos.y, obj.hx*PTM*2, obj.hy*PTM*2);
 }
 
 //Fonction pour print la flèche (trucs mystiques pour le bout tkt)

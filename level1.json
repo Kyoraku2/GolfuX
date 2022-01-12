@@ -2,51 +2,51 @@
     "obstacles":{
         "wall":[
             {
-                "middle_pos":{"x":9.5, "y":0},
+                "middle_pos":{"x":11.5, "y":0},
                 "shape": "box",
                 "userdata": -1,
                 "isstatic": true,
-                "hx": 9.25,
+                "hx": 11.5,
                 "hy":0.25,
                 "radius": -1,
                 "vectrices": -1
             },
             {
-                "middle_pos":{"x":9.5, "y":25.7},
+                "middle_pos":{"x":11.5, "y":31},
                 "shape": "box",
                 "userdata": -1,
                 "isstatic": true,
-                "hx": 9.25,
+                "hx": 11.5,
                 "hy":0.25,
                 "radius": -1,
                 "vectrices": -1
             },
             {
-                "middle_pos":{"x":0, "y":12.85},
+                "middle_pos":{"x":0, "y":15.5},
                 "shape": "box",
                 "userdata": -1,
                 "isstatic": true,
                 "hx": 0.25,
-                "hy":13.1,
+                "hy": 15.75,
                 "radius": -1,
                 "vectrices": -1
             },
             {
-                "middle_pos":{"x":19, "y":12.85},
+                "middle_pos":{"x":23, "y":15.5},
                 "shape": "box",
                 "userdata": -1,
                 "isstatic": true,
                 "hx": 0.25,
-                "hy":13.1,
+                "hy": 15.75,
                 "radius": -1,
                 "vectrices": -1
             },
             {
-                "middle_pos":{"x":10, "y":12},
+                "middle_pos":{"x":11.5, "y":5},
                 "shape": "box",
                 "userdata": -1,
                 "isstatic": true,
-                "hx": 4.25,
+                "hx": 6.5,
                 "hy":0.25,
                 "radius": -1,
                 "vectrices": -1
@@ -121,14 +121,14 @@
         ],
         "spawn":[
             {
-                "middle_pos":{"x":10, "y":3},
+                "middle_pos":{"x":11.5, "y":2.5},
                 "hx": 1.5,
-                "hy": 1.5
+                "hy": 1
             }
         ]
     },
     "hole":{
-        "pos":{"x":10, "y":20},
+        "pos":{"x":11.5, "y":28},
         "radius":0.5
     }
 }

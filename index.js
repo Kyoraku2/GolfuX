@@ -251,7 +251,7 @@ function draw() {
     drawAxes(context);
     
     context.fillStyle = 'rgb(255,255,0)';
-    world.DrawDebugData(); // Affichage des éléments de débugage
+    //world.DrawDebugData(); // Affichage des éléments de débugage
         
     context.restore();
 }
