@@ -432,7 +432,7 @@ golfux.prototype.step = function(){
     renderObjectType("bumper",this.level,"blue");
 
     // Spawn area
-    renderObjectType("spawn",this.level,"pink");
+    renderObjectType("spawn",this.level,"rgb(0,110,0)");
 
     // Wind
     if(this.level.obstacles["wind"].length>0){
