@@ -183,10 +183,10 @@
                 "exit_pos":{"x":20.3,"y":30.7},
                 "userdata":203,
                 "bidirectional":true,
-                "hx1": 0.1,
+                "hx1": 0.3,
                 "hy1": 1,
                 "hx2": 1,
-                "hy2": 0.1
+                "hy2": 0.3
             },
             {
                 "exit_pos":{"x":11.5,"y":5.3},
@@ -194,9 +194,9 @@
                 "userdata":203,
                 "bidirectional":false,
                 "hx1": 1,
-                "hy1": 0.1,
+                "hy1": 0.3,
                 "hx2": 1,
-                "hy2": 0.1
+                "hy2": 0.3
             }
         ],
         "wind":[
