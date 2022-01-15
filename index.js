@@ -5,6 +5,8 @@ var e_pairBit = 0x0008;
 var e_centerOfMassBit = 0x0010;
 
 var PTM = 32;
+const NUM_LEVELS = 18;
+var max_lvl = localStorage.getItem("level");
 
 var world = null;
 var canvas;
@@ -34,6 +36,7 @@ var viewCenterPixel = {
     y:240
 };
 var currentTest = null;
+var ballPlaced = false;
 
 function myRound(val,places) {
     var c = 1;
@@ -72,9 +75,38 @@ function setViewCenterWorld(b2vecpos, instantaneous) {
 }
 
 
-function onMouseDown(canvas, evt) {            
+function onMouseDown(canvas, evt) {
     updateMousePos(canvas, evt);
     currentTest.onMouseDown(canvas, evt);
+    if(!ballPlaced){
+        placeBallInSpawn();
+    }
+}
+
+function collideCircles(obj1,obj2){
+
+}
+
+function clickCollideRect(obj){
+    return mousePosWorld.x >= obj.middle_pos.x-obj.hx
+            && mousePosWorld.x <= obj.middle_pos.x+obj.hx
+            && mousePosWorld.y >= obj.middle_pos.y-obj.hy
+            && mousePosWorld.y <= obj.middle_pos.y+obj.hy;
+}
+
+function placeBallInSpawn(){
+    var spawn_area;
+    for(var i = 0 ; i < currentTest.level.obstacles['spawn'].length ; ++i){
+        if(clickCollideRect(currentTest.level.obstacles['spawn'][i])){
+            spawn_area = currentTest.level.obstacles['spawn'][i];
+            break;
+        }
+    }
+    if(spawn_area === undefined){
+        return;
+    }
+    currentTest.balls.push(new Ball(new b2Vec2(mousePosWorld.x,mousePosWorld.y), currentTest.balls.length));
+    ballPlaced = true;
 }
 
 function onMouseUp(canvas, evt) {
@@ -101,15 +133,30 @@ function onTouchUp(canvas, evt) {
 
 function updateMousePos(canvas, evt) {
     var rect = canvas.getBoundingClientRect();
-    mousePosPixel = {
-        x: evt.clientX - rect.left,
-        y: canvas.height - (evt.clientY - rect.top)
-    };
+    if(evt.clientX !== undefined){
+        mousePosPixel = {
+            x: evt.clientX - rect.left,
+            y: canvas.height - (evt.clientY - rect.top)
+        };
+    }else{
+        if(evt.clientX === undefined && evt.touches.length !== 0){
+            mousePosPixel = {
+                x: evt.touches[0].clientX - rect.left,
+                y: canvas.height - (evt.touches[0].clientY - rect.top)
+            };
+        }else{
+            mousePosPixel = {
+                x: evt.changedTouches[0].clientX - rect.left,
+                y: canvas.height - (evt.changedTouches[0].clientY - rect.top)
+            };
+        }
+    }
     mousePosWorld = getWorldPointFromPixelPoint(mousePosPixel);
 }
 
 function onTouchMove(evt) {
-    currentTest.onTouchMove(evt);
+    currentTest.onTouchMove(canvas, evt);
+    updateMousePos(canvas, evt);
 }
 
 
@@ -206,7 +253,7 @@ function draw() {
     drawAxes(context);
     
     context.fillStyle = 'rgb(255,255,0)';
-    world.DrawDebugData(); // Affichage des éléments de débugage
+    //world.DrawDebugData(); // Affichage des éléments de débugage
         
     context.restore();
 }
@@ -227,3 +274,86 @@ function animate() {
         requestAnimFrame( animate );
     step();
 }
+
+/* ECOUTEURS INTERFACES */
+
+document.addEventListener("DOMContentLoaded", function() {
+    //Création levels dynamiques
+    create_levels_btn(NUM_LEVELS);
+    //Progression
+    if (localStorage.getItem("level") == null) {
+        save_progression(1);
+    }
+    
+    //Mode Solo
+    document.getElementById("play-solo").addEventListener('click', function(e){
+        display_title(false);
+        document.getElementById("solo").style.display = "block";
+    });
+
+    //Liste niveaux 
+    document.getElementById("levels").addEventListener('click', function(e) {
+        if (e.target.dataset["index"] != undefined) {
+            if (e.target.dataset["index"] <= max_lvl) {
+                document.getElementById("solo").style.display = "none";
+                //Charger level X
+                document.getElementById("game").style.display = "block";
+            } else {
+                alert("Vous n'avez pas encore débloqué ce niveau.");
+            }
+        }
+    });
+
+    //Multi Local
+    document.getElementById("multi-local").addEventListener('click', function(e){
+        display_title(false);
+    });
+
+    //Multi Online
+    document.getElementById("multi-online").addEventListener('click', function(e){
+        display_title(false);
+    });
+
+    //Retour
+    document.querySelector(".retour").addEventListener('click', function(e){
+        document.getElementById("solo").style.display = "none";
+        display_title();
+    });
+
+    function display_title(display=true) {
+        if (display == false) {
+            document.getElementById("menu").style.display = "none";
+            document.querySelector("header").style.display = "none";
+            document.querySelector("footer").style.display = "none";
+        } else {
+            document.getElementById("menu").style.display = "block";
+            document.querySelector("header").style.display = "block";
+            document.querySelector("footer").style.display = "block";
+        }
+    }
+
+    function create_levels_btn(lvl_number) {
+        var levels = document.getElementById("levels");
+        for(var i = 0; i < lvl_number; i++) {
+            var button = document.createElement("button");
+            button.dataset["index"] = i+1;
+            var content;
+            if (i+1 <= max_lvl) {
+                content = i+1;
+                button.classList.add("unlock");
+            } else {
+                content = "\uD83D\uDD12";
+            }
+            var txt = document.createTextNode(content);
+            button.appendChild(txt);
+            levels.appendChild(button);
+        }
+    }
+
+    function save_progression(last_lvl) {
+        var progress = localStorage.getItem("level");
+        progress = (!progress) ? {} : JSON.parse(progress);
+        progress = last_lvl;
+        localStorage.setItem("level", JSON.stringify(progress));
+    }
+});
