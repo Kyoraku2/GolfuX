@@ -3,7 +3,7 @@
    License: none (public domain)
 */
 
-html, body, div, span, applet, object, iframe,
+html, body, div, div, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
 del, dfn, em, img, ins, kbd, q, s, samp,
@@ -55,6 +55,7 @@ table {
 body {
     background-color: #02d055;
 	font: 15px "verdana", serif;
+	color: white;
 }
 
 header, footer {
@@ -63,7 +64,7 @@ header, footer {
 
 footer > p {
 	font-size: 2vh;
-	margin-top: 7vh;
+	margin-top: 5vh;
 }
 
 h2 {
@@ -86,6 +87,14 @@ p {
 header > img {
 	width: 60vw;
 	margin-top: 7vh;
+}
+
+header > div {
+	font-size: 2.5vw;
+	font-weight: bold;
+	position: relative;
+	bottom: 2vw;
+	text-shadow: #009945 7px 7px 2px;
 }
 
 #menu {
@@ -118,23 +127,18 @@ button.unlock:hover {
 #menu button {
 	height: 10vh;
 	width: 50vh;
-	margin: 5vh;
+	margin: 6vh;
 	border-radius: 20px;
 }
 
-#solo {
+#solo, #multi-local, #multi-online {
 	display: none;
 	text-align: center;
 	margin-left: 10vw;
 	margin-right: 10vw;
 }
 
-#solo button.retour {
-	height: 10vh;
-	width: 50vh;
-}
-
-button.retour {
+button.btn-retour {
 	height: 10vh;
 	width: 50vh;
 	border-radius: 20px;
@@ -146,7 +150,7 @@ button.retour {
 	height: 15vh;
 	width: 15vh;
 	margin: 5vh;
-	border-radius: 10px;
+	border-radius: 20px;
 	font-size: 5vh;
 }
 
@@ -166,3 +170,37 @@ button.retour {
 	border-left : 3px solid white;
 	border-right : 3px solid white;
 }
+
+/*************************/
+
+#subtitle div {
+	display: inline-block;
+}
+
+.animated {
+	animation-duration: 2.5s;
+	animation-fill-mode: both;
+	animation-iteration-count: infinite;
+}
+
+@keyframes bounce {
+	0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+	40% {transform: translateY(-3vh);}
+	60% {transform: translateY(-2vh);}
+}
+.bounce {
+	animation-name: bounce;
+}
+
+#bounce-1 {animation-delay: 0s;}
+#bounce-2 {animation-delay: 0.1s;}
+#bounce-3 {animation-delay: 0.2s;}
+#bounce-4 {animation-delay: 0.3s;}
+#bounce-5 {animation-delay: 0.4s;}
+#bounce-6 {animation-delay: 0.5s;}
+#bounce-7 {animation-delay: 0.6s;}
+#bounce-8 {animation-delay: 0.7s;}
+#bounce-9 {animation-delay: 0.8s;}
+#bounce-10 {animation-delay: 0.9s;}
+#bounce-11 {animation-delay: 1s;}
+#bounce-12 {animation-delay: 1.1s;}

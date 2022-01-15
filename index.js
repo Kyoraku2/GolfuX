@@ -286,7 +286,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
     
     //Mode Solo
-    document.getElementById("play-solo").addEventListener('click', function(e){
+    document.getElementById("btn-play-solo").addEventListener('click', function(e){
         display_title(false);
         document.getElementById("solo").style.display = "block";
     });
@@ -305,20 +305,28 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     //Multi Local
-    document.getElementById("multi-local").addEventListener('click', function(e){
+    document.getElementById("btn-multi-local").addEventListener('click', function(e){
         display_title(false);
+        document.getElementById("multi-local").style.display = "block";
     });
 
     //Multi Online
-    document.getElementById("multi-online").addEventListener('click', function(e){
+    document.getElementById("btn-multi-online").addEventListener('click', function(e){
         display_title(false);
+        document.getElementById("multi-online").style.display = "block";
     });
 
     //Retour
-    document.querySelector(".retour").addEventListener('click', function(e){
-        document.getElementById("solo").style.display = "none";
-        display_title();
-    });
+    var btns_retour = document.getElementsByClassName("btn-retour");
+    for (var i = 0; i < btns_retour.length; i++) {
+        btns_retour[i].addEventListener('click', function(e){
+            document.getElementById("solo").style.display = "none";
+            document.getElementById("multi-local").style.display = "none";
+            document.getElementById("multi-online").style.display = "none";
+            display_title();
+            console.log("ok");
+        });
+    }
 
     function display_title(display=true) {
         if (display == false) {

@@ -46,21 +46,44 @@
         <!-- TITRE DE LA PAGE -->
         <header>
             <img src="./textures/logo.PNG" alt="Logo GolfuX">
+            <div id="subtitle">
+                <div id="bounce-1" class="animated bounce">LE </div>
+                <div id="bounce-2" class="animated bounce">JEU </div>
+                <div id="bounce-3" class="animated bounce">DE </div>
+                <div id="bounce-4" class="animated bounce">GOLF </div>
+                <div id="bounce-5" class="animated bounce">PC </div>
+                <div id="bounce-6" class="animated bounce">ET </div>
+                <div id="bounce-7" class="animated bounce">MOBILE </div>
+                <div id="bounce-8" class="animated bounce">À </div>
+                <div id="bounce-9" class="animated bounce">JOUER </div>
+                <div id="bounce-10" class="animated bounce">ENTRE </div>
+                <div id="bounce-11" class="animated bounce">AMIS </div>
+                <div id="bounce-12" class="animated bounce">!</div>
+            </div>
         </header>
         <!-- MENUS & JEU -->
         <main>
             <div id="menu">
-                <button id="play-solo" class="unlock">MODE SOLO</button>
-                <button id="multi-local" class="unlock">MULTIJOUEUR LOCAL</button>
-                <button id="multi-online" class="unlock">MULTIJOUEUR EN LIGNE</button>
+                <button id="btn-play-solo" class="unlock">MODE SOLO</button>
+                <button id="btn-multi-local" class="unlock">MULTIJOUEUR LOCAL</button>
+                <button id="btn-multi-online" class="unlock">MULTIJOUEUR EN LIGNE</button>
             </div>
             <div id="solo">
-                <h2>NIVEAUX - MODE SOLO</h2>
+                <h2>MODE SOLO - NIVEAUX</h2>
                 <div id="levels">
                     <!-- Boutons insérés via JavaScript -->
                 </div>
-                <button class="retour unlock">RETOUR</button>
+                <button class="btn-retour unlock">RETOUR</button>
             </div>
+            <div id="multi-local">
+                <h2>MULTIJOUEUR LOCAL</h2>
+                <button class="btn-retour unlock">RETOUR</button>
+            </div>
+            <div id="multi-online">
+                <h2>MULTIJOUEUR EN LIGNE</h2>
+                <button class="btn-retour unlock">RETOUR</button>
+            </div>
+            <!-- INTERFACE JEU -->
             <div id="game">           
                 <canvas id="canvas" width="640" height="800" tabindex='1'></canvas>
             </div>
