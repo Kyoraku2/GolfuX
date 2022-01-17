@@ -33,13 +33,7 @@ var viewCenterPixel = {
     x:320,
     y:240
 };
-var currentTest = null;
-var ballPlaced = false;
-
-let sock;
-document.addEventListener("DOMContentLoaded", function() {
-    sock = io.connect();
-});
+var golfux;
 
 function myRound(val,places) {
     var c = 1;
@@ -80,7 +74,7 @@ function setViewCenterWorld(b2vecpos, instantaneous) {
 
 function onMouseDown(canvas, evt) {
     updateMousePos(canvas, evt);
-    currentTest.onMouseDown(canvas, evt);
+    golfux.onMouseDown(canvas, evt);
     if(!ballPlaced){
         placeBallInSpawn();
     }
@@ -99,23 +93,23 @@ function clickCollideRect(obj){
 
 function placeBallInSpawn(){
     var spawn_area;
-    for(var i = 0 ; i < currentTest.level.obstacles['spawn'].length ; ++i){
-        if(clickCollideRect(currentTest.level.obstacles['spawn'][i])){
-            spawn_area = currentTest.level.obstacles['spawn'][i];
+    for(var i = 0 ; i < golfux.level.obstacles['spawn'].length ; ++i){
+        if(clickCollideRect(golfux.level.obstacles['spawn'][i])){
+            spawn_area = golfux.level.obstacles['spawn'][i];
             break;
         }
     }
     if(spawn_area === undefined){
         return;
     }
-    currentTest.balls.push(new Ball(new b2Vec2(mousePosWorld.x,mousePosWorld.y), currentTest.balls.length));
+    golfux.balls.push(new Ball(new b2Vec2(mousePosWorld.x,mousePosWorld.y), golfux.balls.length));
     ballPlaced = true;
 }
 
 function onMouseUp(canvas, evt) {
     mouseDown = false;
     updateMousePos(canvas, evt);
-    currentTest.onMouseUp(canvas, evt);
+    golfux.onMouseUp(canvas, evt);
 }
 
 function onMouseMove(canvas, evt) {
@@ -124,13 +118,13 @@ function onMouseMove(canvas, evt) {
 
 function onTouchDown(canvas, evt) {            
     updateMousePos(canvas, evt);
-    currentTest.onTouchDown(canvas, evt);
+    golfux.onTouchDown(canvas, evt);
 }
 
 function onTouchUp(canvas, evt) {
     mouseDown = false;
     updateMousePos(canvas, evt);
-    currentTest.onTouchUp(canvas, evt);
+    golfux.onTouchUp(canvas, evt);
 }
 
 
@@ -158,7 +152,7 @@ function updateMousePos(canvas, evt) {
 }
 
 function onTouchMove(evt) {
-    currentTest.onTouchMove(canvas, evt);
+    golfux.onTouchMove(canvas, evt);
     updateMousePos(canvas, evt);
 }
 
@@ -214,8 +208,8 @@ function init() {
 
 function changeTest() {    
     resetScene();
-    if ( currentTest && currentTest.setNiceViewCenter ){
-        currentTest.setNiceViewCenter();
+    if ( golfux && golfux.setNiceViewCenter ){
+        golfux.setNiceViewCenter();
     }
     draw();
 }
@@ -226,10 +220,8 @@ function createWorld() {
         
     world = new Box2D.b2World( new Box2D.b2Vec2(0.0, 0.0) );
     world.SetDebugDraw(myDebugDraw);
-
-    eval( "currentTest = new golfux();" );
-    
-    currentTest.setup();
+    golfux = new Golfux();
+    golfux.setup();
 }
 
 function resetScene() {
@@ -240,7 +232,7 @@ function resetScene() {
 function step() { // Equivalent d'update
     world.Step(1/60, 3, 2);
     draw();
-    currentTest.step();
+    golfux.step();
 }
 
 function draw() {
@@ -277,3 +269,14 @@ function animate() {
         requestAnimFrame( animate );
     step();
 }
+
+/****************************************
+ *          Gestion serveur
+ ***************************************/
+
+
+var ballPlaced = false;
+let sock;
+document.addEventListener("DOMContentLoaded", function() {
+    sock = io.connect();
+});

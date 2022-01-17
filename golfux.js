@@ -1,10 +1,10 @@
-class golfux{
+class Golfux{
     constructor(){
         this.click_down=null;
         this.click_up=null;
         this.balls = [];
-        this.balls[0] = new Ball(new b2Vec2(0,2), 0);
-        this.balls[1] = new Ball(new b2Vec2(0,2), 1);
+        //this.balls[0] = new Ball(new b2Vec2(0,2), 0);
+        //this.balls[1] = new Ball(new b2Vec2(0,2), 1);
         //this.ball = new Ball();
         this.level = new Level();
         this.level.createFromJSON('level3')
@@ -269,7 +269,7 @@ function addEventListener(balls, level){
     world.SetContactListener(listener);
 }
 
-golfux.prototype.setNiceViewCenter = function() {
+Golfux.prototype.setNiceViewCenter = function() {
     var cvs=document.getElementById('canvas');
     var inFrame = (window.top != window.self);
     var w = ((inFrame) ? window.top.innerWidth : window.innerWidth)
@@ -298,15 +298,15 @@ golfux.prototype.setNiceViewCenter = function() {
     setViewCenterWorld(new b2Vec2(world_width/2-0.05*world_width/2,world_height/2-0.05*world_height/2), true);
 }
 
-golfux.prototype.setup = function() {
+Golfux.prototype.setup = function() {
 
 }
 
-golfux.prototype.onTouchMove = function(canvas, evt) {
+Golfux.prototype.onTouchMove = function(canvas, evt) {
     evt.preventDefault();
 }
 
-golfux.prototype.onMouseDown = function(canvas, evt) {
+Golfux.prototype.onMouseDown = function(canvas, evt) {
     if(this.balls.length == 0){
         return;
     }
@@ -318,7 +318,7 @@ golfux.prototype.onMouseDown = function(canvas, evt) {
     this.click_down=getWorldPointFromPixelPoint(this.click_down);
 }
 
-golfux.prototype.onMouseUp = function(canvas, evt) {
+Golfux.prototype.onMouseUp = function(canvas, evt) {
     if(this.balls.length == 0 || !this.click_down){
         return;
     }
@@ -352,7 +352,7 @@ golfux.prototype.onMouseUp = function(canvas, evt) {
     this.click_down=null;
 }
 
-golfux.prototype.onTouchDown = function(canvas, evt) {
+Golfux.prototype.onTouchDown = function(canvas, evt) {
     if(this.balls.length == 0){
         return;
     }
@@ -364,7 +364,7 @@ golfux.prototype.onTouchDown = function(canvas, evt) {
     this.click_down=getWorldPointFromPixelPoint(this.click_down);
 }
 
-golfux.prototype.onTouchUp = function(canvas, evt) {
+Golfux.prototype.onTouchUp = function(canvas, evt) {
     if(this.balls.length == 0){
         return;
     }
@@ -396,7 +396,7 @@ golfux.prototype.onTouchUp = function(canvas, evt) {
     this.click_down=null;
 }
 
-golfux.prototype.step = function(){
+Golfux.prototype.step = function(){
     // TODO : voir si on peut pas faire mieux
     if(!this.level.hole){
         return;
