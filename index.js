@@ -279,4 +279,65 @@ var ballPlaced = false;
 let sock;
 document.addEventListener("DOMContentLoaded", function() {
     sock = io.connect();
+
+    let partie = {  
+                    nbPlayers: null,
+                    nbManches: null,
+                    code: null
+                };
+
+    var creerPartie = document.getElementById("btnCreer") //TODO Je sais pas ce qu'a mis robin donc c du random
+    var rejoindrePartie = document.getElementById("btnRejoindre"); //TODO Same
+    var listeParties = document.getElementById("listeParties");
+
+    creerPartie.addEventListener("click", function(e){
+        var nbJoueurs = document.getElementById("nbJoueurs");
+        var nbManche = document.getElementById("nbManches");
+        var prive = document.getElementById("prive");
+        var code = null;
+
+        if(prive.checked){
+            code = createPassword();
+            console.log(code);
+        }
+
+        partie.nbPlayers = nbJoueurs.value;
+        partie.nbManches = nbManche.value;
+        partie.code = code;
+
+        sock.emit("CreateGame", partie);
+
+    });
+
+    rejoindrePartie.addEventListener("click", function(e){
+        //TODO Afficher liste partie
+        sock.emit("askListePartie");
+    });
+
+    listeParties.addEventListener("click", function(e){
+        if(e.target.dataset.id){
+            sock.emit("JoinPublicGame", e.target.dataset.id);
+        }
+    });
+
+    //TODO Rejoindre partie privé 
+
+
 });
+
+function createPassword(){
+    var alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+    var number = "0123456789".split("");
+    
+    var code = "";
+
+    for(var i = 0; i<4; i++){
+        if(Math.round(Math.random()*2) == 1){
+            code += alphabet[Math.round(Math.random()*(alphabet.length-1))];
+        }else{
+            code += number[Math.round(Math.random()*(number.length-1))];
+        }
+    }
+    return code;
+
+}

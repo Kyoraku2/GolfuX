@@ -49,4 +49,42 @@ io.on('connection', function (socket) {
     console.log("Un client s'est connecté");
     let index = -1;
     let game = null;
+
+    socket.on("CreateGame", function(partie){
+        index = 0;
+        counter++;
+        game = counter;
+        games[game] = partie;
+        games[game].joueurs = [];
+        games[game].joueurs[index] = {socket: socket, points: 0, tour: -1};
+        console.log("Partie créée à l'indice "+game);
+        console.log("Joueur connecté à l'indice "+index);
+        //TODO Afficher l'id de la partie au createur de la partie afin qu'il puisse la partager aux autres 
+    });
+
+    socket.on("JoinPublicGame", function(id){
+        if(games[id] && games[id].joueurs.length < games[id].nbJoueurs){
+            index = games[id].joueurs.length;
+            games[id].joueurs[index] = {socket: socket, points: 0, tour: -1};
+            game = id;
+            console.log("Joueur connecté à l'indice "+index);
+        }else{
+            socket.emit("error", {message: "Erreur, impossible de rejoindre la partie"});
+        }
+    });
+
+    socket.on("JoinPrivateGame", function(info){
+        if(games[info.id] && games[info.id].code === info.code && games[info.id].joueurs.length < games[info.id].nbJoueurs){
+            index = games[info.id].joueurs.length;
+            games[id].joueurs[index] = {socket: socket, points: 0, tour: -1};
+            game = info.id;
+            console.log("Joueur connecté à l'indice "+index);
+        }else{
+            socket.emit("error", {message: "Erreur, impossible de rejoindre la partie, mot de passe ou id invalide"});
+        }
+    })
+
+
+
+
 });
