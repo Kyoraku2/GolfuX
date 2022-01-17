@@ -442,6 +442,7 @@ document.addEventListener("DOMContentLoaded", function() {
         if (code.length != 4) {
             return false;
         }
+        code = code.toUpperCase();
         for (var i = 0; i < code.length; i++) {
             if (! ((code[i] >= 'A' && code[i] <= 'Z') || (code[i] >= '0' && code[i] <= '9'))) {
                 return false;
