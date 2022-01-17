@@ -49,44 +49,56 @@
         <!-- TITRE DE LA PAGE -->
         <header>
             <img src="./textures/logo.PNG" alt="Logo GolfuX">
-            <div id="subtitle">
-                <div id="bounce-1" class="animated bounce">LE </div>
-                <div id="bounce-2" class="animated bounce">JEU </div>
-                <div id="bounce-3" class="animated bounce">DE </div>
-                <div id="bounce-4" class="animated bounce">GOLF </div>
-                <div id="bounce-5" class="animated bounce">PC </div>
-                <div id="bounce-6" class="animated bounce">ET </div>
-                <div id="bounce-7" class="animated bounce">MOBILE </div>
-                <div id="bounce-8" class="animated bounce">À </div>
-                <div id="bounce-9" class="animated bounce">JOUER </div>
-                <div id="bounce-10" class="animated bounce">ENTRE </div>
-                <div id="bounce-11" class="animated bounce">AMIS </div>
-                <div id="bounce-12" class="animated bounce">!</div>
-            </div>
+            <h1 class="subtitle">
+                <span class="animated bounce bounce-1">LE </span>
+                <span class="animated bounce bounce-2">JEU </span>
+                <span class="animated bounce bounce-3">DE </span>
+                <span class="animated bounce bounce-4">GOLF </span>
+                <span class="animated bounce bounce-5">PC </span>
+                <span class="animated bounce bounce-6">ET </span>
+                <span class="animated bounce bounce-7">MOBILE </span>
+                <span class="animated bounce bounce-8">À </span>
+                <span class="animated bounce bounce-9">JOUER </span>
+                <span class="animated bounce bounce-10">ENTRE </span>
+                <span class="animated bounce bounce-11">AMIS </span>
+                <span class="animated bounce bounce-12">!</span>
+            </h1>
         </header>
         <!-- MENUS & JEU -->
         <main>
             <div id="menu">
-                <button id="btn-play-solo" class="unlock">MODE SOLO</button>
-                <button id="btn-multi-local" class="unlock">MULTIJOUEUR LOCAL</button>
-                <button id="btn-multi-online" class="unlock">MULTIJOUEUR EN LIGNE</button>
+                <button id="btn-play-solo" class="unlock" title="Jouer tout seul si t'as pas d'amis">&#127942; MODE SOLO</button>
+                <button id="btn-multi-local" class="unlock" title="Sois pas radin et partage ton PC pour jouer en multijoueur">&#128104;&#8205;&#128105;&#8205;&#128103;&#8205;&#128102; MULTIJOUEUR LOCAL</button>
+                <button id="btn-multi-online" class="unlock" title="Jouer contre le monde entier si tu veux être un Master Player">&#127757; MULTIJOUEUR EN LIGNE</button>
             </div>
 
             <div id="solo">
-                <h2>&#128681; MODE SOLO - NIVEAUX &#128681;</h2>
+                <h2 class="subtitle">
+                    <span class="animated bounce bounce-1">&#128681; </span>
+                    <span class="animated bounce bounce-2">MODE </span>
+                    <span class="animated bounce bounce-3">SOLO </span>
+                    <span class="animated bounce bounce-4">- </span>
+                    <span class="animated bounce bounce-5">NIVEAUX </span>
+                    <span class="animated bounce bounce-6">&#128681;</span>
+                </h2>
                 <p>Vous pouvez dans ce mode individuel, vous entrainer sur un maximum de niveaux afin de devenir un golfeur expérimenté !
-                <br>&#127937; Arriverez-vous à finir tous nos parcours créés avec notre plus grande fourberie ?</p>
+                <br>&#127937; Arriverez-vous à finir tous nos parcours créés avec notre plus grande fourberie, afin de devenir un <em>Master Player</em> ?</p>
                 <div id="levels">
                     <!-- Boutons insérés via JavaScript -->
                 </div>
-                <button class="btn-retour unlock">&#8617; RETOUR</button>
+                <button class="btn-retour unlock" title="Retourner au menu principal">&#8617; RETOUR</button>
             </div>
 
             <div id="multi-local">
-                <h2>&#128681; MULTIJOUEUR LOCAL &#128681;</h2>
-                <p>Jouez avec vos amis sur le même appareil grâce à ce mode de jeu ! Aucune connexion internet n'est requise.
-                <br>&#128073; Ce mode multijoueur est plutôt conseillé aux joueurs sur ordinateur.</p>
-                <div class="nb-list">
+                <h2 class="subtitle">
+                    <span class="animated bounce bounce-1">&#128681; </span>
+                    <span class="animated bounce bounce-2">MULTIJOUEUR </span>
+                    <span class="animated bounce bounce-3">LOCAL </span>
+                    <span class="animated bounce bounce-4">&#128681;</span>
+                </h2>
+                <p>Jouez en toute convivialité avec vos amis sur le même appareil grâce à ce mode de jeu ! Ne soyez juste pas violent si vous perdez...
+                <br>&#128187; Ce mode multijoueur est plutôt conseillé aux joueurs sur ordinateur.</p>
+                <div class="block">
                     <span class="emoji">&#128104;&#8205;&#128105;&#8205;&#128103;&#8205;&#128102;</span> NOMBRE DE JOUEURS :
                     <select>
                         <option>2</option>
@@ -94,19 +106,75 @@
                         <option>4</option>
                     </select>
                 </div>
-                <div class="nb-list">
+                <div class="block">
                     <span class="emoji">&#9971;</span> NOMBRE DE MANCHES :
                     <select class="manches">
                         <!-- Choix insérés via JavaScript -->
                     </select>
                 </div>
-                <button class="btn-start unlock">&#127942; COMMENCER</button>
-                <button class="btn-retour unlock">&#8617; RETOUR</button>
+                <button class="btn-start unlock" title="Commencer la partie multijoueur">&#127942; COMMENCER</button>
+                <button class="btn-retour unlock" title="Retourner au menu principal">&#8617; RETOUR</button>
             </div>
 
             <div id="multi-online">
-                <h2>MULTIJOUEUR EN LIGNE</h2>
-                <button class="btn-retour unlock">&#8617; RETOUR</button>
+                <h2 class="subtitle">
+                    <span class="animated bounce bounce-1">&#128681; </span>
+                    <span class="animated bounce bounce-2">MULTIJOUEUR </span>
+                    <span class="animated bounce bounce-3">EN </span>
+                    <span class="animated bounce bounce-4">LIGNE </span>
+                    <span class="animated bounce bounce-5">&#128681;</span>
+                </h2>
+                <p>Jouez dans une partie privée en ligne en distanciel avec vos amis si vous avez la flemme de les inviter chez vous !
+                <br>&#128170; Ou bien affrontez le monde entier dans une partie publique si vous ne voulez pas rester un <em>Little Player</em>.</p>
+                <button id="btn-creer-partie" class="unlock" title="Créer une partie en ligne">&#128295; CRÉER UNE PARTIE</button>
+                <button class="btn-retour unlock" title="Retourner au menu principal">&#8617; RETOUR</button>
+                <div class="block">
+                    <h3><span class="emoji">&#128270;</span> REJOINDRE UNE PARTIE PRIVÉE AVEC UN CODE :</h3><br>
+                    Entrer le code de la partie : <input type="text" placeholder="XXXX" maxlength="4" id="code"><br>
+                    <button id="btn-join-partie" class="unlock" title="Rejoindre la partie par code">&#10145; REJOINDRE</button>
+                </div>
+                <div class="block">
+                    <h3><span class="emoji">&#128161;</span> LISTE DES PARTIES PUBLIQUES DISPONIBLES :</h3>
+                    <ul id="game-list">
+                        <!-- Parties insérées via JavaScript-->
+                    </ul>
+                </div>
+            </div>
+
+            <div id="creer-partie">
+                <h2 class="subtitle">
+                    <span class="animated bounce bounce-1">&#128681; </span>
+                    <span class="animated bounce bounce-2">CRÉER </span>
+                    <span class="animated bounce bounce-3">UNE </span>
+                    <span class="animated bounce bounce-4">PARTIE </span>
+                    <span class="animated bounce bounce-5">&#128681;</span>
+                </h2>
+                <div class="block">
+                    <span class="emoji">&#128104;&#8205;&#128105;&#8205;&#128103;&#8205;&#128102;</span> NOMBRE DE JOUEURS MAXIMUM :
+                    <select>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                    </select>
+                </div>
+                <div class="block">
+                    <span class="emoji">&#9971;</span> NOMBRE DE MANCHES :
+                    <select class="manches">
+                        <!-- Choix insérés via JavaScript -->
+                    </select>
+                </div>
+                <div class="block">
+                    <span class="emoji">&#128272;</span> PARTIE PRIVÉE :
+                    <div id="btn-private">
+                        <input type="checkbox" id="check-private">
+                        <label for="check-private"></label>
+                    </div>
+                    <div id="code-display">
+
+                    </div>
+                </div>
+                <button class="btn-start unlock" title="Créer la partie en ligne">&#128295; CRÉER</button>
+                <button class="btn-retour-2 unlock" title="Retourner au menu en ligne">&#8617; RETOUR</button>
             </div>
 
             <!-- INTERFACE JEU -->
@@ -116,7 +184,7 @@
         </main>
         <!-- BAS DE PAGE -->
         <footer>
-            <p>&copy; GolfuX Corporation&trade; - 2022<br>Arthur BETARD, Robin GRAPPE, Tayeb HAKKAR<br><em>Université de Franche-Comté</em></p>
+            <p>&copy; GolfuX Corporation&trade; - 2022<br>Arthur BETARD, Robin GRAPPE, Tayeb HAKKAR<br>CMI Informatique - <em>Université de Franche-Comté</em></p>
         </footer>
     </body>
 </html>

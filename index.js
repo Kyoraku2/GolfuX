@@ -287,6 +287,8 @@ document.addEventListener("DOMContentLoaded", function() {
     }
     //Création choix
     create_choices(MANCHES_MAX);
+    //Check partie privée
+    display_code("");
     
     //Mode Solo
     document.getElementById("btn-play-solo").addEventListener('click', function(e){
@@ -326,7 +328,17 @@ document.addEventListener("DOMContentLoaded", function() {
             document.getElementById("solo").style.display = "none";
             document.getElementById("multi-local").style.display = "none";
             document.getElementById("multi-online").style.display = "none";
+            document.getElementById("creer-partie").style.display = "none";
             display_title();
+        });
+    }
+
+    //Retour 2 (retour qui ne va pas sur le menu principal)
+    var btns_retour_2 = document.getElementsByClassName("btn-retour-2");
+    for (var i = 0; i < btns_retour_2.length; i++) {
+        btns_retour_2[i].addEventListener('click', function(e){
+            document.getElementById("creer-partie").style.display = "none";
+            document.getElementById("multi-online").style.display = "block";
         });
     }
 
@@ -337,11 +349,35 @@ document.addEventListener("DOMContentLoaded", function() {
             if (confirm("Êtes-vous sûr de commencer cette partie avec les paramètres suivants ?")) {
                 document.getElementById("multi-local").style.display = "none";
                 document.getElementById("multi-online").style.display = "none";
+                document.getElementById("creer-partie").style.display = "none";
                 //Charger level aléatoire
                 document.getElementById("game").style.display = "block";
             }
         });
     }
+
+    //Créer partie
+    document.getElementById("btn-creer-partie").addEventListener('click', function(e){
+        document.getElementById("multi-online").style.display = "none";
+        document.getElementById("creer-partie").style.display = "block";
+    });
+
+    //Check private
+    document.getElementById("btn-private").addEventListener('click', function(e){
+        display_code("");
+    });
+
+    //Rejoindre partie
+    document.getElementById("btn-join-partie").addEventListener('click', function(e){
+        var content = document.getElementById("code").value;
+        if (correct_code(content) == false) {
+            alert("La saisie du code est incorrecte. Veuillez recommencer.");
+        }
+    });
+
+    /***************
+    Fonctions
+    ***************/
 
     function display_title(display=true) {
         if (display == false) {
@@ -364,8 +400,10 @@ document.addEventListener("DOMContentLoaded", function() {
             if (i+1 <= max_lvl) {
                 content = i+1;
                 button.classList.add("unlock");
+                button.title = "Niveau "+content;
             } else {
                 content = "\uD83D\uDD12";
+                button.title = "Verrouillé";
             }
             var txt = document.createTextNode(content);
             button.appendChild(txt);
@@ -390,5 +428,25 @@ document.addEventListener("DOMContentLoaded", function() {
                 selects[i].appendChild(option);
             }
         }
+    }
+
+    function display_code(code) {
+        if (document.getElementById("check-private").checked) {
+            document.getElementById("code-display").innerHTML = "<br>Code : "+code;
+        } else {
+            document.getElementById("code-display").innerHTML = "";
+        }
+    }
+
+    function correct_code(code) {
+        if (code.length != 4) {
+            return false;
+        }
+        for (var i = 0; i < code.length; i++) {
+            if (! ((code[i] >= 'A' && code[i] <= 'Z') || (code[i] >= '0' && code[i] <= '9'))) {
+                return false;
+            }
+        }
+        return true;
     }
 });
