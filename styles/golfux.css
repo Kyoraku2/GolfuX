@@ -64,7 +64,7 @@ header, footer {
 
 footer > p {
 	font-size: 2vh;
-	margin-top: 5vh;
+	margin-top: 0px;
 }
 
 h2 {
@@ -82,6 +82,10 @@ p {
 	color: white;
 	font-weight: bold;
 	text-shadow: #009945 3px 3px 2px;
+}
+
+em {
+	font-style: italic;
 }
 
 header > img {
@@ -131,26 +135,62 @@ button.unlock:hover {
 	border-radius: 20px;
 }
 
-#solo, #multi-local, #multi-online {
+#solo {
+	display: none;
+	text-align: center;
+	margin-left: 5vw;
+	margin-right: 5vw;
+}
+
+#multi-local, #multi-online {
 	display: none;
 	text-align: center;
 	margin-left: 10vw;
 	margin-right: 10vw;
 }
 
-button.btn-retour {
+button.btn-retour, button.btn-start {
 	height: 10vh;
-	width: 50vh;
+	width: 40vh;
 	border-radius: 20px;
-	margin-top: 5vh;
-	margin-bottom: 5vh;
+	margin: 5vh;
 }
 
 #levels button {
 	height: 15vh;
 	width: 15vh;
-	margin: 5vh;
+	margin: 3vh;
 	border-radius: 20px;
+	font-size: 5vh;
+}
+
+select {
+	height: 7vh;
+	width: 8vh;
+	font-size: 3vh;
+	background-color: #b15f01;
+	border: 3px solid white;
+	color: white;
+	font-weight: bold;
+	border-radius: 10px;
+	cursor: pointer;
+}
+
+.nb-list {
+	background-color: #683801;
+	border: 3px solid white;
+	color: white;
+	font-weight: bold;
+	padding: 5vh;
+	border-radius: 30px;
+	font-size: 3vh;
+	margin-left: 8vw;
+	margin-right: 8vw;
+	margin-top: 3vh;
+	margin-bottom: 3vh;
+}
+
+.emoji {
 	font-size: 5vh;
 }
 
@@ -188,6 +228,7 @@ button.btn-retour {
 	40% {transform: translateY(-3vh);}
 	60% {transform: translateY(-2vh);}
 }
+
 .bounce {
 	animation-name: bounce;
 }

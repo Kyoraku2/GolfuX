@@ -1,24 +1,27 @@
-<html>
+<!doctype html>
+
+<html lang="fr">
     <head>
+        <meta charset="UTF-8">
         <title>GolfuX</title>
 
         <link type="text/css" rel="stylesheet" href="./styles/golfux.css">
         
-        <script type="text/javascript" src="./build/Box2D_v2.2.1_min.js"></script>
-        <script type="text/javascript" src="./helpers/embox2d-helpers.js"></script>
-        <script type="text/javascript" src="./helpers/embox2d-html5canvas-debugDraw.js"></script>
-        <script type="text/javascript" src="index.js"></script>
-        <script type="text/javascript" src="./golfux.js"></script>
-        <script type="text/javascript" src="./ball.js"></script>
-        <script type="text/javascript" src="./level.js"></script>
-        <script type="text/javascript" src="./Obstacle.js"></script>
-        <script type="text/javascript" src="./hole.js"></script>
+        <script src="./build/Box2D_v2.2.1_min.js"></script>
+        <script src="./helpers/embox2d-helpers.js"></script>
+        <script src="./helpers/embox2d-html5canvas-debugDraw.js"></script>
+        <script src="index.js"></script>
+        <script src="./golfux.js"></script>
+        <script src="./ball.js"></script>
+        <script src="./level.js"></script>
+        <script src="./Obstacle.js"></script>
+        <script src="./hole.js"></script>
         <!--<script src="https://code.createjs.com/1.0.0/createjs.min.js"></script>-->
         <!--
         <script type="text/javascript" src="tests/template.js"></script>
         -->
         
-        <script type="text/javascript">  
+        <script>  
             var Box2D;
             //var level = window.location.search.slice(4);
             //if(level==""){level = 1}
@@ -68,21 +71,44 @@
                 <button id="btn-multi-local" class="unlock">MULTIJOUEUR LOCAL</button>
                 <button id="btn-multi-online" class="unlock">MULTIJOUEUR EN LIGNE</button>
             </div>
+
             <div id="solo">
-                <h2>MODE SOLO - NIVEAUX</h2>
+                <h2>&#128681; MODE SOLO - NIVEAUX &#128681;</h2>
+                <p>Vous pouvez dans ce mode individuel, vous entrainer sur un maximum de niveaux afin de devenir un golfeur expérimenté !
+                <br>&#127937; Arriverez-vous à finir tous nos parcours créés avec notre plus grande fourberie ?</p>
                 <div id="levels">
                     <!-- Boutons insérés via JavaScript -->
                 </div>
-                <button class="btn-retour unlock">RETOUR</button>
+                <button class="btn-retour unlock">&#8617; RETOUR</button>
             </div>
+
             <div id="multi-local">
-                <h2>MULTIJOUEUR LOCAL</h2>
-                <button class="btn-retour unlock">RETOUR</button>
+                <h2>&#128681; MULTIJOUEUR LOCAL &#128681;</h2>
+                <p>Jouez avec vos amis sur le même appareil grâce à ce mode de jeu ! Aucune connexion internet n'est requise.
+                <br>&#128073; Ce mode multijoueur est plutôt conseillé aux joueurs sur ordinateur.</p>
+                <div class="nb-list">
+                    <span class="emoji">&#128104;&#8205;&#128105;&#8205;&#128103;&#8205;&#128102;</span> NOMBRE DE JOUEURS :
+                    <select>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                    </select>
+                </div>
+                <div class="nb-list">
+                    <span class="emoji">&#9971;</span> NOMBRE DE MANCHES :
+                    <select class="manches">
+                        <!-- Choix insérés via JavaScript -->
+                    </select>
+                </div>
+                <button class="btn-start unlock">&#127942; COMMENCER</button>
+                <button class="btn-retour unlock">&#8617; RETOUR</button>
             </div>
+
             <div id="multi-online">
                 <h2>MULTIJOUEUR EN LIGNE</h2>
-                <button class="btn-retour unlock">RETOUR</button>
+                <button class="btn-retour unlock">&#8617; RETOUR</button>
             </div>
+
             <!-- INTERFACE JEU -->
             <div id="game">           
                 <canvas id="canvas" width="640" height="800" tabindex='1'></canvas>
@@ -90,8 +116,7 @@
         </main>
         <!-- BAS DE PAGE -->
         <footer>
-            <p>&copy; GolfuX Corporation&trade; - 2022</p>
+            <p>&copy; GolfuX Corporation&trade; - 2022<br>Arthur BETARD, Robin GRAPPE, Tayeb HAKKAR<br><em>Université de Franche-Comté</em></p>
         </footer>
     </body>
 </html>
-

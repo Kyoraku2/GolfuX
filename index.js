@@ -7,6 +7,7 @@ var e_centerOfMassBit = 0x0010;
 var PTM = 32;
 const NUM_LEVELS = 18;
 var max_lvl = localStorage.getItem("level");
+const MANCHES_MAX = 18;
 
 var world = null;
 var canvas;
@@ -284,6 +285,8 @@ document.addEventListener("DOMContentLoaded", function() {
     if (localStorage.getItem("level") == null) {
         save_progression(1);
     }
+    //Création choix
+    create_choices(MANCHES_MAX);
     
     //Mode Solo
     document.getElementById("btn-play-solo").addEventListener('click', function(e){
@@ -324,7 +327,19 @@ document.addEventListener("DOMContentLoaded", function() {
             document.getElementById("multi-local").style.display = "none";
             document.getElementById("multi-online").style.display = "none";
             display_title();
-            console.log("ok");
+        });
+    }
+
+    //Commencer
+    var btns_start = document.getElementsByClassName("btn-start");
+    for (var i = 0; i < btns_start.length; i++) {
+        btns_start[i].addEventListener('click', function(e){
+            if (confirm("Êtes-vous sûr de commencer cette partie avec les paramètres suivants ?")) {
+                document.getElementById("multi-local").style.display = "none";
+                document.getElementById("multi-online").style.display = "none";
+                //Charger level aléatoire
+                document.getElementById("game").style.display = "block";
+            }
         });
     }
 
@@ -342,7 +357,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function create_levels_btn(lvl_number) {
         var levels = document.getElementById("levels");
-        for(var i = 0; i < lvl_number; i++) {
+        for (var i = 0; i < lvl_number; i++) {
             var button = document.createElement("button");
             button.dataset["index"] = i+1;
             var content;
@@ -363,5 +378,17 @@ document.addEventListener("DOMContentLoaded", function() {
         progress = (!progress) ? {} : JSON.parse(progress);
         progress = last_lvl;
         localStorage.setItem("level", JSON.stringify(progress));
+    }
+
+    function create_choices(nb_choices) {
+        var selects = document.getElementsByClassName("manches");
+        for (var i = 0; i < selects.length; i++) {
+            for (var j = 0; j < nb_choices; j++) {
+                var option = document.createElement("option");
+                var txt = document.createTextNode(j+1);
+                option.appendChild(txt);
+                selects[i].appendChild(option);
+            }
+        }
     }
 });
