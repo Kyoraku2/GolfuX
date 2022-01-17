@@ -36,6 +36,11 @@ var viewCenterPixel = {
 var currentTest = null;
 var ballPlaced = false;
 
+let sock;
+document.addEventListener("DOMContentLoaded", function() {
+    sock = io.connect();
+});
+
 function myRound(val,places) {
     var c = 1;
     for (var i = 0; i < places; i++)

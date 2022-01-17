@@ -3,8 +3,8 @@ class golfux{
         this.click_down=null;
         this.click_up=null;
         this.balls = [];
-        //this.balls[0] = new Ball(new b2Vec2(0,2), 0);
-        //this.balls[1] = new Ball(new b2Vec2(0,2), 1);
+        this.balls[0] = new Ball(new b2Vec2(0,2), 0);
+        this.balls[1] = new Ball(new b2Vec2(0,2), 1);
         //this.ball = new Ball();
         this.level = new Level();
         this.level.createFromJSON('level3')
@@ -345,6 +345,8 @@ golfux.prototype.onMouseUp = function(canvas, evt) {
         y:this.balls[this.ballIndex].body.GetPosition().y
     }
     this.balls[this.ballIndex].body.ApplyLinearImpulse(new b2Vec2(impulse.x*intensifie, impulse.y*intensifie),true);
+    sock.emit("shoot",{x:impulse.x*intensifie, y:impulse.y*intensifie});
+    
     this.ballIndex = (this.ballIndex < this.balls.length-1) ? this.ballIndex+1 : 0;
     this.click_up=null;
     this.click_down=null;

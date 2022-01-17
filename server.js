@@ -6,7 +6,7 @@ var app = express();
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
 
-server.listen(process.env.PORT || 3000, function() {
+server.listen(8080, function() {
     console.log("C'est parti ! En attente de connexion sur le port 8080...");
 });
 
@@ -19,7 +19,7 @@ app.get('/', function(req, res) {
 
 
 app.get('/level*', function(req, res) {
-    console.log("Reçu : GET "+req.url);
+    //console.log("Reçu : GET "+req.url);
     res.setHeader('Content-type', 'application/json');
     //couleur = JSON.stringify(couleur);
     //res.json({ TODO: "à compléter "});
@@ -33,6 +33,20 @@ function readLevel(level){
 
     let rawdata = fs.readFileSync(level+'.json');
     let jsonRes = JSON.parse(rawdata);
-    console.log(jsonRes);
+    //console.log(jsonRes);
     return jsonRes;
 }
+
+
+/***************************************************************
+*           Gestion des clients et des connexions
+***************************************************************/
+
+let games = {};
+let counter = 0;
+
+io.on('connection', function (socket) {
+    console.log("Un client s'est connecté");
+    let index = -1;
+    let game = null;
+});
