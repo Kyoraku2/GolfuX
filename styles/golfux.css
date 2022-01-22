@@ -94,6 +94,10 @@ em {
 	font-style: italic;
 }
 
+strong {
+	font-weight: bold;
+}
+
 header > img {
 	width: 60vw;
 	margin-top: 7vh;
@@ -121,6 +125,11 @@ button {
 	font-size: 3vh;
 }
 
+li button {
+	font-weight: normal;
+	margin: 100px;
+}
+
 button.unlock {
 	transition-property: background-color, box-shadow, bottom;
 	transition-duration: 0.2s;
@@ -134,7 +143,8 @@ button.unlock:hover {
 	bottom: 2vh;
 }
 
-button#btn-play-solo:hover, #levels button.unlock:hover, #btn-join-partie:hover {
+button#btn-play-solo:hover, #levels button.unlock:hover, #btn-join-code:hover,
+#wait-room button.btn-start.unlock:hover, #multi-online button.btn-wait:hover {
 	background-color: rgb(255, 208, 0);
 }
 
@@ -142,7 +152,8 @@ button#btn-multi-local:hover {
 	background-color: #02ccff;
 }
 
-button#btn-multi-online:hover, button#btn-creer-partie:hover, #creer-partie button.btn-start:hover {
+button#btn-multi-online:hover, button#btn-creer-partie:hover, #creer-partie button.btn-start:hover,
+#creer-partie button.btn-wait:hover {
 	background-color: blue;
 }
 
@@ -160,25 +171,25 @@ button#btn-multi-online:hover, button#btn-creer-partie:hover, #creer-partie butt
 	margin-right: 5vw;
 }
 
-#multi-local, #multi-online, #creer-partie {
+#multi-local, #multi-online, #creer-partie, #wait-room {
 	display: none;
 	text-align: center;
-	margin-left: 10vw;
-	margin-right: 10vw;
+	margin-left: 5vw;
+	margin-right: 5vw;
 }
 
 #multi-local button.btn-start:hover {
 	background-color: #02ccff;
 }
 
-button.btn-retour, button.btn-start, #btn-creer-partie, button.btn-retour-2 {
-	height: 10vh;
-	width: 40vh;
+button.btn-retour, button.btn-start, #btn-creer-partie, button.btn-retour-2,
+button.btn-wait, #btn-room-quit {
 	border-radius: 3vh;
-	margin: 5vh;
+	margin: 3vh;
+	padding: 20px;
 }
 
-#btn-join-partie {
+#btn-join-code {
 	height: 10vh;
 	border-radius: 3vh;
 	margin-top: 5vh;
@@ -206,6 +217,12 @@ select {
 	cursor: pointer;
 }
 
+#nom-partie {
+	height: 5vh;
+	width: 30vw;
+	font-size: 3vh;
+}
+
 input[type="text"] {
 	height: 3vh;
 	text-align: center;
@@ -217,7 +234,7 @@ input[type="text"] {
 	border: 3px solid white;
 	color: white;
 	font-weight: bold;
-	padding: 5vh;
+	padding: 3vw;
 	border-radius: 4vh;
 	font-size: 3vh;
 	margin-left: 8vw;
@@ -226,8 +243,14 @@ input[type="text"] {
 	margin-bottom: 3vh;
 }
 
-#multi-online .block, #code-display {
+#multi-online .block, #code-display, #wait-room .block {
 	font-weight: normal;
+}
+
+#wait-room h2 {
+	font-size: 3vh;
+	border: none;
+	margin-top: 10vh;
 }
 
 .emoji {

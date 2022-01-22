@@ -66,12 +66,14 @@
         </header>
         <!-- MENUS & JEU -->
         <main>
+            <!-- MENU PRINCIPAL -->
             <div id="menu">
                 <button id="btn-play-solo" class="unlock" title="Jouer tout seul si t'as pas d'amis">&#127942; MODE SOLO</button>
                 <button id="btn-multi-local" class="unlock" title="Sois pas radin et partage ton PC pour jouer en multijoueur">&#128104;&#8205;&#128105;&#8205;&#128103;&#8205;&#128102; MULTIJOUEUR LOCAL</button>
                 <button id="btn-multi-online" class="unlock" title="Jouer contre le monde entier si tu veux être un Master Player">&#127757; MULTIJOUEUR EN LIGNE</button>
             </div>
 
+            <!-- NIVEAUX SOLO -->
             <div id="solo">
                 <h2 class="subtitle">
                     <span class="animated bounce bounce-1">&#128681; </span>
@@ -89,6 +91,7 @@
                 <button class="btn-retour unlock" title="Retourner au menu principal">&#8617; RETOUR</button>
             </div>
 
+            <!-- MENU CRÉATION PARTIE LOCALE -->
             <div id="multi-local">
                 <h2 class="subtitle">
                     <span class="animated bounce bounce-1">&#128681; </span>
@@ -112,10 +115,11 @@
                         <!-- Choix insérés via JavaScript -->
                     </select>
                 </div>
-                <button class="btn-start unlock" title="Commencer la partie multijoueur">&#127942; COMMENCER</button>
+                <button id="btn-start-local" class="btn-start unlock" title="Commencer la partie multijoueur">&#127942; COMMENCER</button>
                 <button class="btn-retour unlock" title="Retourner au menu principal">&#8617; RETOUR</button>
             </div>
 
+            <!-- MENU ONLINE -->
             <div id="multi-online">
                 <h2 class="subtitle">
                     <span class="animated bounce bounce-1">&#128681; </span>
@@ -131,16 +135,30 @@
                 <div class="block">
                     <h3><span class="emoji">&#128270;</span> REJOINDRE UNE PARTIE PRIVÉE AVEC UN CODE :</h3><br>
                     Entrer le code de la partie : <input type="text" placeholder="XXXX" maxlength="4" id="code"><br>
-                    <button id="btn-join-partie" class="unlock" title="Rejoindre la partie par code">&#10145; REJOINDRE</button>
+                    <button id="btn-join-code" class="unlock" title="Rejoindre la partie par code">&#10145; REJOINDRE</button>
                 </div>
                 <div class="block">
                     <h3><span class="emoji">&#128161;</span> LISTE DES PARTIES PUBLIQUES DISPONIBLES :</h3>
                     <ul id="game-list">
                         <!-- Parties insérées via JavaScript-->
+                            <!-- bla bla bla -->
+                        <!-- Exemple d'affichage en dur -->
+                        <li>
+                            <button class="btn-wait unlock" title="Rejoindre la partie publique">
+                            <strong>"NOM DE LA PARTIE 1" :</strong> (X/X)<br>
+                            Manches : X</button>
+                        </li>
+                        <li>
+                            <button class="btn-wait unlock" title="Rejoindre la partie publique">
+                            <strong>"NOM DE LA PARTIE 2" :</strong> (X/X)<br>
+                            Manches : X</button>
+                        </li>
+                        <li>ETC...</li>
                     </ul>
                 </div>
             </div>
 
+            <!-- MENU CRÉATION PARTIE ONLINE -->
             <div id="creer-partie">
                 <h2 class="subtitle">
                     <span class="animated bounce bounce-1">&#128681; </span>
@@ -149,6 +167,9 @@
                     <span class="animated bounce bounce-4">PARTIE </span>
                     <span class="animated bounce bounce-5">&#128681;</span>
                 </h2>
+                <div class="block">
+                    <span class="emoji">&#128221;</span>NOM DE LA PARTIE : <input type="text" placeholder="Un nom trop drôle !" maxlength="30" id="nom-partie">
+                </div>
                 <div class="block">
                     <span class="emoji">&#128104;&#8205;&#128105;&#8205;&#128103;&#8205;&#128102;</span> NOMBRE DE JOUEURS MAXIMUM :
                     <select>
@@ -173,8 +194,35 @@
 
                     </div>
                 </div>
-                <button class="btn-start unlock" title="Créer la partie en ligne">&#128295; CRÉER</button>
+                <button class="unlock btn-wait" title="Créer la partie en ligne">&#128295; CRÉER</button>
                 <button class="btn-retour-2 unlock" title="Retourner au menu en ligne">&#8617; RETOUR</button>
+            </div>
+
+            <!-- SALLE D'ATTENTE -->
+            <div id="wait-room">
+                <h2 class="subtitle">
+                    <span class="animated bounce bounce-1">&#128681; </span>
+                    <span class="animated bounce bounce-2">VEUILLEZ </span>
+                    <span class="animated bounce bounce-3">ATTENDRE </span>
+                    <span class="animated bounce bounce-4">QUE </span>
+                    <span class="animated bounce bounce-5">L'HÔTE </span>
+                    <span class="animated bounce bounce-6">DÉCIDE </span>
+                    <span class="animated bounce bounce-7">DE </span>
+                    <span class="animated bounce bounce-8">COMMENCER </span>
+                    <span class="animated bounce bounce-9">LA </span>
+                    <span class="animated bounce bounce-10">PARTIE </span>
+                    <span class="animated bounce bounce-11">... </span>
+                    <span class="animated bounce bounce-12">&#128681;</span>
+                </h2>
+                <div class="block">
+                    <h3><span class="emoji">&#127757;</span> "NOM DE LA PARTIE" :</h3><br>
+                    &#128104;&#8205;&#128105;&#8205;&#128103;&#8205;&#128102; Nombre de joueurs : X/X<br>
+                    &#9971;  Nombre de manches : X<br>
+                    &#128290; Code : <br><br>
+                    &#8987; Temps d'attente : <time>0</time> seconde(s)
+                </div>
+                <button id="btn-room-quit" class="unlock" title="Retourner au menu en ligne">&#8617; RETOUR</button>
+                <button class="btn-start" title="Commencer la partie en ligne">&#127942; COMMENCER</button>
             </div>
 
             <!-- INTERFACE JEU -->

@@ -337,24 +337,36 @@ document.addEventListener("DOMContentLoaded", function() {
     var btns_retour_2 = document.getElementsByClassName("btn-retour-2");
     for (var i = 0; i < btns_retour_2.length; i++) {
         btns_retour_2[i].addEventListener('click', function(e){
-            document.getElementById("creer-partie").style.display = "none";
-            document.getElementById("multi-online").style.display = "block";
+            display_retour_online();
         });
     }
+
+    //Retour wait room
+    document.getElementById("btn-room-quit").addEventListener('click', function(e){
+        if (confirm("Voulez-vous quitter cette partie en cours ?")) {
+            display_retour_online();
+        }
+    });
 
     //Commencer
     var btns_start = document.getElementsByClassName("btn-start");
     for (var i = 0; i < btns_start.length; i++) {
         btns_start[i].addEventListener('click', function(e){
-            if (confirm("Êtes-vous sûr de commencer cette partie avec les paramètres suivants ?")) {
-                document.getElementById("multi-local").style.display = "none";
-                document.getElementById("multi-online").style.display = "none";
-                document.getElementById("creer-partie").style.display = "none";
-                //Charger level aléatoire
-                document.getElementById("game").style.display = "block";
+            if (btns_start[i].classList.contains("unlock")) {
+                if (confirm("Êtes-vous sûr de commencer cette partie avec les paramètres suivants ?")) {
+                    display_game();
+                }
+            } else {
+                alert("Vous ne pouvez pas commencer la partie pour le moment.");
             }
         });
     }
+
+    document.getElementById("btn-start-local").addEventListener('click', function(e){
+        if (confirm("Êtes-vous sûr de commencer cette partie avec les paramètres suivants ?")) {
+            display_game();
+        }
+    });
 
     //Créer partie
     document.getElementById("btn-creer-partie").addEventListener('click', function(e){
@@ -367,17 +379,66 @@ document.addEventListener("DOMContentLoaded", function() {
         display_code("");
     });
 
-    //Rejoindre partie
-    document.getElementById("btn-join-partie").addEventListener('click', function(e){
+    //Rejoindre partie par code
+    document.getElementById("btn-join-code").addEventListener('click', function(e){
         var content = document.getElementById("code").value;
         if (correct_code(content) == false) {
             alert("La saisie du code est incorrecte. Veuillez recommencer.");
+        } else {
+            if (confirm("Voulez-vous rejoindre la partie suivante ?")) {
+                display_waiting_room();
+            }
         }
     });
+
+    //Rejoindre waiting room
+    var btns_wait = document.getElementsByClassName("btn-wait");
+    for (var i = 0; i < btns_wait.length; i++) {
+        btns_wait[i].addEventListener('click', function(e){
+            if (confirm("Êtes-vous sûr de commencer cette partie avec les paramètres suivants ?")) {
+                display_waiting_room();
+            }
+        });
+    }
 
     /***************
     Fonctions
     ***************/
+
+    var timeout_id;
+    function display_retour_online() {
+        document.getElementById("wait-room").style.display = "none";
+        document.getElementById("creer-partie").style.display = "none";
+        document.getElementById("multi-online").style.display = "block";
+        clearTimeout(timeout_id);
+    }
+
+    function display_waiting_room() {
+        document.getElementById("multi-online").style.display = "none";
+        document.getElementById("creer-partie").style.display = "none";
+        document.getElementById("wait-room").style.display = "block";
+        timer();
+    }
+
+    function display_game() {
+        document.getElementById("multi-local").style.display = "none";
+        document.getElementById("multi-online").style.display = "none";
+        document.getElementById("creer-partie").style.display = "none";
+        document.getElementById("wait-room").style.display = "none";
+        //Charger level aléatoire
+        document.getElementById("game").style.display = "block";
+    }
+
+    function timer() {
+        var display = document.querySelector("time");
+        var sec = 0;
+        display.innerHTML = sec;
+        timeout_id = setInterval(add_sec => {
+            sec++;
+            display.innerHTML = sec;
+            //console.log(sec);
+        }, 1000);
+    }
 
     function display_title(display=true) {
         if (display == false) {
@@ -443,10 +504,9 @@ document.addEventListener("DOMContentLoaded", function() {
             return false;
         }
         code = code.toUpperCase();
-        for (var i = 0; i < code.length; i++) {
-            if (! ((code[i] >= 'A' && code[i] <= 'Z') || (code[i] >= '0' && code[i] <= '9'))) {
-                return false;
-            }
+        var regex = new RegExp(/^(?:[0-9]|[A-Z]){4}$/, "g");
+        if (code.match(regex) == null) {
+            return false;
         }
         return true;
     }
