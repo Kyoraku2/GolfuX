@@ -3,8 +3,8 @@ class Golfux{
         this.click_down=null;
         this.click_up=null;
         this.balls = [];
-        //this.balls[0] = new Ball(new b2Vec2(0,2), 0);
-        //this.balls[1] = new Ball(new b2Vec2(0,2), 1);
+        //this.balls[0] = new Ball(undefined, 0);
+        //this.balls[1] = new Ball(undefined, 1);
         //this.ball = new Ball();
         this.level = new Level();
         this.level.createFromJSON('level3')

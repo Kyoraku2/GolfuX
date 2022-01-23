@@ -322,7 +322,29 @@ document.addEventListener("DOMContentLoaded", function() {
 
     //TODO Rejoindre partie privé 
 
+    sock.on("gameStart",function(index){
+        // Pas forcément sur, mais pourquoi pas s'en servir pour savoir quand stopper le loading screen
+    });
 
+    sock.on("yourTurn",function(e){
+        // booléen ou autre
+    });
+
+    sock.on("ballShot",function(obj){
+        golfux.balls[obj.index].body.ApplyLinearImpulse(new b2Vec2(obj.impulse.x, obj.impulse.y),true);
+    });
+
+    sock.on("ballPlaced",function(obj){
+        golfux.balls[obj.index] = new Ball(new b2Vec2(obj.pos.x, obj.pos.y), obj.index);
+    });
+
+    sock.on("ballShotFinalPos",function(obj){
+        // pas forcément nécessaire
+        var localPos = golfux.balls[obj.index].body.GetPosition();
+        if(localPos.x != obj.pos.x || localPos.y != obj.pos.y){
+            golfux.balls[obj.index].body.SetTransform(new b2Vec2(obj.pos.x, obj.pos.y), 0);
+        }
+    });
 });
 
 function createPassword(){
