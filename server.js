@@ -72,7 +72,7 @@ io.on('connection', function (socket) {
             socket.emit("error", {message: "Erreur, une partie est déjà en cours."});
             return;
         }
-        if(games[id] && games[id].joueurs.length < games[id].nbJoueurs){
+        if(games[id] && games[id].joueurs.length < games[id].nbPlayers){
             index = games[id].joueurs.length;
             games[id].joueurs[index] = {socket: socket, points: 0, tour: -1};
             game = id;
@@ -81,6 +81,15 @@ io.on('connection', function (socket) {
             socket.emit("error", {message: "Erreur, impossible de rejoindre la partie"});
         }
         // TODO lancer quand c'est plein
+        // La c'est juste un truc nul pour la démo de lundi
+        games[game].current = Math.floor(Math.random() * games[game].nbPlayers);
+        for(var i=0 ; i<games[game].nbPlayers ; ++i){
+            if(i != games[game].current){
+                games[game].joueurs[i].socket.emit("notYourTurn");
+            }
+        }
+        games[game].current = 0;
+        games[game].joueurs[games[game].current].socket.emit("yourTurn",games[game].current);
     });
 
     socket.on("JoinPrivateGame", function(info){
@@ -88,7 +97,7 @@ io.on('connection', function (socket) {
             socket.emit("error", {message: "Erreur, une partie est déjà en cours."});
             return;
         }
-        if(games[info.id] && games[info.id].code === info.code && games[info.id].joueurs.length < games[info.id].nbJoueurs){
+        if(games[info.id] && games[info.id].code === info.code && games[info.id].joueurs.length < games[info.id].nbPlayers){
             index = games[info.id].joueurs.length;
             games[id].joueurs[index] = {socket: socket, points: 0, tour: -1};
             game = info.id;
@@ -99,18 +108,18 @@ io.on('connection', function (socket) {
         // TODO lancer quand c'est plein
     });
 
-    socket.on("ballPlaced",function(pos){
+    socket.on("placeBall",function(pos){
         if(game === null || index < 0){
             socket.emit("error", {message: "Erreur, pas de partie en cours."});
             return;
         }
-        if(games[game.current != index]){
+        if(games[game].current != index){
             socket.emit("error", {message: "Erreur, ce n'est pas ton tour."});
             return;
         }
         for(var i=0 ; i<games[game].nbPlayers ; ++i){
             if(i != games[game].current){
-                games[game].joueurs[i].socket.emit("ballShot",{index:games[game].current,pos:pos});
+                games[game].joueurs[i].socket.emit("ballPlaced",{index:games[game].current,pos:pos});
             }
         }
     });
@@ -120,7 +129,7 @@ io.on('connection', function (socket) {
             socket.emit("error", {message: "Erreur, pas de partie en cours."});
             return;
         }
-        if(games[game.current != index]){
+        if(games[game].current != index){
             socket.emit("error", {message: "Erreur, ce n'est pas ton tour."});
             return;
         }
@@ -129,7 +138,10 @@ io.on('connection', function (socket) {
                 games[game].joueurs[i].socket.emit("ballShot",{index:games[game].current,impulse:impulse});
             }
         }
+        console.log(games[game].current);
+        games[game].joueurs[games[game].current].socket.emit("notYourTurn");
         games[game].current = (games[game].current + 1) % games[game].nbPlayers;
+        games[game].joueurs[games[game].current].socket.emit("yourTurn",games[game].current);
     });
 
     socket.on("endPos",function(pos){
@@ -138,7 +150,7 @@ io.on('connection', function (socket) {
             socket.emit("error", {message: "Erreur, pas de partie en cours."});
             return;
         }
-        if(games[game.current != index]){
+        if(games[game].current != index){
             socket.emit("error", {message: "Erreur, ce n'est pas ton tour."});
             return;
         }
@@ -147,8 +159,10 @@ io.on('connection', function (socket) {
                 games[game].joueurs[i].socket.emit("ballShotFinalPos",{index:games[game].current,pos:pos});
             }
         }
-        // Faudra qu'on récupère peut-être la position du trou ici pour pouvoir vérifier quand il met la balle
 
+        // TODO : faut faire le changement de joueur courant ici pour faire en sorte qu'il attendre que l'autre bouge plus
+        // Faudra faire en sorte que l'autre bouge plus coté golfux.js osi
+        // Faudra qu'on récupère peut-être la position du trou ici pour pouvoir vérifier quand il met la balle
     });
     
 

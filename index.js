@@ -92,6 +92,9 @@ function clickCollideRect(obj){
 }
 
 function placeBallInSpawn(){
+    if(ballIndex === null){
+        return;
+    }
     var spawn_area;
     for(var i = 0 ; i < golfux.level.obstacles['spawn'].length ; ++i){
         if(clickCollideRect(golfux.level.obstacles['spawn'][i])){
@@ -102,8 +105,9 @@ function placeBallInSpawn(){
     if(spawn_area === undefined){
         return;
     }
-    golfux.balls.push(new Ball(new b2Vec2(mousePosWorld.x,mousePosWorld.y), golfux.balls.length));
+    golfux.balls[ballIndex] = new Ball(new b2Vec2(mousePosWorld.x,mousePosWorld.y), ballIndex);
     ballPlaced = true;
+    sock.emit("placeBall",{x:mousePosWorld.x,y:mousePosWorld.y});
 }
 
 function onMouseUp(canvas, evt) {
@@ -275,23 +279,25 @@ function animate() {
  ***************************************/
 
 
-var ballPlaced = false;
+let ballPlaced = false;
 let sock;
+let ballIndex = null;
+// TODO faire un truc pour que ça affiche la flèche quand c'est un autre joueur qui joue
 document.addEventListener("DOMContentLoaded", function() {
     sock = io.connect();
 
     let partie = {  
-                    nbPlayers: null,
-                    nbManches: null,
+                    nbPlayers: 2,
+                    nbManches: 2,
                     code: null
                 };
 
-    var creerPartie = document.getElementById("btnCreer") //TODO Je sais pas ce qu'a mis robin donc c du random
-    var rejoindrePartie = document.getElementById("btnRejoindre"); //TODO Same
+    var creerPartie = document.getElementById("create") //TODO Je sais pas ce qu'a mis robin donc c du random
+    var rejoindrePartie = document.getElementById("join"); //TODO Same
     var listeParties = document.getElementById("listeParties");
 
     creerPartie.addEventListener("click", function(e){
-        var nbJoueurs = document.getElementById("nbJoueurs");
+        /*var nbJoueurs = document.getElementById("nbJoueurs");
         var nbManche = document.getElementById("nbManches");
         var prive = document.getElementById("prive");
         var code = null;
@@ -303,7 +309,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         partie.nbPlayers = nbJoueurs.value;
         partie.nbManches = nbManche.value;
-        partie.code = code;
+        partie.code = code;*/
 
         sock.emit("CreateGame", partie);
 
@@ -311,14 +317,15 @@ document.addEventListener("DOMContentLoaded", function() {
 
     rejoindrePartie.addEventListener("click", function(e){
         //TODO Afficher liste partie
-        sock.emit("askListePartie");
+        //sock.emit("askListePartie");
+        sock.emit("JoinPublicGame",1);
     });
 
-    listeParties.addEventListener("click", function(e){
+    /*listeParties.addEventListener("click", function(e){
         if(e.target.dataset.id){
             sock.emit("JoinPublicGame", e.target.dataset.id);
         }
-    });
+    });*/
 
     //TODO Rejoindre partie privé 
 
@@ -326,11 +333,24 @@ document.addEventListener("DOMContentLoaded", function() {
         // Pas forcément sur, mais pourquoi pas s'en servir pour savoir quand stopper le loading screen
     });
 
-    sock.on("yourTurn",function(e){
-        // booléen ou autre
+    sock.on("endGame",function(obj){
+
+    })
+
+    sock.on("yourTurn",function(index){
+        ballIndex = index;
+        alert("Your turn");
+    });
+
+    sock.on("notYourTurn",function(){
+        ballIndex = null;
     });
 
     sock.on("ballShot",function(obj){
+        golfux.balls[obj.index].lastPos = {
+            x:golfux.balls[obj.index].body.GetPosition().x,
+            y:golfux.balls[obj.index].body.GetPosition().y
+        }
         golfux.balls[obj.index].body.ApplyLinearImpulse(new b2Vec2(obj.impulse.x, obj.impulse.y),true);
     });
 
