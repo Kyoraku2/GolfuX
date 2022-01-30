@@ -603,7 +603,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     sock.on("yourTurn",function(index){
         ballIndex = index;
-        alert("Your turn");
+        console.log("Your turn");
     });
 
     sock.on("notYourTurn",function(){
