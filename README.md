@@ -15,3 +15,4 @@ TODO :
 - Update les JSON comme dado disait
 - Faire des niveaux
 - Détecter quand la balle s'arrête et transmettre sa position finale (Attendre que la balle s'arrête pour pouvoir jouer le tour suivant)
+- Calculer vecteur normal portails
