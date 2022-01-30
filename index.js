@@ -287,89 +287,7 @@ let sock;
 let ballIndex = null;
 // TODO faire un truc pour que ça affiche la flèche quand c'est un autre joueur qui joue
 document.addEventListener("DOMContentLoaded", function() {
-    sock = io.connect();
-
-    let partie = {  
-                    nbPlayers: 2,
-                    nbManches: 2,
-                    code: null
-                };
-
-    var creerPartie = document.getElementById("create") //TODO Je sais pas ce qu'a mis robin donc c du random
-    var rejoindrePartie = document.getElementById("join"); //TODO Same
-    var listeParties = document.getElementById("listeParties");
-
-    creerPartie.addEventListener("click", function(e){
-        /*var nbJoueurs = document.getElementById("nbJoueurs");
-        var nbManche = document.getElementById("nbManches");
-        var prive = document.getElementById("prive");
-        var code = null;
-
-        if(prive.checked){
-            code = createPassword();
-            console.log(code);
-        }
-
-        partie.nbPlayers = nbJoueurs.value;
-        partie.nbManches = nbManche.value;
-        partie.code = code;*/
-
-        sock.emit("CreateGame", partie);
-
-    });
-
-    rejoindrePartie.addEventListener("click", function(e){
-        //TODO Afficher liste partie
-        //sock.emit("askListePartie");
-        sock.emit("JoinPublicGame",1);
-    });
-
-    /*listeParties.addEventListener("click", function(e){
-        if(e.target.dataset.id){
-            sock.emit("JoinPublicGame", e.target.dataset.id);
-        }
-    });*/
-
-    //TODO Rejoindre partie privé 
-
-    sock.on("gameStart",function(index){
-        // Pas forcément sur, mais pourquoi pas s'en servir pour savoir quand stopper le loading screen
-    });
-
-    sock.on("endGame",function(obj){
-
-    })
-
-    sock.on("yourTurn",function(index){
-        ballIndex = index;
-        alert("Your turn");
-    });
-
-    sock.on("notYourTurn",function(){
-        ballIndex = null;
-    });
-
-    sock.on("ballShot",function(obj){
-        golfux.balls[obj.index].lastPos = {
-            x:golfux.balls[obj.index].body.GetPosition().x,
-            y:golfux.balls[obj.index].body.GetPosition().y
-        }
-        golfux.balls[obj.index].body.ApplyLinearImpulse(new b2Vec2(obj.impulse.x, obj.impulse.y),true);
-    });
-
-    sock.on("ballPlaced",function(obj){
-        golfux.balls[obj.index] = new Ball(new b2Vec2(obj.pos.x, obj.pos.y), obj.index);
-    });
-
-    sock.on("ballShotFinalPos",function(obj){
-        // pas forcément nécessaire
-        var localPos = golfux.balls[obj.index].body.GetPosition();
-        if(localPos.x != obj.pos.x || localPos.y != obj.pos.y){
-            golfux.balls[obj.index].body.SetTransform(new b2Vec2(obj.pos.x, obj.pos.y), 0);
-        }
-    });
-
-    /* ECOUTEURS INTERFACES */
+    /********* ECOUTEURS INTERFACES *********************/
 
     //Création levels dynamiques
     create_levels_btn(NUM_LEVELS);
@@ -472,7 +390,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     //Rejoindre partie par code
-    document.getElementById("btn-join-code").addEventListener('click', function(e){
+    /*document.getElementById("btn-join-code").addEventListener('click', function(e){ // TODO : modifier ici
         var content = document.getElementById("code").value;
         if (correct_code(content) == false) {
             alert("La saisie du code est incorrecte. Veuillez recommencer.");
@@ -481,17 +399,17 @@ document.addEventListener("DOMContentLoaded", function() {
                 display_waiting_room();
             }
         }
-    });
+    });*/
 
     //Rejoindre waiting room
-    var btns_wait = document.getElementsByClassName("btn-wait");
+    /*var btns_wait = document.getElementsByClassName("btn-wait");
     for (var i = 0; i < btns_wait.length; i++) {
         btns_wait[i].addEventListener('click', function(e){
             if (confirm("Êtes-vous sûr de commencer cette partie avec les paramètres suivants ?")) {
                 display_waiting_room();
             }
         });
-    }
+    }*/
 
     /***************
     Fonctions
@@ -505,7 +423,9 @@ document.addEventListener("DOMContentLoaded", function() {
         clearTimeout(timeout_id);
     }
 
-    function display_waiting_room() {
+    function display_waiting_room(game) {
+        // TODO : voir si y'a pas plus propre mdr
+        document.getElementById("wait-room").children[1].innerHTML= '<div class="block"><h3><span class="emoji">&#127757;</span> '+game.name+' :</h3><br>&#128104;&#8205;&#128105;&#8205;&#128103;&#8205;&#128102; Nombre de joueurs : '+game.nbPlayers+'/'+game.maxPlayers+'<br>&#9971;  Nombre de manches : '+game.nbManches+'<br>&#128290; Code : <br><br>&#8987; Temps d\'attente : <time>0</time> seconde(s)</div>';
         document.getElementById("multi-online").style.display = "none";
         document.getElementById("creer-partie").style.display = "none";
         document.getElementById("wait-room").style.display = "block";
@@ -602,6 +522,112 @@ document.addEventListener("DOMContentLoaded", function() {
         }
         return true;
     }
+
+    function create_game_list(list){
+        for(var i=0, l=list.length ; i < l ; ++i){
+            var btn = document.createElement("button");
+            btn.className = "btn-wait unlock";
+            btn.dataset.id = list[i].id
+            btn.title = "Rejoindre la partie publique";
+            btn.innerHTML = '<strong>"'+list[i].name+'" :</strong> ('+list[i].nbPlayers+'/'+list[i].maxPlayers+')<br>Manches :'+list[i].nbManches+'</button>'
+            document.getElementById("game-list").appendChild(btn);
+        }
+    }
+
+
+    /***************** Partie serveur  *******************/
+    sock = io.connect();
+
+    let partie = { 
+        name:null,
+        nbPlayers: null,
+        nbManches: null,
+        code: null,
+        isPrivate: null
+    };
+
+    var btnCreateGame = document.getElementById("createGame");
+    var joinPrivateGame = document.getElementById("btn-join-code");
+    var gameList = document.getElementById("game-list");
+
+    btnCreateGame.addEventListener("click",function(e){
+        var gameName = document.getElementById("nom-partie").value;
+        var isPrivate = document.getElementById("check-private").checked;
+        var nbPlayers = document.getElementById("onlineNbPlayer").selectedIndex+2;
+        var nbManches = document.getElementById("onlineNbManches").value;
+        partie.name = gameName;
+        partie.nbPlayers = nbPlayers;
+        partie.nbManches = nbManches;
+        partie.isPrivate = isPrivate;
+        partie.code = createPassword();
+        sock.emit("CreateGame", partie);
+    });
+
+    gameList.addEventListener("click",function(e){
+        if(e.target.dataset.id){
+            console.log(e.target);
+            sock.emit("JoinPublicGame",e.target.dataset.id);
+        }
+    });
+
+    joinPrivateGame.addEventListener("click",function(e){
+        sock.emit("JoinPrivateGame",document.getElementById("code").value);
+    });
+
+    sock.on("error",function(msg){
+        alert(msg.message);
+    });
+
+    sock.on("gameList",function(list){
+        create_game_list(list);
+    });
+
+    sock.on("waiting",function(game){
+        display_waiting_room(game);
+    });
+
+    sock.on("playerJoined",function(game){
+        console.log("coucou");
+        display_waiting_room(game);
+    });
+
+    sock.on("gameStart",function(){
+        display_game();
+    });
+
+    sock.on("endGame",function(obj){
+
+    })
+
+    sock.on("yourTurn",function(index){
+        ballIndex = index;
+        alert("Your turn");
+    });
+
+    sock.on("notYourTurn",function(){
+        ballIndex = null;
+    });
+
+    sock.on("ballShot",function(obj){
+        golfux.balls[obj.index].lastPos = {
+            x:golfux.balls[obj.index].body.GetPosition().x,
+            y:golfux.balls[obj.index].body.GetPosition().y
+        }
+        golfux.balls[obj.index].body.ApplyLinearImpulse(new b2Vec2(obj.impulse.x, obj.impulse.y),true);
+    });
+
+    sock.on("ballPlaced",function(obj){
+        golfux.balls[obj.index] = new Ball(new b2Vec2(obj.pos.x, obj.pos.y), obj.index);
+    });
+
+    sock.on("ballShotFinalPos",function(obj){
+        // pas forcément nécessaire
+        var localPos = golfux.balls[obj.index].body.GetPosition();
+        if(localPos.x != obj.pos.x || localPos.y != obj.pos.y){
+            golfux.balls[obj.index].body.SetTransform(new b2Vec2(obj.pos.x, obj.pos.y), 0);
+        }
+    });
+
 });
 
 function createPassword(){
