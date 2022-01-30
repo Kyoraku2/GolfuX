@@ -1,22 +1,27 @@
-<html>
+<!doctype html>
+
+<html lang="fr">
     <head>
+        <meta charset="UTF-8">
         <title>GolfuX</title>
+
+        <link type="text/css" rel="stylesheet" href="./styles/golfux.css">
         
-        <script type="text/javascript" src="./build/Box2D_v2.2.1_min.js"></script>
-        <script type="text/javascript" src="./helpers/embox2d-helpers.js"></script>
-        <script type="text/javascript" src="./helpers/embox2d-html5canvas-debugDraw.js"></script>
-        <script type="text/javascript" src="index.js"></script>
-        <script type="text/javascript" src="./golfux.js"></script>
-        <script type="text/javascript" src="./ball.js"></script>
-        <script type="text/javascript" src="./level.js"></script>
-        <script type="text/javascript" src="./Obstacle.js"></script>
-        <script type="text/javascript" src="./hole.js"></script>
+        <script src="./build/Box2D_v2.2.1_min.js"></script>
+        <script src="./helpers/embox2d-helpers.js"></script>
+        <script src="./helpers/embox2d-html5canvas-debugDraw.js"></script>
+        <script src="index.js"></script>
+        <script src="./golfux.js"></script>
+        <script src="./ball.js"></script>
+        <script src="./level.js"></script>
+        <script src="./Obstacle.js"></script>
+        <script src="./hole.js"></script>
         <!--<script src="https://code.createjs.com/1.0.0/createjs.min.js"></script>-->
         <!--
         <script type="text/javascript" src="tests/template.js"></script>
         -->
         
-        <script type="text/javascript">  
+        <script>  
             var Box2D;
             //var level = window.location.search.slice(4);
             //if(level==""){level = 1}
@@ -41,15 +46,193 @@
         <script src="/socket.io/socket.io.js"></script>
     </head>
     <body>
-        <div style="text-align:center;">           
-            <canvas id="canvas" width="640" height="800" tabindex='1' style="position: absolute; top: 50%; left: 50%;    -webkit-transform: translate(-50%, -50%);
-            -moz-transform: translate(-50%, -50%);
-            -ms-transform: translate(-50%, -50%);
-            -o-transform: translate(-50%, -50%);
-            transform: translate(-50%, -50%);"></canvas>
-        </div>
-        <button id="create" style="position: absolute; top: 0%; left: 0%;">create</button>
-        <button id="join" style="position: absolute; top: 22px; left: 0%;">join</button>
+        <!-- TITRE DE LA PAGE -->
+        <header>
+            <img src="./textures/logo.PNG" alt="Logo GolfuX">
+            <h1 class="subtitle">
+                <span class="animated bounce bounce-1">LE </span>
+                <span class="animated bounce bounce-2">JEU </span>
+                <span class="animated bounce bounce-3">DE </span>
+                <span class="animated bounce bounce-4">GOLF </span>
+                <span class="animated bounce bounce-5">PC </span>
+                <span class="animated bounce bounce-6">ET </span>
+                <span class="animated bounce bounce-7">MOBILE </span>
+                <span class="animated bounce bounce-8">À </span>
+                <span class="animated bounce bounce-9">JOUER </span>
+                <span class="animated bounce bounce-10">ENTRE </span>
+                <span class="animated bounce bounce-11">AMIS </span>
+                <span class="animated bounce bounce-12">!</span>
+            </h1>
+        </header>
+        <!-- MENUS & JEU -->
+        <main>
+            <!-- MENU PRINCIPAL -->
+            <div id="menu">
+                <button id="btn-play-solo" class="unlock" title="Jouer tout seul si t'as pas d'amis">&#127942; MODE SOLO</button>
+                <button id="btn-multi-local" class="unlock" title="Sois pas radin et partage ton PC pour jouer en multijoueur">&#128104;&#8205;&#128105;&#8205;&#128103;&#8205;&#128102; MULTIJOUEUR LOCAL</button>
+                <button id="btn-multi-online" class="unlock" title="Jouer contre le monde entier si tu veux être un Master Player">&#127757; MULTIJOUEUR EN LIGNE</button>
+            </div>
+
+            <!-- NIVEAUX SOLO -->
+            <div id="solo">
+                <h2 class="subtitle">
+                    <span class="animated bounce bounce-1">&#128681; </span>
+                    <span class="animated bounce bounce-2">MODE </span>
+                    <span class="animated bounce bounce-3">SOLO </span>
+                    <span class="animated bounce bounce-4">- </span>
+                    <span class="animated bounce bounce-5">NIVEAUX </span>
+                    <span class="animated bounce bounce-6">&#128681;</span>
+                </h2>
+                <p>Vous pouvez dans ce mode individuel, vous entrainer sur un maximum de niveaux afin de devenir un golfuXeur expérimenté !
+                <br>&#127937; Arriverez-vous à finir tous nos parcours créés avec notre plus grande fourberie, afin de devenir un <em>Master Player</em> ?</p>
+                <div id="levels">
+                    <!-- Boutons insérés via JavaScript -->
+                </div>
+                <button class="btn-retour unlock" title="Retourner au menu principal">&#8617; RETOUR</button>
+            </div>
+
+            <!-- MENU CRÉATION PARTIE LOCALE -->
+            <div id="multi-local">
+                <h2 class="subtitle">
+                    <span class="animated bounce bounce-1">&#128681; </span>
+                    <span class="animated bounce bounce-2">MULTIJOUEUR </span>
+                    <span class="animated bounce bounce-3">LOCAL </span>
+                    <span class="animated bounce bounce-4">&#128681;</span>
+                </h2>
+                <p>Jouez en toute convivialité avec vos amis sur le même appareil grâce à ce mode de jeu ! Ne soyez juste pas violent si vous perdez...
+                <br>&#128187; Ce mode multijoueur est plutôt conseillé aux joueurs sur ordinateur.</p>
+                <div class="block">
+                    <span class="emoji">&#128104;&#8205;&#128105;&#8205;&#128103;&#8205;&#128102;</span> NOMBRE DE JOUEURS :
+                    <select>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                    </select>
+                </div>
+                <div class="block">
+                    <span class="emoji">&#9971;</span> NOMBRE DE MANCHES :
+                    <select class="manches">
+                        <!-- Choix insérés via JavaScript -->
+                    </select>
+                </div>
+                <button id="btn-start-local" class="btn-start unlock" title="Commencer la partie multijoueur">&#127942; COMMENCER</button>
+                <button class="btn-retour unlock" title="Retourner au menu principal">&#8617; RETOUR</button>
+            </div>
+
+            <!-- MENU ONLINE -->
+            <div id="multi-online">
+                <h2 class="subtitle">
+                    <span class="animated bounce bounce-1">&#128681; </span>
+                    <span class="animated bounce bounce-2">MULTIJOUEUR </span>
+                    <span class="animated bounce bounce-3">EN </span>
+                    <span class="animated bounce bounce-4">LIGNE </span>
+                    <span class="animated bounce bounce-5">&#128681;</span>
+                </h2>
+                <p>Jouez dans une partie privée en ligne en distanciel avec vos amis si vous avez la flemme de les inviter chez vous !
+                <br>&#128170; Ou bien affrontez le monde entier dans une partie publique si vous ne voulez pas rester un <em>Little Player</em>.</p>
+                <button id="btn-creer-partie" class="unlock" title="Créer une partie en ligne">&#128295; CRÉER UNE PARTIE</button>
+                <button class="btn-retour unlock" title="Retourner au menu principal">&#8617; RETOUR</button>
+                <div class="block">
+                    <h3><span class="emoji">&#128270;</span> REJOINDRE UNE PARTIE PRIVÉE AVEC UN CODE :</h3><br>
+                    Entrer le code de la partie : <input type="text" placeholder="XXXX" maxlength="4" id="code"><br>
+                    <button id="btn-join-code" class="unlock" title="Rejoindre la partie par code">&#10145; REJOINDRE</button>
+                </div>
+                <div class="block">
+                    <h3><span class="emoji">&#128161;</span> LISTE DES PARTIES PUBLIQUES DISPONIBLES :</h3>
+                    <ul id="game-list">
+                        <!-- Parties insérées via JavaScript-->
+                            <!-- bla bla bla -->
+                        <!-- Exemple d'affichage en dur -->
+                        <li>
+                            <button class="btn-wait unlock" title="Rejoindre la partie publique">
+                            <strong>"NOM DE LA PARTIE 1" :</strong> (X/X)<br>
+                            Manches : X</button>
+                        </li>
+                        <li>
+                            <button class="btn-wait unlock" title="Rejoindre la partie publique">
+                            <strong>"NOM DE LA PARTIE 2" :</strong> (X/X)<br>
+                            Manches : X</button>
+                        </li>
+                        <li>ETC...</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- MENU CRÉATION PARTIE ONLINE -->
+            <div id="creer-partie">
+                <h2 class="subtitle">
+                    <span class="animated bounce bounce-1">&#128681; </span>
+                    <span class="animated bounce bounce-2">CRÉER </span>
+                    <span class="animated bounce bounce-3">UNE </span>
+                    <span class="animated bounce bounce-4">PARTIE </span>
+                    <span class="animated bounce bounce-5">&#128681;</span>
+                </h2>
+                <div class="block">
+                    <span class="emoji">&#128221;</span>NOM DE LA PARTIE : <input type="text" placeholder="Un nom trop drôle !" maxlength="30" id="nom-partie">
+                </div>
+                <div class="block">
+                    <span class="emoji">&#128104;&#8205;&#128105;&#8205;&#128103;&#8205;&#128102;</span> NOMBRE DE JOUEURS MAXIMUM :
+                    <select>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                    </select>
+                </div>
+                <div class="block">
+                    <span class="emoji">&#9971;</span> NOMBRE DE MANCHES :
+                    <select class="manches">
+                        <!-- Choix insérés via JavaScript -->
+                    </select>
+                </div>
+                <div class="block">
+                    <span class="emoji">&#128272;</span> PARTIE PRIVÉE :
+                    <div id="btn-private">
+                        <input type="checkbox" id="check-private">
+                        <label for="check-private"></label>
+                    </div>
+                    <div id="code-display">
+
+                    </div>
+                </div>
+                <button class="unlock btn-wait" title="Créer la partie en ligne">&#128295; CRÉER</button>
+                <button class="btn-retour-2 unlock" title="Retourner au menu en ligne">&#8617; RETOUR</button>
+            </div>
+
+            <!-- SALLE D'ATTENTE -->
+            <div id="wait-room">
+                <h2 class="subtitle">
+                    <span class="animated bounce bounce-1">&#128681; </span>
+                    <span class="animated bounce bounce-2">VEUILLEZ </span>
+                    <span class="animated bounce bounce-3">ATTENDRE </span>
+                    <span class="animated bounce bounce-4">QUE </span>
+                    <span class="animated bounce bounce-5">L'HÔTE </span>
+                    <span class="animated bounce bounce-6">DÉCIDE </span>
+                    <span class="animated bounce bounce-7">DE </span>
+                    <span class="animated bounce bounce-8">COMMENCER </span>
+                    <span class="animated bounce bounce-9">LA </span>
+                    <span class="animated bounce bounce-10">PARTIE </span>
+                    <span class="animated bounce bounce-11">... </span>
+                    <span class="animated bounce bounce-12">&#128681;</span>
+                </h2>
+                <div class="block">
+                    <h3><span class="emoji">&#127757;</span> "NOM DE LA PARTIE" :</h3><br>
+                    &#128104;&#8205;&#128105;&#8205;&#128103;&#8205;&#128102; Nombre de joueurs : X/X<br>
+                    &#9971;  Nombre de manches : X<br>
+                    &#128290; Code : <br><br>
+                    &#8987; Temps d'attente : <time>0</time> seconde(s)
+                </div>
+                <button id="btn-room-quit" class="unlock" title="Retourner au menu en ligne">&#8617; RETOUR</button>
+                <button class="btn-start" title="Commencer la partie en ligne">&#127942; COMMENCER</button>
+            </div>
+
+            <!-- INTERFACE JEU -->
+            <div id="game">           
+                <canvas id="canvas" width="640" height="800" tabindex='1'></canvas>
+            </div>
+        </main>
+        <!-- BAS DE PAGE -->
+        <footer>
+            <p>&copy; GolfuX Corporation&trade; - 2022<br>Arthur BETARD, Robin GRAPPE, Tayeb HAKKAR<br>CMI Informatique - <em>Université de Franche-Comté</em></p>
+        </footer>
     </body>
 </html>
-
