@@ -43,7 +43,7 @@
                 animate();
             };        
         </script>
-        
+        <script src="/socket.io/socket.io.js"></script>
     </head>
     <body>
         <!-- TITRE DE LA PAGE -->
@@ -143,17 +143,11 @@
                         <!-- Parties insérées via JavaScript-->
                             <!-- bla bla bla -->
                         <!-- Exemple d'affichage en dur -->
-                        <li>
+                        <!--<li>
                             <button class="btn-wait unlock" title="Rejoindre la partie publique">
                             <strong>"NOM DE LA PARTIE 1" :</strong> (X/X)<br>
                             Manches : X</button>
-                        </li>
-                        <li>
-                            <button class="btn-wait unlock" title="Rejoindre la partie publique">
-                            <strong>"NOM DE LA PARTIE 2" :</strong> (X/X)<br>
-                            Manches : X</button>
-                        </li>
-                        <li>ETC...</li>
+                        </li>-->
                     </ul>
                 </div>
             </div>
@@ -172,7 +166,7 @@
                 </div>
                 <div class="block">
                     <span class="emoji">&#128104;&#8205;&#128105;&#8205;&#128103;&#8205;&#128102;</span> NOMBRE DE JOUEURS MAXIMUM :
-                    <select>
+                    <select id="onlineNbPlayer">
                         <option>2</option>
                         <option>3</option>
                         <option>4</option>
@@ -180,7 +174,7 @@
                 </div>
                 <div class="block">
                     <span class="emoji">&#9971;</span> NOMBRE DE MANCHES :
-                    <select class="manches">
+                    <select class="manches" id="onlineNbManches">
                         <!-- Choix insérés via JavaScript -->
                     </select>
                 </div>
@@ -194,7 +188,7 @@
 
                     </div>
                 </div>
-                <button class="unlock btn-wait" title="Créer la partie en ligne">&#128295; CRÉER</button>
+                <button class="unlock btn-wait" title="Créer la partie en ligne" id="createGame">&#128295; CRÉER</button>
                 <button class="btn-retour-2 unlock" title="Retourner au menu en ligne">&#8617; RETOUR</button>
             </div>
 
