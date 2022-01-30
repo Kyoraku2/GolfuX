@@ -181,6 +181,7 @@ function init() {
     },false);
 
     canvas.addEventListener('touchmove', function(evt){
+        evt.preventDefault();
         onTouchMove(evt);
     }, false); // mobile
     
@@ -193,6 +194,7 @@ function init() {
     }, false);
 
     canvas.addEventListener('mousemove', function(evt) {
+        evt.preventDefault();
         onMouseMove(canvas,evt);
     }, false);
 
