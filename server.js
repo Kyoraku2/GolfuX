@@ -6,7 +6,7 @@ var app = express();
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
 
-server.listen(process.env.PORT || 8080, function() {
+server.listen(process.env.PORT || 3000, function() {
     console.log("C'est parti ! En attente de connexion sur le port 8080...");
 });
 
