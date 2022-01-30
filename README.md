@@ -16,3 +16,7 @@ TODO :
 - Faire des niveaux
 - Détecter quand la balle s'arrête et transmettre sa position finale (Attendre que la balle s'arrête pour pouvoir jouer le tour suivant)
 - Calculer vecteur normal portails
+- Afficher la flèche directionnelle pour tous les tirs (sans le % quand ce n'est pas toi qui tir)
+
+Problème
+- Pour le placement de la première balle (parties avec au moins 3 joueurs)
