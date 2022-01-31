@@ -6,7 +6,7 @@ var app = express();
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
 
-server.listen(process.env.PORT || 3000, function() {
+server.listen(8080/*process.env.PORT || 3000*/, function() {
     console.log("C'est parti ! En attente de connexion sur le port 8080...");
 });
 
@@ -132,8 +132,8 @@ io.on('connection', function (socket) {
                     if(i != games[game].current){
                         games[game].joueurs[i].socket.emit("notYourTurn");
                     }
+                    //games[game].joueurs[i].socket.emit("isPlaying",games[game].current);
                 }
-                //games[game].current = 0;
                 games[game].joueurs[games[game].current].socket.emit("yourTurn",games[game].current);
             }else{
                 for(var i=0, l=games[game].joueurs.length ; i<l-1 ; ++i){
@@ -184,8 +184,8 @@ io.on('connection', function (socket) {
                     if(i != games[game].current){
                         games[game].joueurs[i].socket.emit("notYourTurn");
                     }
+                    //games[game].joueurs[i].socket.emit("isPlaying",games[game].current);
                 }
-                //games[game].current = 0;
                 games[game].joueurs[games[game].current].socket.emit("yourTurn",games[game].current);
             }else{
                 for(var i=0, l=games[game].joueurs.length ; i<l-1 ; ++i){
@@ -239,6 +239,9 @@ io.on('connection', function (socket) {
         games[game].joueurs[games[game].current].socket.emit("notYourTurn");
         games[game].current = (games[game].current + 1) % games[game].nbPlayers;
         games[game].joueurs[games[game].current].socket.emit("yourTurn",games[game].current);
+        //for(var i=0 ; i<games[game].nbPlayers ; ++i){
+        //    games[game].joueurs[i].socket.emit("isPlaying",games[game].current);
+        //}
     });
 
     socket.on("endPos",function(pos){

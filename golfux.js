@@ -341,8 +341,10 @@ Golfux.prototype.onMouseUp = function(canvas, evt) {
         y:this.balls[ballIndex].body.GetPosition().y
     }
     this.balls[ballIndex].body.ApplyLinearImpulse(new b2Vec2(impulse.x*intensifie, impulse.y*intensifie),true);
-    sock.emit("shoot",{x:impulse.x*intensifie, y:impulse.y*intensifie});
-    
+    if(playType === 2){
+        sock.emit("shoot",{x:impulse.x*intensifie, y:impulse.y*intensifie});
+    }
+
     ballIndex = (ballIndex < this.balls.length-1) ? ballIndex+1 : 0;
     this.click_up=null;
     this.click_down=null;
@@ -387,7 +389,10 @@ Golfux.prototype.onTouchUp = function(canvas, evt) {
         y:this.balls[ballIndex].body.GetPosition().y
     }
     this.balls[ballIndex].body.ApplyLinearImpulse(new b2Vec2(impulse.x*intensifie, impulse.y*intensifie),true);
-    sock.emit("shoot",{x:impulse.x*intensifie ,y:impulse.y*intensifie});
+    if(playType === 2){
+        sock.emit("shoot",{x:impulse.x*intensifie ,y:impulse.y*intensifie});
+    }
+    
     ballIndex = (ballIndex < this.balls.length-1) ? ballIndex+1 : 0;
     this.click_up=null;
     this.click_down=null;
@@ -477,25 +482,27 @@ Golfux.prototype.step = function(){
     
     // Balls
     for(ball of this.balls){
-        ball.x=ball.body.GetPosition().x;
-        ball.y=ball.body.GetPosition().y;
-        ball.isColliding(this.level.hole);
-
-        if(ball.body.GetLinearVelocity().Length()<1){
-            ball.isMoving = false;
-        }else{
-            ball.isMoving = true;
-        }
-
-        var pos = getPixelPointFromWorldPoint({
-            x:ball.x-ball.radius,
-            y:ball.y+ball.radius
-        });
-        if(!ball.isInHole || ball.isMoving){
-            context.drawImage(ball.sprite, pos.x, pos.y,ball.radius*PTM*2,ball.radius*PTM*2);
-            endLevel = false;
-        }else{
-            ball.body.GetFixtureList().SetSensor(true);
+        if(ball){
+            ball.x=ball.body.GetPosition().x;
+            ball.y=ball.body.GetPosition().y;
+            ball.isColliding(this.level.hole);
+    
+            if(ball.body.GetLinearVelocity().Length()<1){
+                ball.isMoving = false;
+            }else{
+                ball.isMoving = true;
+            }
+    
+            var pos = getPixelPointFromWorldPoint({
+                x:ball.x-ball.radius,
+                y:ball.y+ball.radius
+            });
+            if(!ball.isInHole || ball.isMoving){
+                context.drawImage(ball.sprite, pos.x, pos.y,ball.radius*PTM*2,ball.radius*PTM*2);
+                endLevel = false;
+            }else{
+                ball.body.GetFixtureList().SetSensor(true);
+            }
         }
     }
 
@@ -582,7 +589,9 @@ function print_segment(norme, fromx, fromy, tox, toy) {
     context.fillStyle = color;
     context.strokeStyle = color;
     context.font = "bold 20px comic sans ms";
-    context.fillText(Math.trunc(percents)+"%", (tox + fromx)/2 - 15, (toy + fromy)/2 - 15);
+    //if(ballIndex == currentBall){
+        context.fillText(Math.trunc(percents)+"%", (tox + fromx)/2 - 15, (toy + fromy)/2 - 15);
+    //}
     context.lineWidth = 2;
     var headlen = 10; // length of head in pixels
     var dx = tox - fromx;
