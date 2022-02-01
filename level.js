@@ -22,8 +22,8 @@ class Level{
         this.hole.createHole();
     }
 
-    createWall(middle_pos,shape,isstatic,hx,hy,radius,vectrices){
-        this.obstacles["walls"].push(new Wall(middle_pos,shape,isstatic,hx,hy,radius,vectrices));
+    createWall(middle_pos,shape,hx,hy,radius,vectrices){
+        this.obstacles["walls"].push(new Wall(middle_pos,shape,true,hx,hy,radius,vectrices));
     }
 
     createBumper(middle_pos,shape,isstatic,hx,hy,radius,vectrices){
@@ -88,36 +88,23 @@ class Level{
             this.createHole(data.hole.radius,new b2Vec2(data.hole.pos.x,data.hole.pos.y));
             for(const [name,array] of Object.entries(data.obstacles)){
                 array.forEach(object => {
-                    switch(name){
-                        case "wall":
-                            this.createWall(new b2Vec2(object.middle_pos.x,object.middle_pos.y), object.shape, object.isstatic, object.hx, object.hy, object.radius, object.vectrices);
-                        break;
-                        case "sand":
-                            this.createSand(new b2Vec2(object.middle_pos.x,object.middle_pos.y), object.shape, object.hx, object.hy, object.radius, object.vectrices);
-                        break;
-                        case "bubblegum":
-                            this.createBubblegum(new b2Vec2(object.middle_pos.x,object.middle_pos.y), object.shape, object.hx, object.hy, object.radius, object.vectrices);
-                        break;
-                        case "void":
-                            this.createVoid(new b2Vec2(object.middle_pos.x,object.middle_pos.y), object.shape, object.hx, object.hy, object.radius, object.vectrices);
-                        break;
+                    var radius = (object.shape == "circle") ? object.radius : -1;
+                    var vectrices = (object.shape == "jeSaisPasCQuoiQuiUtiliseCa") ? object.vectrices : -1;
+                    switch(name){ //this["create"+X]() || Destructuring
                         case "bumper":
-                            this.createBumper(new b2Vec2(object.middle_pos.x,object.middle_pos.y), object.shape, object.isstatic, object.hx, object.hy, object.radius, object.vectrices);
+                            this.createBumper(new b2Vec2(object.middle_pos.x,object.middle_pos.y), object.shape, object.isstatic, object.heightWidth.width, object.heightWidth.height, object.radius, object.vectrices);
                         break;
                         case "portal":
                             this.createPortal(new b2Vec2(object.enter_pos.x, object.enter_pos.y), new b2Vec2(object.exit_pos.x, object.exit_pos.y), object.bidirectional, object.hx1, object.hy1, object.hx2, object.hy2);
                         break;
                         case "wind":
-                            this.createWind(new b2Vec2(object.middle_pos.x, object.middle_pos.y), object.hx, object.hy, object.acceleration, new b2Vec2(object.direction.x, object.direction.y));
+                            this.createWind(new b2Vec2(object.middle_pos.x, object.middle_pos.y), object.heightWidth.width, object.heightWidth.height, object.acceleration, new b2Vec2(object.direction.x, object.direction.y));
                         break;
                         case "spawn":
-                            this.createSpawn(new b2Vec2(object.middle_pos.x, object.middle_pos.y), object.hx, object.hy);
+                            this.createSpawn(new b2Vec2(object.middle_pos.x, object.middle_pos.y), object.heightWidth.width, object.heightWidth.height);
                         break;
-                        case 'ice':
-                            this.createIce(new b2Vec2(object.middle_pos.x,object.middle_pos.y), object.shape, object.hx, object.hy, object.radius, object.vectrices);
-                        break;
-                        case 'water':
-                            this.createWater(new b2Vec2(object.middle_pos.x,object.middle_pos.y), object.shape, object.hx, object.hy, object.radius, object.vectrices);
+                        default:
+                            this["create"+name.charAt(0).toUpperCase()+name.slice(1)](new b2Vec2(object.middle_pos.x,object.middle_pos.y), object.shape, object.heightWidth.width, object.heightWidth.height, radius, vectrices);
                         break;
                     }
                         
