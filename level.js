@@ -104,7 +104,6 @@ class Level{
                             this.createSpawn(new b2Vec2(object.middle_pos.x, object.middle_pos.y), object.heightWidth.width, object.heightWidth.height);
                         break;
                         default:
-                            console.log(object);
                             this["create"+name.charAt(0).toUpperCase()+name.slice(1)](new b2Vec2(object.middle_pos.x,object.middle_pos.y), object.shape, object.heightWidth.width, object.heightWidth.height, radius, vectrices);
                         break;
                     }
