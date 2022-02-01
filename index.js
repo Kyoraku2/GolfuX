@@ -317,7 +317,6 @@ document.addEventListener("DOMContentLoaded", function() {
         partie.nbPlayers = nbPlayers;
         partie.nbManches = nbManches;
         partie.isPrivate = isPrivate;
-        partie.code = createPassword();
         sock.emit("CreateGame", partie);
     });
 
@@ -345,7 +344,6 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     sock.on("playerJoined",function(game){
-        console.log("coucou");
         display_waiting_room(game);
     });
 
@@ -493,7 +491,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     //Check private
     document.getElementById("btn-private").addEventListener('click', function(e){
-        display_code("");
+        //display_code("");
     });
 
     //Rejoindre partie par code
@@ -532,11 +530,12 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function display_waiting_room(game) {
         // TODO : voir si y'a pas plus propre mdr
-        document.getElementById("wait-room").children[1].innerHTML= '<div class="block"><h3><span class="emoji">&#127757;</span> '+game.name+' :</h3><br>&#128104;&#8205;&#128105;&#8205;&#128103;&#8205;&#128102; Nombre de joueurs : '+game.nbPlayers+'/'+game.maxPlayers+'<br>&#9971;  Nombre de manches : '+game.nbManches+'<br>&#128290; Code : <br><br>&#8987; Temps d\'attente : <time>0</time> seconde(s)</div>';
+        var sec = document.querySelector("time").innerHTML; 
+        document.getElementById("wait-room").children[1].innerHTML= '<h3><span class="emoji">&#127757;</span> '+game.name+' :</h3><br>&#128104;&#8205;&#128105;&#8205;&#128103;&#8205;&#128102; Nombre de joueurs : '+game.nbPlayers+'/'+game.maxPlayers+'<br>&#9971;  Nombre de manches : '+game.nbManches+'<br>&#128290; Code : '+game.code+'<br><br>&#8987; Temps d\'attente : <time>'+sec+'</time> seconde(s)';
         document.getElementById("multi-online").style.display = "none";
         document.getElementById("creer-partie").style.display = "none";
         document.getElementById("wait-room").style.display = "block";
-        timer();
+        timer(sec);
     }
 
     function display_game() {
@@ -548,9 +547,8 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById("game").style.display = "block";
     }
 
-    function timer() {
+    function timer(sec) {
         var display = document.querySelector("time");
-        var sec = 0;
         display.innerHTML = sec;
         timeout_id = setInterval(add_sec => {
             sec++;
@@ -642,20 +640,4 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 });
 
-function createPassword(){
-    var alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-    var number = "0123456789".split("");
-    
-    var code = "";
-
-    for(var i = 0; i<4; i++){
-        if(Math.round(Math.random()*2) == 1){
-            code += alphabet[Math.round(Math.random()*(alphabet.length-1))];
-        }else{
-            code += number[Math.round(Math.random()*(number.length-1))];
-        }
-    }
-    return code;
-
-}
 
