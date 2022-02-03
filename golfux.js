@@ -3,13 +3,8 @@ class Golfux{
         this.click_down=null;
         this.click_up=null;
         this.balls = [];
-        //this.balls[0] = new Ball(undefined, 0);
-        //this.balls[1] = new Ball(undefined, 1);
-        //this.ball = new Ball();
         this.level = new Level();
-        this.level.createFromJSON('level3')
-        //this.level.initBasicWalls();
-        //this.level.createHole(0.5, new b2Vec2(10,20));
+        this.level.createFromJSON('level3');
         addEventListener(this.balls,this.level);
     }
 
@@ -23,8 +18,6 @@ class Golfux{
         this.click_down=null;
         this.click_up=null;
         this.balls = [];
-        //this.balls[0] = new Ball(new b2Vec2(0,2), 0);
-        //this.balls[1] = new Ball(new b2Vec2(1,2), 1);
         this.level = new Level();
 
         this.level.createFromJSON('level'+level)
@@ -417,6 +410,7 @@ Golfux.prototype.step = function(){
     context.stroke();
 
     context.fillStyle = '#FF0000';
+    
     // Sand
     renderObjectType("sand",this.level,"white");
 
@@ -548,9 +542,32 @@ function renderObjectType(type,level,debugColor){
                 case "box":
                     renderSquareObject(level.obstacles[type][i],debugColor);
                 break;
+                case "polygon":
+                    renderPolygonObject(level.obstacles[type][i],debugColor);
+                break;
             }
         }
     }
+}
+
+function renderPolygonObject(obj,debugColor){
+    if(obj.sprite !== undefined){
+        var pattern = context.createPattern(obj.sprite, 'repeat');
+        context.fillStyle = pattern;
+    }else{
+        context.fillStyle = debugColor;
+    }
+    var vectrices = [];
+    for(var i=0, l=obj.vectrices.length ; i<l ; ++i){
+        vectrices.push(getPixelPointFromWorldPoint(obj.vectrices[i]));
+    }
+    context.beginPath();
+    context.moveTo(vectrices[0].x,vectrices[0].y);
+    for(var i=1, l=vectrices.length ; i<l ; ++i){
+        context.lineTo(vectrices[i].x,vectrices[i].y);
+    }
+    context.closePath();
+    context.fill();
 }
 
 function renderRoundObject(obj,debugColor){
@@ -560,7 +577,7 @@ function renderRoundObject(obj,debugColor){
     }else{
         context.fillStyle = debugColor;
     }
-    var pos = getPixelPointFromWorldPoint(obj.body.GetPosition());
+    var pos = getPixelPointFromWorldPoint(obj.middle_pos);
     context.beginPath();
     context.arc(pos.x, pos.y, obj.radius*PTM, 0, 2 * Math.PI);
     context.fill();
@@ -573,13 +590,23 @@ function renderSquareObject(obj,debugColor){
     }else{
         context.fillStyle = debugColor;
     }
-    var world_pos=obj.body.GetPosition();
     var leftup_corner={
-        x:world_pos.x-obj.hx,
-        y:world_pos.y+obj.hy
+        x:obj.middle_pos.x-obj.hx,
+        y:obj.middle_pos.y+obj.hy
     };
-    var canvas_pos = getPixelPointFromWorldPoint(leftup_corner);
-    context.fillRect(canvas_pos.x, canvas_pos.y, obj.hx*PTM*2, obj.hy*PTM*2);
+
+    var canvas_pos;
+    if(!obj.angle){
+        canvas_pos = getPixelPointFromWorldPoint(leftup_corner);
+        context.fillRect(canvas_pos.x, canvas_pos.y, obj.hx*PTM*2, obj.hy*PTM*2);
+    }else{
+        canvas_pos = getPixelPointFromWorldPoint(obj.middle_pos);
+        context.save();
+        context.translate(canvas_pos.x,canvas_pos.y);
+        context.rotate(-obj.angle);
+        context.fillRect(-obj.hx*PTM, -obj.hy*PTM, obj.hx*PTM*2, obj.hy*PTM*2);
+        context.restore();
+    }
 }
 
 //Fonction pour print la flèche (trucs mystiques pour le bout tkt)

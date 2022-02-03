@@ -78,6 +78,7 @@ function setViewCenterWorld(b2vecpos, instantaneous) {
 
 function onMouseDown(canvas, evt) {
     updateMousePos(canvas, evt);
+    console.log(mousePosWorld);
     golfux.onMouseDown(canvas, evt);
     if(!ballPlaced){
         placeBallInSpawn();
@@ -260,7 +261,7 @@ function draw() {
     drawAxes(context);
     
     context.fillStyle = 'rgb(255,255,0)';
-    //world.DrawDebugData(); // Affichage des éléments de débugage
+    world.DrawDebugData(); // Affichage des éléments de débugage
         
     context.restore();
 }

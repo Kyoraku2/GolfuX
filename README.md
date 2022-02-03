@@ -9,13 +9,10 @@ TODO :
 - Supprimer une partie vide ou finie
 - Détecter la fin de partie coté serveur (pour ça il faut la/les positions du/des trou(s))
 - Faire le système de points
-- Update les JSON comme dado disait
 - Faire des niveaux
 - Détecter quand la balle s'arrête et transmettre sa position finale (Attendre que la balle s'arrête pour pouvoir jouer le tour suivant)
 - Calculer vecteur normal portails
 - Afficher la flèche directionnelle pour tous les tirs (sans le % quand ce n'est pas toi qui tir) (Pour ça fait faire en sorte qu'on envoie des co et un vecteur au serveur qui le transmet au reste des joueurs)
-- Mode local (règles du jeu coté client)
+- Mode multi local (règles du jeu coté client)
 - "Stack" de coup à jouer dans le cas où la page est pas chargée.
-
-Problème
-- Pour le placement de la première balle (parties avec au moins 3 joueurs)
+- Faire en sorte de replacer TOUTES les balles à chaque fin de tour

@@ -4,63 +4,89 @@
             {
                 "middle_pos":{"x":11.5, "y":0},
                 "shape": "box",
-                "heightWidth" : {"width": 11.5, "height":0.25}
+                "heightWidth" : {"width": 11.5, "height":0.25},
+                "angle":0
             },
             {
                 "middle_pos":{"x":11.5, "y":31},
                 "shape": "box",
-                "heightWidth" : {"width": 11.5, "height":0.25}
+                "heightWidth" : {"width": 11.5, "height":0.25},
+                "angle":0
             },
             {
                 "middle_pos":{"x":0, "y":15.5},
                 "shape": "box",
-                "heightWidth" : {"width": 0.25, "height":15.75}
+                "heightWidth" : {"width": 0.25, "height":15.75},
+                "angle":0
             },
             {
                 "middle_pos":{"x":23, "y":15.5},
                 "shape": "box",
-                "heightWidth" : {"width": 0.25, "height":15.75}
+                "heightWidth" : {"width": 0.25, "height":15.75},
+                "angle":0
             },
             {
                 "middle_pos":{"x":11.5, "y":5},
                 "shape": "box",
-                "heightWidth" : {"width": 6.5, "height":0.25}
+                "heightWidth" : {"width": 6.5, "height":0.25},
+                "angle":0
             },
             {
                 "middle_pos":{"x":17.75, "y":18},
                 "shape": "box",
-                "heightWidth" : {"width": 0.25, "height":13}
+                "heightWidth" : {"width": 0.25, "height":13},
+                "angle":0
             },
             {
                 "middle_pos":{"x":5.1, "y":18},
                 "shape": "box",
-                "heightWidth" : {"width": 0.25, "height":13.25}
+                "heightWidth" : {"width": 0.25, "height":13.25},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":11.5, "y":16},
+                "shape": "box",
+                "heightWidth" : {"width": 2, "height":2},
+                "angle":0.75
+            },
+            {
+                "middle_pos":{"x":0, "y":0},
+                "shape": "polygon",
+                "vectrices":[
+                    {"x":22.8, "y":3},
+                    {"x":19.8, "y":0.25},
+                    {"x":22.8, "y":0.25}
+                ]
             }
         ],
         "sand":[
             {
                 "middle_pos":{"x":2.5, "y":9},
                 "shape": "box",
-                "heightWidth" : {"width": 2.5, "height":1.5}
+                "heightWidth" : {"width": 2.5, "height":1.5},
+                "angle":0
             },
             {
                 "middle_pos":{"x":2.5, "y":25},
                 "shape": "box",
-                "heightWidth" : {"width": 2.5, "height":1.5}
+                "heightWidth" : {"width": 2.5, "height":1.5},
+                "angle":0
             }
         ],
         "bubblegum":[
             {
                 "middle_pos":{"x":2.5, "y":17},
                 "shape": "box",
-                "heightWidth" : {"width": 2.5, "height":1}
+                "heightWidth" : {"width": 2.5, "height":1},
+                "angle":0
             }
         ],
         "void":[
             {
                 "middle_pos":{"x":11.4, "y":30.25},
                 "shape": "box",
-                "heightWidth" : {"width": 6.1, "height":0.5}
+                "heightWidth" : {"width": 6.1, "height":0.5},
+                "angle":0
             }
 
         ],
@@ -232,19 +258,22 @@
             {
                 "middle_pos":{"x":20.38, "y":18},
                 "shape": "box",
-                "heightWidth" : {"width": 1.38, "height":13}
+                "heightWidth" : {"width": 1.38, "height":13},
+                "angle":0
             }
         ],
         "water":[
             {
                 "middle_pos":{"x":18.5, "y":18},
                 "shape": "box",
-                "heightWidth" : {"width": 0.5, "height":13}
+                "heightWidth" : {"width": 0.5, "height":13},
+                "angle":0
             },
             {
                 "middle_pos":{"x":22.25, "y":18},
                 "shape": "box",
-                "heightWidth" : {"width": 0.5, "height":13}
+                "heightWidth" : {"width": 0.5, "height":13},
+                "angle":0
             }
         ]
     },
