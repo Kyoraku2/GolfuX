@@ -232,8 +232,8 @@ io.on('connection', function (socket) {
     });
 
     socket.on("placeBall",function(pos){
-        if(game !== null || index >= 0){
-            socket.emit("error", {message: "Erreur, une partie est déjà en cours."});
+        if(game === null || index < 0){
+            socket.emit("error", {message: "Erreur, vous n'êtes pas dans la partie"});
             return;
         }
         if(games[game].current != index){
@@ -248,8 +248,8 @@ io.on('connection', function (socket) {
     });
 
     socket.on("shoot",function(impulse){
-        if(game !== null || index >= 0){
-            socket.emit("error", {message: "Erreur, une partie est déjà en cours."});
+        if(game === null || index < 0){
+            socket.emit("error", {message: "Erreur, vous n'êtes pas dans la partie"});
             return;
         }
         if(games[game].current != index){
@@ -264,8 +264,8 @@ io.on('connection', function (socket) {
     });
 
     socket.on("endPos",function(allPos){
-        if(game !== null || index >= 0){
-            socket.emit("error", {message: "Erreur, une partie est déjà en cours."});
+        if(game === null || index < 0){
+            socket.emit("error", {message: "Erreur, vous n'êtes pas dans la partie"});
             return;
         }
         if(games[game].current != index){
