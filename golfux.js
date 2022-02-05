@@ -415,7 +415,7 @@ Golfux.prototype.step = function(){
 
     context.fillStyle = '#FF0000';
     
-    // Sand
+    /*// Sand
     renderObjectType("sand",this.level,"white");
 
     // Ice
@@ -476,7 +476,7 @@ Golfux.prototype.step = function(){
         }
     }
     // Walls
-    renderObjectType("walls",this.level,"red");
+    renderObjectType("walls",this.level,"red");*/
     
     // Balls
     var allStopped = (this.balls.length !== 0);
