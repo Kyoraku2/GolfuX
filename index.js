@@ -12,6 +12,8 @@ const MANCHES_MAX = 18;
 var world = null;
 var canvas;
 var context;
+var canvasBack;
+var contextBack;
 var myDebugDraw;        
 var myQueryCallback;      
 var run = true;      
@@ -171,6 +173,8 @@ function init() {
     
     canvas = document.getElementById("canvas");
     context = canvas.getContext( '2d' );
+    canvasBack = document.getElementById("stage");
+    contextBack = canvasBack.getContext( '2d' );
     
     canvasOffset.x = canvas.width/2;
     canvasOffset.y = canvas.height/2;
@@ -248,8 +252,7 @@ function step() { // Equivalent d'update
 }
 
 function draw() {
-    context.fillStyle = 'rgb(0,153,0)';
-    context.fillRect( 0, 0, canvas.width, canvas.height );
+    context.clearRect( 0, 0, canvas.width, canvas.height );
     
     context.save();            
     context.translate(canvasOffset.x, canvasOffset.y);
@@ -260,8 +263,7 @@ function draw() {
     drawAxes(context);
     
     context.fillStyle = 'rgb(255,255,0)';
-    world.DrawDebugData(); // Affichage des éléments de débugage
-        
+    //world.DrawDebugData(); // Affichage des éléments de débugage
     context.restore();
 }
 
@@ -409,6 +411,7 @@ document.addEventListener("DOMContentLoaded", function() {
     document.getElementById("btn-play-solo").addEventListener('click', function(e){
         playType = 0;
         ballIndex = 0;
+        currentBall = 0;
         display_title(false);
         document.getElementById("solo").style.display = "block";
     });

@@ -259,7 +259,6 @@ function addEventListener(balls, level){
 }
 
 Golfux.prototype.setNiceViewCenter = function() {
-    var cvs=document.getElementById('canvas');
     var inFrame = (window.top != window.self);
     var w = ((inFrame) ? window.top.innerWidth : window.innerWidth)
     || document.documentElement.clientWidth
@@ -276,8 +275,10 @@ Golfux.prototype.setNiceViewCenter = function() {
         w = 0.75 * h;
     }
     w=0.75*h;
-    cvs.height = h;
-    cvs.width = w;
+    canvas.height = h;
+    canvas.width = w;
+    canvasBack.height = h;
+    canvasBack.width = w;
     PTM = w/w_width;
 
     var pos1 = getWorldPointFromPixelPoint({x:0,y:0});
@@ -402,82 +403,19 @@ Golfux.prototype.step = function(){
     }
     var cvs=document.getElementById('canvas');
     var context = cvs.getContext( '2d' );
-
     var endLevel = true;
 
-    context.fillStyle = "black";
-    context.strokeStyle = "black";
-    var pos = getPixelPointFromWorldPoint({x:this.level.hole.body.GetPosition().x,y:this.level.hole.body.GetPosition().y});
-    context.beginPath();
-    context.arc(pos.x, pos.y, this.level.hole.radius*PTM, 0, 2 * Math.PI);
-    context.fill();
-    context.stroke();
-
-    context.fillStyle = '#FF0000';
+    updateBackground(this.level);
     
-    // Sand
-    renderObjectType("sand",this.level,"white");
-
-    // Ice
-    renderObjectType("ice",this.level,"lime");
-
-    // Bubblegum
-    renderObjectType("bubblegum",this.level,"black");
-
-    // Void
-    renderObjectType("void",this.level,"grey");
-
-    // Water
-    renderObjectType("water",this.level,"yellow");
-
-    // Bumper
-    renderObjectType("bumper",this.level,"blue");
-
-    // Spawn area
-    renderObjectType("spawn",this.level,"rgb(0,110,0)");
-
     // Wind
     if(this.level.obstacles["wind"].length>0){
         for(var i=0,l=this.level.obstacles["wind"].length;i<l;++i){
-            var world_pos_wall=this.level.obstacles["wind"][i].body.GetPosition();
-            var leftup_corner={
-                x:world_pos_wall.x-this.level.obstacles["wind"][i].hx,
-                y:world_pos_wall.y+this.level.obstacles["wind"][i].hy
-            };
-            context.fillStyle = 'rgb(0,130,0)';
-            var wall_pos_canvas = getPixelPointFromWorldPoint(leftup_corner);
-            var wall_pos_canvas_center = getPixelPointFromWorldPoint(world_pos_wall);
-            context.fillRect(wall_pos_canvas.x, wall_pos_canvas.y, this.level.obstacles["wind"][i].hx*PTM*2, this.level.obstacles["wind"][i].hy*PTM*2);
-            context.save();
-            context.translate(wall_pos_canvas_center.x,wall_pos_canvas_center.y);
-            var angle = 2*Math.atan(this.level.obstacles["wind"][i].direction.y/(this.level.obstacles["wind"][i].direction.x+Math.sqrt(Math.pow(this.level.obstacles["wind"][i].direction.x,2) + Math.pow(this.level.obstacles["wind"][i].direction.y,2))));
-            context.rotate(Math.PI*1.5);
-            context.rotate(-angle);
-            context.drawImage(this.level.obstacles["wind"][i].sprite, -this.level.obstacles["wind"][i].hx*PTM, -this.level.obstacles["wind"][i].hy*PTM , this.level.obstacles["wind"][i].hx*PTM*2, this.level.obstacles["wind"][i].hy*PTM*2);
-            context.restore();
-
             if(this.level.obstacles["wind"][i].enter){
                 this.level.obstacles["wind"][i].enter.ApplyLinearImpulse(new b2Vec2(this.level.obstacles["wind"][i].direction.x*this.level.obstacles["wind"][i].acceleration, this.level.obstacles["wind"][i].direction.y*this.level.obstacles["wind"][i].acceleration), true);
             }
-
         }
     }
 
-    // Portal
-    if(this.level.obstacles["portal"].length>0){
-        for(var i=0,l=this.level.obstacles["portal"].length;i<l;++i){
-            if(!this.level.obstacles["portal"][i].bidirectional){
-                renderSquareObject(this.level.obstacles["portal"][i].enter,"aqua");
-                renderSquareObject(this.level.obstacles["portal"][i].exit,"orange");
-            }else{
-                renderSquareObject(this.level.obstacles["portal"][i].enter,"purple");
-                renderSquareObject(this.level.obstacles["portal"][i].exit,"purple");
-            }
-        }
-    }
-    // Walls
-    renderObjectType("walls",this.level,"red");
-    
     // Balls
     var allStopped = (this.balls.length !== 0);
     for(ball of this.balls){
@@ -518,7 +456,7 @@ Golfux.prototype.step = function(){
         }
     }
 
-    if(allStopped){
+    if(allStopped && playType == 2){
         if(replacementStack.length > 0 && replacementStack.length === lastReplecementLength){
             lastReplecementLength = replacementStack.length;
             for(obj of replacementStack[0]){
@@ -546,7 +484,7 @@ Golfux.prototype.step = function(){
 
     if(this.click_down && this.balls.length != 0 && ballIndex !== null && this.balls[ballIndex] && !this.balls[ballIndex].shot){
         var click_pos = getPixelPointFromWorldPoint(this.click_down);
-        var ball_pos = getPixelPointFromWorldPoint(this.balls[ballIndex].body.GetPosition()); // TODO : changer pour affichage
+        var ball_pos = getPixelPointFromWorldPoint(this.balls[ballIndex].body.GetPosition());
         var mouse_pos = getPixelPointFromWorldPoint(mousePosWorld);
         var vector = {
             x:click_pos.x-mouse_pos.x,
@@ -576,63 +514,153 @@ Golfux.prototype.step = function(){
     }
 }
 
-function renderObjectType(type,level,debugColor){
+function allImagesLoaded(level){
+    for(const type in level.obstacles){
+        for(var i=0,l=level.obstacles[type].length;i<l;++i){
+            if(level.obstacles[type][i].sprite !== undefined){
+                if(level.obstacles[type][i].sprite.complete === false){
+                    return false;
+                }
+            }
+        }
+    }
+
+    return true;
+}
+
+function updateBackground(level){
+    if(level.rendered){
+        return;
+    }
+    level.rendered = allImagesLoaded(level);
+    contextBack.fillStyle = 'rgb(0,153,0)';
+    contextBack.fillRect( 0, 0, canvasBack.width, canvasBack.height );
+    contextBack.fillStyle = "black";
+    contextBack.strokeStyle = "black";
+    var pos = getPixelPointFromWorldPoint({x:level.hole.body.GetPosition().x,y:level.hole.body.GetPosition().y});
+    contextBack.beginPath();
+    contextBack.arc(pos.x, pos.y, level.hole.radius*PTM, 0, 2 * Math.PI);
+    contextBack.fill();
+    contextBack.stroke();
+
+    contextBack.fillStyle = '#FF0000';
+    
+    // Sand
+    renderObjectType("sand",level,"white",contextBack);
+
+    // Ice
+    renderObjectType("ice",level,"lime",contextBack);
+
+    // Bubblegum
+    renderObjectType("bubblegum",level,"black",contextBack);
+
+    // Void
+    renderObjectType("void",level,"grey",contextBack);
+
+    // Water
+    renderObjectType("water",level,"yellow",contextBack);
+
+    // Bumper
+    renderObjectType("bumper",level,"blue",contextBack);
+
+    // Spawn area
+    renderObjectType("spawn",level,"rgb(0,110,0)",contextBack);
+
+    // Wind
+    if(level.obstacles["wind"].length>0){
+        for(var i=0,l=level.obstacles["wind"].length;i<l;++i){
+            var world_pos_wall=level.obstacles["wind"][i].body.GetPosition();
+            var leftup_corner={
+                x:world_pos_wall.x-level.obstacles["wind"][i].hx,
+                y:world_pos_wall.y+level.obstacles["wind"][i].hy
+            };
+            contextBack.fillStyle = 'rgb(0,130,0)';
+            var wall_pos_canvas = getPixelPointFromWorldPoint(leftup_corner);
+            var wall_pos_canvas_center = getPixelPointFromWorldPoint(world_pos_wall);
+            contextBack.fillRect(wall_pos_canvas.x, wall_pos_canvas.y, level.obstacles["wind"][i].hx*PTM*2, level.obstacles["wind"][i].hy*PTM*2);
+            contextBack.save();
+            contextBack.translate(wall_pos_canvas_center.x,wall_pos_canvas_center.y);
+            var angle = 2*Math.atan(level.obstacles["wind"][i].direction.y/(level.obstacles["wind"][i].direction.x+Math.sqrt(Math.pow(level.obstacles["wind"][i].direction.x,2) + Math.pow(level.obstacles["wind"][i].direction.y,2))));
+            contextBack.rotate(Math.PI*1.5);
+            contextBack.rotate(-angle);
+            contextBack.drawImage(level.obstacles["wind"][i].sprite, -level.obstacles["wind"][i].hx*PTM, -level.obstacles["wind"][i].hy*PTM , level.obstacles["wind"][i].hx*PTM*2, level.obstacles["wind"][i].hy*PTM*2);
+            contextBack.restore();
+        }
+    }
+
+    // Portal
+    if(level.obstacles["portal"].length>0){
+        for(var i=0,l=level.obstacles["portal"].length;i<l;++i){
+            if(!level.obstacles["portal"][i].bidirectional){
+                renderSquareObject(level.obstacles["portal"][i].enter,"aqua",contextBack);
+                renderSquareObject(level.obstacles["portal"][i].exit,"orange",contextBack);
+            }else{
+                renderSquareObject(level.obstacles["portal"][i].enter,"purple",contextBack);
+                renderSquareObject(level.obstacles["portal"][i].exit,"purple",contextBack);
+            }
+        }
+    }
+    // Walls
+    renderObjectType("walls",level,"red",contextBack);
+}
+
+function renderObjectType(type,level,debugColor,ctx){
     if(level.obstacles[type].length>0){
         for(var i=0,l=level.obstacles[type].length;i<l;++i){
             switch(level.obstacles[type][i].type){
                 case "circle":
-                    renderRoundObject(level.obstacles[type][i],debugColor);
+                    renderRoundObject(level.obstacles[type][i],debugColor,ctx);
                 break;
                 case "box":
-                    renderSquareObject(level.obstacles[type][i],debugColor);
+                    renderSquareObject(level.obstacles[type][i],debugColor,ctx);
                 break;
                 case "polygon":
-                    renderPolygonObject(level.obstacles[type][i],debugColor);
+                    renderPolygonObject(level.obstacles[type][i],debugColor,ctx);
                 break;
             }
         }
     }
 }
 
-function renderPolygonObject(obj,debugColor){
+function renderPolygonObject(obj,debugColor,ctx){
     if(obj.sprite !== undefined){
-        var pattern = context.createPattern(obj.sprite, 'repeat');
-        context.fillStyle = pattern;
+        var pattern = ctx.createPattern(obj.sprite, 'repeat');
+        ctx.fillStyle = pattern;
     }else{
-        context.fillStyle = debugColor;
+        ctx.fillStyle = debugColor;
     }
     var vectrices = [];
     for(var i=0, l=obj.vectrices.length ; i<l ; ++i){
         vectrices.push(getPixelPointFromWorldPoint(obj.vectrices[i]));
     }
-    context.beginPath();
-    context.moveTo(vectrices[0].x,vectrices[0].y);
+    ctx.beginPath();
+    ctx.moveTo(vectrices[0].x,vectrices[0].y);
     for(var i=1, l=vectrices.length ; i<l ; ++i){
-        context.lineTo(vectrices[i].x,vectrices[i].y);
+        ctx.lineTo(vectrices[i].x,vectrices[i].y);
     }
-    context.closePath();
-    context.fill();
+    ctx.closePath();
+    ctx.fill();
 }
 
-function renderRoundObject(obj,debugColor){
+function renderRoundObject(obj,debugColor,ctx){
     if(obj.sprite !== undefined){
-        var pattern = context.createPattern(obj.sprite, 'repeat');
-        context.fillStyle = pattern;
+        var pattern = ctx.createPattern(obj.sprite, 'repeat');
+        ctx.fillStyle = pattern;
     }else{
-        context.fillStyle = debugColor;
+        ctx.fillStyle = debugColor;
     }
     var pos = getPixelPointFromWorldPoint(obj.middle_pos);
-    context.beginPath();
-    context.arc(pos.x, pos.y, obj.radius*PTM, 0, 2 * Math.PI);
-    context.fill();
+    ctx.beginPath();
+    ctx.arc(pos.x, pos.y, obj.radius*PTM, 0, 2 * Math.PI);
+    ctx.fill();
 }
 
-function renderSquareObject(obj,debugColor){
+function renderSquareObject(obj,debugColor,ctx){
     if(obj.sprite !== undefined){
-        var pattern = context.createPattern(obj.sprite, 'repeat');
-        context.fillStyle = pattern;
+        var pattern = ctx.createPattern(obj.sprite, 'repeat');
+        ctx.fillStyle = pattern;
     }else{
-        context.fillStyle = debugColor;
+        ctx.fillStyle = debugColor;
     }
     var leftup_corner={
         x:obj.middle_pos.x-obj.hx,
@@ -642,14 +670,14 @@ function renderSquareObject(obj,debugColor){
     var canvas_pos;
     if(!obj.angle){
         canvas_pos = getPixelPointFromWorldPoint(leftup_corner);
-        context.fillRect(canvas_pos.x, canvas_pos.y, obj.hx*PTM*2, obj.hy*PTM*2);
+        ctx.fillRect(canvas_pos.x, canvas_pos.y, obj.hx*PTM*2, obj.hy*PTM*2);
     }else{
         canvas_pos = getPixelPointFromWorldPoint(obj.middle_pos);
-        context.save();
-        context.translate(canvas_pos.x,canvas_pos.y);
-        context.rotate(-obj.angle);
-        context.fillRect(-obj.hx*PTM, -obj.hy*PTM, obj.hx*PTM*2, obj.hy*PTM*2);
-        context.restore();
+        ctx.save();
+        ctx.translate(canvas_pos.x,canvas_pos.y);
+        ctx.rotate(-obj.angle);
+        ctx.fillRect(-obj.hx*PTM, -obj.hy*PTM, obj.hx*PTM*2, obj.hy*PTM*2);
+        ctx.restore();
     }
 }
 

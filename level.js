@@ -12,6 +12,7 @@ class Level{
             ice:[],
             water:[]
         };
+        this.rendered = false;
         this.hole = null;
     }
 
@@ -39,7 +40,7 @@ class Level{
     }
 
     createIce(middle_pos,shape,hx,hy,radius,vectrices,angle){
-        this.obstacles["sand"].push(new Ice(middle_pos,shape,hx,hy,radius,vectrices,angle));
+        this.obstacles["ice"].push(new Ice(middle_pos,shape,hx,hy,radius,vectrices,angle));
     }
 
     createBubblegum(middle_pos,shape,hx,hy,radius,vectrices,angle){
