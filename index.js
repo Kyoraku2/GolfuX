@@ -78,7 +78,6 @@ function setViewCenterWorld(b2vecpos, instantaneous) {
 
 function onMouseDown(canvas, evt) {
     updateMousePos(canvas, evt);
-    console.log(mousePosWorld);
     golfux.onMouseDown(canvas, evt);
     if(!ballPlaced){
         placeBallInSpawn();
@@ -292,6 +291,9 @@ let ballPlaced = false;
 let sock;
 let ballIndex = null;
 let currentBall = null;
+let impulsionStack = [];
+let replacementStack = [];
+let lastReplecementLength = 0;
 // TODO faire un truc pour que ça affiche la flèche quand c'est un autre joueur qui joue
 document.addEventListener("DOMContentLoaded", function() {
     /***************** Partie serveur  *******************/
@@ -323,7 +325,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
     gameList.addEventListener("click",function(e){
         if(e.target.dataset.id){
-            console.log(e.target);
             sock.emit("JoinPublicGame",e.target.dataset.id);
         }
     });
@@ -365,28 +366,30 @@ document.addEventListener("DOMContentLoaded", function() {
         ballIndex = null;
     });
 
-    //sock.on("isPlaying",function(id){
-    //    currentBall = id;
-    //});
+    sock.on("isPlaying",function(id){
+        currentBall = id;
+    });
 
     sock.on("ballShot",function(obj){
-        golfux.balls[obj.index].lastPos = {
-            x:golfux.balls[obj.index].body.GetPosition().x,
-            y:golfux.balls[obj.index].body.GetPosition().y
-        }
-        golfux.balls[obj.index].body.ApplyLinearImpulse(new b2Vec2(obj.impulse.x, obj.impulse.y),true);
+        impulsionStack.push(obj);
     });
 
     sock.on("ballPlaced",function(obj){
         golfux.balls[obj.index] = new Ball(new b2Vec2(obj.pos.x, obj.pos.y), obj.index);
     });
 
-    sock.on("ballShotFinalPos",function(obj){
-        // pas forcément nécessaire
-        var localPos = golfux.balls[obj.index].body.GetPosition();
-        if(localPos.x != obj.pos.x || localPos.y != obj.pos.y){
-            golfux.balls[obj.index].body.SetTransform(new b2Vec2(obj.pos.x, obj.pos.y), 0);
-        }
+    sock.on("ballShotFinalPos",function(positions){
+        replacementStack.push(positions);
+        /*for(obj of positions){
+            var localPos = golfux.balls[obj.index].body.GetPosition();
+            if(localPos.x != obj.pos.x || localPos.y != obj.pos.y){
+                golfux.balls[obj.index].lastPos = {
+                    x:golfux.balls[obj.index].body.GetPosition().x,
+                    y:golfux.balls[obj.index].body.GetPosition().y
+                }
+                golfux.balls[obj.index].body.SetTransform(new b2Vec2(obj.pos.x, obj.pos.y), 0);
+            }
+        }*/
     });
 
     /********* ECOUTEURS INTERFACES *********************/
@@ -554,7 +557,6 @@ document.addEventListener("DOMContentLoaded", function() {
         timeout_id = setInterval(add_sec => {
             sec++;
             display.innerHTML = sec;
-            //console.log(sec);
         }, 1000);
     }
 

@@ -31,8 +31,8 @@ const BUBBLEGUM_LINEAR_DAMPLING = 18;
 const SAND_LINEAR_DAMPLING = 12;
 const ICE_LINEAR_DAMPLING = 0.8;
 // Dimensions du monde pour déterminer le PTM (c'est le zoom un peu, le facteur de scale)
-var w_width = 24.3;
-var w_height = 32.4;
+var w_width = 24;
+var w_height = 32;
 function addEventListener(balls, level){
     var listener = new Box2D.JSContactListener();
     listener.BeginContact = function (contactPtr) {
@@ -296,7 +296,7 @@ Golfux.prototype.onTouchMove = function(canvas, evt) {
 }
 
 Golfux.prototype.onMouseDown = function(canvas, evt) {
-    if(this.balls.length == 0 || !ballPlaced || ballIndex === null){
+    if(this.balls.length == 0 || !ballPlaced || ballIndex === null || impulsionStack.length>0 ){
         return;
     }
     // Récuperation de la position du click
@@ -308,7 +308,7 @@ Golfux.prototype.onMouseDown = function(canvas, evt) {
 }
 
 Golfux.prototype.onMouseUp = function(canvas, evt) {
-    if(this.balls.length == 0 || !ballPlaced || ballIndex === null || !this.click_down){
+    if(this.balls.length == 0 || !ballPlaced || ballIndex === null || !this.click_down  || this.balls[ballIndex].shot){
         return;
     }
     // Récuperation de la position de relachement du click
@@ -334,17 +334,19 @@ Golfux.prototype.onMouseUp = function(canvas, evt) {
         y:this.balls[ballIndex].body.GetPosition().y
     }
     this.balls[ballIndex].body.ApplyLinearImpulse(new b2Vec2(impulse.x*intensifie, impulse.y*intensifie),true);
+    this.balls[ballIndex].shot = true;
     if(playType === 2){
         sock.emit("shoot",{x:impulse.x*intensifie, y:impulse.y*intensifie});
+        ballIndex=undefined;
+    }else{
+        ballIndex = (ballIndex < this.balls.length-1) ? ballIndex+1 : 0;
     }
-
-    ballIndex = (ballIndex < this.balls.length-1) ? ballIndex+1 : 0;
     this.click_up=null;
     this.click_down=null;
 }
 
 Golfux.prototype.onTouchDown = function(canvas, evt) {
-    if(this.balls.length == 0 || !ballPlaced || ballIndex === null){
+    if(this.balls.length == 0 || !ballPlaced || ballIndex === null || impulsionStack.length>0){
         return;
     }
     // Récuperation de la position du click
@@ -356,7 +358,7 @@ Golfux.prototype.onTouchDown = function(canvas, evt) {
 }
 
 Golfux.prototype.onTouchUp = function(canvas, evt) {
-    if(this.balls.length == 0 || !ballPlaced || ballIndex === null || !this.click_down){
+    if(this.balls.length == 0 || !ballPlaced || ballIndex === null || !this.click_down || this.balls[ballIndex].shot){
         return;
     }
     // Récuperation de la position de relachement du click
@@ -382,11 +384,13 @@ Golfux.prototype.onTouchUp = function(canvas, evt) {
         y:this.balls[ballIndex].body.GetPosition().y
     }
     this.balls[ballIndex].body.ApplyLinearImpulse(new b2Vec2(impulse.x*intensifie, impulse.y*intensifie),true);
+    this.balls[ballIndex].shot = true;
     if(playType === 2){
-        sock.emit("shoot",{x:impulse.x*intensifie ,y:impulse.y*intensifie});
+        sock.emit("shoot",{x:impulse.x*intensifie, y:impulse.y*intensifie});
+        ballIndex=undefined;
+    }else{
+        ballIndex = (ballIndex < this.balls.length-1) ? ballIndex+1 : 0;
     }
-    
-    ballIndex = (ballIndex < this.balls.length-1) ? ballIndex+1 : 0;
     this.click_up=null;
     this.click_down=null;
 }
@@ -475,16 +479,18 @@ Golfux.prototype.step = function(){
     renderObjectType("walls",this.level,"red");
     
     // Balls
+    var allStopped = (this.balls.length !== 0);
     for(ball of this.balls){
         if(ball){
             ball.x=ball.body.GetPosition().x;
             ball.y=ball.body.GetPosition().y;
             ball.isColliding(this.level.hole);
     
-            if(ball.body.GetLinearVelocity().Length()<1){
+            if(ball.body.GetLinearVelocity().Length()==0){ // Limite ici
                 ball.isMoving = false;
             }else{
                 ball.isMoving = true;
+                allStopped = false;
             }
     
             var pos = getPixelPointFromWorldPoint({
@@ -500,7 +506,45 @@ Golfux.prototype.step = function(){
         }
     }
 
-    if(this.click_down && this.balls.length != 0 && ballIndex !== null){
+    // Détection de fin de tour
+    if(allStopped && currentBall>=0 && this.balls[currentBall] && this.balls[currentBall].shot){
+        this.balls[currentBall].shot = false;
+        if(playType == 2){
+            var endPos = [];
+            this.balls.forEach(function(ball,index){
+                endPos.push({index:index,pos:{x:ball.body.GetPosition().x,y:ball.body.GetPosition().y}});
+            });
+            sock.emit("endPos",endPos);
+        }
+    }
+
+    if(allStopped){
+        if(replacementStack.length > 0 && replacementStack.length === lastReplecementLength){
+            lastReplecementLength = replacementStack.length;
+            for(obj of replacementStack[0]){
+                var localPos = golfux.balls[obj.index].body.GetPosition();
+                if(localPos.x != obj.pos.x || localPos.y != obj.pos.y){
+                    golfux.balls[obj.index].lastPos = {
+                        x:golfux.balls[obj.index].body.GetPosition().x,
+                        y:golfux.balls[obj.index].body.GetPosition().y
+                    }
+                    golfux.balls[obj.index].body.SetTransform(new b2Vec2(obj.pos.x, obj.pos.y), 0);
+                }
+            }
+            replacementStack.splice(0,1);
+        }
+        if(impulsionStack.length>0){
+            this.balls[impulsionStack[0].index].lastPos = {
+                x:this.balls[impulsionStack[0].index].body.GetPosition().x,
+                y:this.balls[impulsionStack[0].index].body.GetPosition().y
+            }
+            this.balls[impulsionStack[0].index].body.ApplyLinearImpulse(new b2Vec2(impulsionStack[0].impulse.x, impulsionStack[0].impulse.y),true);
+            impulsionStack.splice(0,1);
+        }
+    }
+    
+
+    if(this.click_down && this.balls.length != 0 && ballIndex !== null && this.balls[ballIndex] && !this.balls[ballIndex].shot){
         var click_pos = getPixelPointFromWorldPoint(this.click_down);
         var ball_pos = getPixelPointFromWorldPoint(this.balls[ballIndex].body.GetPosition()); // TODO : changer pour affichage
         var mouse_pos = getPixelPointFromWorldPoint(mousePosWorld);
