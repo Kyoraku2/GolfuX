@@ -9,9 +9,7 @@ TODO :
 - Faire le système de points
 - Afficher la flèche directionnelle pour tous les tirs (sans le % quand ce n'est pas toi qui tir) (Pour ça fait faire en sorte qu'on envoie des co et un vecteur au serveur qui le transmet au reste des joueurs)
 - Mode multi local (règles du jeu coté client)
-
-
-- Calculer vecteur normal portails
+- Problème avec l'impulsion (le max c'est pas le max, ça depend toujours du x et y finaux)
 
 
 Bonus :

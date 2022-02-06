@@ -55,11 +55,11 @@ class Level{
         this.obstacles["water"].push(new Water(middle_pos,shape,hx,hy,radius,vectrices,angle));
     }
 
-    createPortal(enter_pos,exit_pos,bidirectional,hx1,hy1,hx2,hy2){
+    createPortal(enter_pos,exit_pos,bidirectional,hx1,hy1,hx2,hy2,direction1,direction2){
         if(!bidirectional){
-            this.obstacles["portal"].push(new UniDirectionPortal(enter_pos,exit_pos,hx1,hy1,hx2,hy2));
+            this.obstacles["portal"].push(new UniDirectionPortal(enter_pos,exit_pos,hx1,hy1,hx2,hy2,direction1,direction2));
         }else{
-            this.obstacles["portal"].push(new BiDirectionPortal(enter_pos,exit_pos,hx1,hy1,hx2,hy2));
+            this.obstacles["portal"].push(new BiDirectionPortal(enter_pos,exit_pos,hx1,hy1,hx2,hy2,direction1,direction2));
         }
     }
 
@@ -85,7 +85,7 @@ class Level{
                             this.createBumper(new b2Vec2(object.middle_pos.x,object.middle_pos.y), object.shape, object.isstatic, width, height, object.radius, object.vectrices);
                         break;
                         case "portal":
-                            this.createPortal(new b2Vec2(object.enter_pos.x, object.enter_pos.y), new b2Vec2(object.exit_pos.x, object.exit_pos.y), object.bidirectional, object.hx1, object.hy1, object.hx2, object.hy2);
+                            this.createPortal(new b2Vec2(object.enter_pos.x, object.enter_pos.y), new b2Vec2(object.exit_pos.x, object.exit_pos.y), object.bidirectional, object.hx1, object.hy1, object.hx2, object.hy2, object.direction1, object.direction2);
                         break;
                         case "wind":
                             this.createWind(new b2Vec2(object.middle_pos.x, object.middle_pos.y), width, height, object.acceleration, new b2Vec2(object.direction.x, object.direction.y));

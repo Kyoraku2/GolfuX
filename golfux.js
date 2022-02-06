@@ -75,14 +75,24 @@ function addEventListener(balls, level){
                             return;
                         }
                         taken.entered = true;
-                        if(taken.enter.body == bodyB){
-                            setTimeout(function(body,start){
-                                body.SetTransform(start,0);
-                            },0,balls[idA].body,taken.exit_pos);
+                        var impulse = {
+                            x:balls[idA].body.GetLinearVelocity().x,
+                            y:balls[idA].body.GetLinearVelocity().y,
+                        }
+                        if(taken.enter.body == bodyA){
+                            setTimeout(function(body,portal,impulse){
+                                body.SetTransform(portal.exit_pos,0);
+                                body.SetLinearVelocity(new b2Vec2(0,0));
+                                impulse = portalNormalForce(impulse,portal.direction1, portal.direction2);
+                                body.ApplyLinearImpulse(new b2Vec2(impulse.x, impulse.y),true);
+                            },0,balls[idA].body,taken,impulse);
                         }else{
-                            setTimeout(function(body,start){
-                                body.SetTransform(start,0);
-                            },0,balls[idA].body,taken.enter_pos);
+                            setTimeout(function(body,portal,impulse){
+                                body.SetTransform(portal.enter_pos,0);
+                                body.SetLinearVelocity(new b2Vec2(0,0));
+                                impulse = portalNormalForce(impulse,portal.direction2, portal.direction1);
+                                body.ApplyLinearImpulse(new b2Vec2(impulse.x, impulse.y),true);
+                            },0,balls[idA].body,taken,impulse);
                         }
                         break;
                     case 204:
@@ -92,9 +102,16 @@ function addEventListener(balls, level){
                         if(taken == undefined){
                             return;
                         }
-                        setTimeout(function(body,start){
-                            body.SetTransform(start,0);
-                        },0,balls[idA].body,taken.exit_pos);
+                        var impulse = {
+                            x:balls[idA].body.GetLinearVelocity().x,
+                            y:balls[idA].body.GetLinearVelocity().y,
+                        }
+                        setTimeout(function(body,portal,impulse){
+                            body.SetTransform(portal.exit_pos,0);
+                            body.SetLinearVelocity(new b2Vec2(0,0));
+                            impulse = portalNormalForce(impulse,portal.direction1, portal.direction2);
+                            body.ApplyLinearImpulse(new b2Vec2(impulse.x, impulse.y),true);
+                        },0,balls[idA].body,taken,impulse);
                         break;
                     case 205:
                         var wind = level.obstacles['wind'].find(function(e){
@@ -103,7 +120,7 @@ function addEventListener(balls, level){
                         if(wind == undefined){
                             return;
                         }
-                        wind.enter = balls[idB].body;
+                        wind.enter = balls[idA].body;
                         break;
                     case 207:
                         balls[idA].body.SetLinearDamping(ICE_LINEAR_DAMPLING);
@@ -134,20 +151,29 @@ function addEventListener(balls, level){
                         var taken = level.obstacles['portal'].find(function(e){
                             return bodyA==e.enter.body || bodyA == e.exit.body;
                         },bodyA);
-                        
                         if(taken.entered){
                             taken.entered = false;
                             return;
                         }
                         taken.entered = true;
+                        var impulse = {
+                            x:balls[idB].body.GetLinearVelocity().x,
+                            y:balls[idB].body.GetLinearVelocity().y,
+                        }
                         if(taken.enter.body == bodyA){
-                            setTimeout(function(body,start){
-                                body.SetTransform(start,0);
-                            },0,balls[idB].body,taken.exit_pos);
+                            setTimeout(function(body,portal,impulse){
+                                body.SetTransform(portal.exit_pos,0);
+                                body.SetLinearVelocity(new b2Vec2(0,0));
+                                impulse = portalNormalForce(impulse,portal.direction1, portal.direction2);
+                                body.ApplyLinearImpulse(new b2Vec2(impulse.x, impulse.y),true);
+                            },0,balls[idB].body,taken,impulse);
                         }else{
-                            setTimeout(function(body,start){
-                                body.SetTransform(start,0);
-                            },0,balls[idB].body,taken.enter_pos);
+                            setTimeout(function(body,portal,impulse){
+                                body.SetTransform(portal.enter_pos,0);
+                                body.SetLinearVelocity(new b2Vec2(0,0));
+                                impulse = portalNormalForce(impulse,portal.direction2, portal.direction1);
+                                body.ApplyLinearImpulse(new b2Vec2(impulse.x, impulse.y),true);
+                            },0,balls[idB].body,taken,impulse);
                         }
                         break;
                     case 204:
@@ -157,9 +183,16 @@ function addEventListener(balls, level){
                         if(taken == undefined){
                             return;
                         }
-                        setTimeout(function(body,start){
-                            body.SetTransform(start,0);
-                        },0,balls[idB].body,taken.exit_pos);
+                        var impulse = {
+                            x:balls[idB].body.GetLinearVelocity().x,
+                            y:balls[idB].body.GetLinearVelocity().y,
+                        }
+                        setTimeout(function(body,portal,impulse){
+                            body.SetTransform(portal.exit_pos,0);
+                            body.SetLinearVelocity(new b2Vec2(0,0));
+                            impulse = portalNormalForce(impulse,portal.direction1, portal.direction2);
+                            body.ApplyLinearImpulse(new b2Vec2(impulse.x, impulse.y),true);
+                        },0,balls[idB].body,taken,impulse);
                         break;
                     case 205:
                         var wind = level.obstacles['wind'].find(function(e){
@@ -243,6 +276,7 @@ function addEventListener(balls, level){
                             return;
                         }
                         wind.enter = undefined;
+                        break;
                 }
             }
         }
@@ -297,7 +331,7 @@ Golfux.prototype.onTouchMove = function(canvas, evt) {
 }
 
 Golfux.prototype.onMouseDown = function(canvas, evt) {
-    if(this.balls.length == 0 || !ballPlaced || ballIndex === null || impulsionStack.length>0 ){
+    if(this.balls.length == 0 || (currentBall>=0 && this.balls[currentBall].shot) || !ballPlaced || ballIndex === null || impulsionStack.length>0 ){
         return;
     }
     // Récuperation de la position du click
@@ -329,6 +363,7 @@ Golfux.prototype.onMouseUp = function(canvas, evt) {
     if(intensifie>MAX_INTENSITIE){
         intensifie=MAX_INTENSITIE;
     }
+
     // Impulsion
     this.balls[ballIndex].lastPos = {
         x:this.balls[ballIndex].body.GetPosition().x,
@@ -347,7 +382,7 @@ Golfux.prototype.onMouseUp = function(canvas, evt) {
 }
 
 Golfux.prototype.onTouchDown = function(canvas, evt) {
-    if(this.balls.length == 0 || !ballPlaced || ballIndex === null || impulsionStack.length>0){
+    if(this.balls.length == 0 || (currentBall>=0 && this.balls[currentBall].shot) || !ballPlaced || ballIndex === null || impulsionStack.length>0 ){
         return;
     }
     // Récuperation de la position du click
@@ -703,4 +738,77 @@ function print_segment(norme, fromx, fromy, tox, toy) {
     context.moveTo(tox, toy);
     context.lineTo(tox - headlen * Math.cos(angle + Math.PI / 6), toy - headlen * Math.sin(angle + Math.PI / 6));
     context.stroke();
+}
+
+function portalNormalForce(impulse,dirEnter,dirExit){
+    switch(dirEnter){
+        case "N":
+            switch(dirExit){
+                case "N":
+                    impulse.y*=-1;
+                    break;
+                case "E":
+                    var tmp = impulse.x;
+                    impulse.x = -impulse.y;
+                    impulse.y = tmp;
+                    break;
+                case "W":
+                    var tmp = impulse.x;
+                    impulse.x = impulse.y;
+                    impulse.y = tmp;
+                    break;
+            }
+        case "S":
+            switch(dirExit){
+                case "S":
+                    impulse.y*=-1;
+                    break;
+                case "E":
+                    var tmp = impulse.x;
+                    impulse.x = impulse.y;
+                    impulse.y = tmp;
+                    break;
+                case "W":
+                    var tmp = impulse.x;
+                    impulse.x = -impulse.y;
+                    impulse.y = tmp;
+                    break;
+            }
+            break;
+        case "E":
+            switch(dirExit){
+                case "S":
+                    var tmp = impulse.y;
+                    impulse.y = -impulse.x
+                    impulse.x = tmp;
+                    break;
+                case "N":
+                    var tmp = impulse.y;
+                    impulse.y = impulse.x
+                    impulse.x = tmp;
+                    break;
+                case "E":
+                    impulse.x *= -impulse.x;
+                    break;
+            }
+            break;
+        case "W":
+            switch(dirExit){
+                case "S":
+                    var tmp = impulse.y;
+                    impulse.y = impulse.x
+                    impulse.x = tmp;
+                    break;
+                case "N":
+                    var tmp = impulse.y;
+                    impulse.y = -impulse.x
+                    impulse.x = tmp;
+                    break;
+                case "W":
+                    impulse.x *= -impulse.x;
+                    break;
+            }
+            break;
+    }
+    return impulse;
 }

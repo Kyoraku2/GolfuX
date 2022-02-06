@@ -143,7 +143,9 @@
                 "hx1": 0.3,
                 "hy1": 1,
                 "hx2": 1,
-                "hy2": 0.3
+                "hy2": 0.3,
+                "direction1":"E",
+                "direction2":"S"
             },
             {
                 "exit_pos":{"x":11.5,"y":5.3},
@@ -153,7 +155,9 @@
                 "hx1": 1,
                 "hy1": 0.3,
                 "hx2": 1,
-                "hy2": 0.3
+                "hy2": 0.3,
+                "direction1":"S",
+                "direction2":"N"
             }
         ],
         "wind":[
