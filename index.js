@@ -5,7 +5,8 @@ var e_pairBit = 0x0008;
 var e_centerOfMassBit = 0x0010;
 
 var PTM = 32;
-const NUM_LEVELS = 18;
+const NUM_LEVELS = 40;
+const NUM_WORLDS = 4;
 var max_lvl = localStorage.getItem("level");
 const MANCHES_MAX = 18;
 
@@ -495,6 +496,17 @@ document.addEventListener("DOMContentLoaded", function() {
         //display_code("");
     });
 
+    //Bouton mondes
+    for (var i = 1; i <= NUM_WORLDS; i++) {
+        document.getElementById("btn-world-"+i).addEventListener('click', function(e){
+            var num_world = e.target.dataset["world"];
+            console.log("monde "+num_world);
+            if (num_world != undefined) {
+                change_world(num_world);
+            }
+        });
+    }
+
     //Rejoindre partie par code
     /*document.getElementById("btn-join-code").addEventListener('click', function(e){ // TODO : modifier ici
         var content = document.getElementById("code").value;
@@ -532,6 +544,9 @@ document.addEventListener("DOMContentLoaded", function() {
     function display_waiting_room(game) {
         // TODO : voir si y'a pas plus propre mdr
         var sec = document.querySelector("time").innerHTML; 
+        if (isNaN(sec)) {
+            sec = 0;
+        }
         document.getElementById("wait-room").children[1].innerHTML= '<h3><span class="emoji">&#127757;</span> '+game.name+' :</h3><br>&#128104;&#8205;&#128105;&#8205;&#128103;&#8205;&#128102; Nombre de joueurs : '+game.nbPlayers+'/'+game.maxPlayers+'<br>&#9971;  Nombre de manches : '+game.nbManches+'<br>&#128290; Code : '+game.code+'<br><br>&#8987; Temps d\'attente : <time>'+sec+'</time> seconde(s)';
         document.getElementById("multi-online").style.display = "none";
         document.getElementById("creer-partie").style.display = "none";
@@ -567,25 +582,32 @@ document.addEventListener("DOMContentLoaded", function() {
             document.getElementById("menu").style.display = "block";
             document.querySelector("header").style.display = "block";
             document.querySelector("footer").style.display = "block";
+            change_world(1);
         }
     }
 
     function create_levels_btn(lvl_number) {
-        var levels = document.getElementById("levels");
         for (var i = 0; i < lvl_number; i++) {
+            var world_lvl = Math.floor(i/10) + 1;
+            var num_lvl = i%10 + 1;
+            var levels = document.getElementById("world-"+world_lvl);
             var button = document.createElement("button");
             button.dataset["index"] = i+1;
             var content;
+            var stars = document.createElement("span");
+            stars.classList.add("stars");
             if (i+1 <= max_lvl) {
-                content = i+1;
+                content = world_lvl +"-"+ num_lvl;
                 button.classList.add("unlock");
                 button.title = "Niveau "+content;
+                //stars.appendChild(document.createTextNode("\n\u2B50\u2B50\u2B50"));
             } else {
                 content = "\uD83D\uDD12";
                 button.title = "Verrouillé";
             }
             var txt = document.createTextNode(content);
             button.appendChild(txt);
+            button.appendChild(stars);
             levels.appendChild(button);
         }
     }
@@ -595,6 +617,15 @@ document.addEventListener("DOMContentLoaded", function() {
         progress = (!progress) ? {} : JSON.parse(progress);
         progress = last_lvl;
         localStorage.setItem("level", JSON.stringify(progress));
+    }
+
+    function change_world(num_world) {
+        document.querySelector("body").classList = [];
+        document.querySelector("body").classList.add("background-w"+num_world);
+        for (var i = 1; i <= NUM_WORLDS; i++) {
+            document.getElementById("world-"+i).style.display = "none";
+        }
+        document.getElementById("world-"+num_world).style.display = "block";
     }
 
     function create_choices(nb_choices) {

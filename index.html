@@ -87,7 +87,23 @@
                 <br>&#127937; Arriverez-vous à finir tous nos parcours créés avec notre plus grande fourberie, afin de devenir un <em>Master Player</em> ?</p>
                 <div id="levels">
                     <!-- Boutons insérés via JavaScript -->
+                    <div id="world-1">
+                        <h3><span class="emoji">&#128674;</span> MONDE 1 : "<em>ARCHIPEL PDL</em>" <span class="emoji">&#128032;</span></h3>
+                    </div>
+                    <div id="world-2">
+                        <h3><span class="emoji">&#127797;</span> MONDE 2 : "<em>DÉSERT PYTHON</em>" <span class="emoji">&#128013;</span></h3>
+                    </div>
+                    <div id="world-3">
+                        <h3><span class="emoji">&#129482;</span> MONDE 3 : "<em>MONTAGNES GLA'C</em>" <span class="emoji">&#9924;</span></h3>
+                    </div>
+                    <div id="world-4">
+                        <h3><span class="emoji">&#127984;</span> MONDE 4 : "<em>JAVA'S CRYPTE</em>" <span class="emoji">&#128128;</span></h3>
+                    </div>
                 </div>
+                <button class="unlock" id="btn-world-1" data-world="1" title="Aller au monde 1">&#128674; MONDE 1</button>
+                <button class="unlock" id="btn-world-2" data-world="2" title="Aller au monde 2">&#127797; MONDE 2</button>
+                <button class="unlock" id="btn-world-3" data-world="3" title="Aller au monde 3">&#129482; MONDE 3</button>
+                <button class="unlock" id="btn-world-4" data-world="4" title="Aller au monde 4">&#127984; MONDE 4</button><br>
                 <button class="btn-retour unlock" title="Retourner au menu principal">&#8617; RETOUR</button>
             </div>
 
@@ -140,9 +156,6 @@
                 <div class="block">
                     <h3><span class="emoji">&#128161;</span> LISTE DES PARTIES PUBLIQUES DISPONIBLES :</h3>
                     <ul id="game-list">
-                        <!-- Parties insérées via JavaScript-->
-                            <!-- bla bla bla -->
-                        <!-- Exemple d'affichage en dur -->
                         <!--<li>
                             <button class="btn-wait unlock" title="Rejoindre la partie publique">
                             <strong>"NOM DE LA PARTIE 1" :</strong> (X/X)<br>
@@ -213,7 +226,7 @@
                     &#128104;&#8205;&#128105;&#8205;&#128103;&#8205;&#128102; Nombre de joueurs : X/X<br>
                     &#9971;  Nombre de manches : X<br>
                     &#128290; Code : <br><br>
-                    &#8987; Temps d'attente : <time>0</time> seconde(s)
+                    &#8987; Temps d'attente : <time>00:00</time> seconde(s)
                 </div>
                 <button id="btn-room-quit" class="unlock" title="Retourner au menu en ligne">&#8617; RETOUR</button>
                 <button class="btn-start" title="Commencer la partie en ligne">&#127942; COMMENCER</button>
@@ -224,6 +237,7 @@
                 <canvas id="canvas" width="640" height="800" tabindex='1'></canvas>
             </div>
         </main>
+        
         <!-- BAS DE PAGE -->
         <footer>
             <p>&copy; GolfuX Corporation&trade; - 2022<br>Arthur BETARD, Robin GRAPPE, Tayeb HAKKAR<br>CMI Informatique - <em>Université de Franche-Comté</em></p>

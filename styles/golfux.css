@@ -83,6 +83,12 @@ h3 {
 	font-weight: bold;
 }
 
+#levels h3 {
+	font-size: 3vh;
+	text-shadow: #333333 5px 5px 2px;
+	margin-top: 5vh;
+}
+
 p {
 	color: white;
 	font-weight: bold;
@@ -157,6 +163,27 @@ button#btn-multi-online:hover, button#btn-creer-partie:hover, #creer-partie butt
 	background-color: blue;
 }
 
+#btn-world-1:hover, .background-w1 {
+	background-color: #02d055;
+}
+
+#btn-world-2:hover, .background-w2 {
+	background-color: rgb(247, 217, 162);
+}
+
+#btn-world-3:hover, .background-w3 {
+	background-color: skyblue;
+}
+
+#btn-world-4:hover, .background-w4 {
+	background-color: gray;
+}
+
+.background-w1, .background-w2, .background-w3, .background-w4 {
+	transition-property: background-color;
+	transition-duration: 0.5s;
+}
+
 #menu button {
 	height: 10vh;
 	width: 50vh;
@@ -183,7 +210,7 @@ button#btn-multi-online:hover, button#btn-creer-partie:hover, #creer-partie butt
 }
 
 button.btn-retour, button.btn-start, #btn-creer-partie, button.btn-retour-2,
-button.btn-wait, #btn-room-quit {
+button.btn-wait, #btn-room-quit, #btn-world-1, #btn-world-2, #btn-world-3, #btn-world-4 {
 	border-radius: 3vh;
 	margin: 3vh;
 	padding: 20px;
@@ -202,7 +229,7 @@ button.btn-wait, #btn-room-quit {
 	width: 15vh;
 	margin: 3vh;
 	border-radius: 3vh;
-	font-size: 5vh;
+	font-size: 4vh;
 }
 
 select {
@@ -257,7 +284,11 @@ input[type="text"] {
 	font-size: 5vh;
 }
 
-#game {
+.stars {
+	font-size: 2vh;
+}
+
+#game, #world-2, #world-3, #world-4 {
     text-align: center;
 	display: none;
 }

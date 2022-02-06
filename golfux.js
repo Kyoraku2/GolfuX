@@ -4,7 +4,7 @@ class Golfux{
         this.click_up=null;
         this.balls = [];
         this.level = new Level();
-        this.level.createFromJSON('level3');
+        this.level.createFromJSON('level1');
         addEventListener(this.balls,this.level);
     }
 
@@ -29,10 +29,10 @@ class Golfux{
 const MAX_INTENSITIE=8;
 const BUBBLEGUM_LINEAR_DAMPLING = 18;
 const SAND_LINEAR_DAMPLING = 12;
-const ICE_LINEAR_DAMPLING = 0.8;
+const ICE_LINEAR_DAMPLING = 0.6;
 // Dimensions du monde pour déterminer le PTM (c'est le zoom un peu, le facteur de scale)
-var w_width = 24.3;
-var w_height = 32.4;
+var w_width = 24;
+var w_height = 32;
 function addEventListener(balls, level){
     var listener = new Box2D.JSContactListener();
     listener.BeginContact = function (contactPtr) {
