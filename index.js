@@ -6,7 +6,7 @@ var e_centerOfMassBit = 0x0010;
 
 var PTM = 32;
 const NUM_LEVELS = 40;
-const NUM_WORLDS = 4;
+const NUM_WORLDS = Math.floor(NUM_LEVELS/10);
 var max_lvl = localStorage.getItem("level");
 const MANCHES_MAX = 18;
 
@@ -398,6 +398,11 @@ document.addEventListener("DOMContentLoaded", function() {
     if (localStorage.getItem("level") == null) {
         save_progression(1);
     }
+    //save_progression(40);
+
+    //Monde par défaut
+    change_world(1);
+
     //Création choix
     create_choices(MANCHES_MAX);
     //Check partie privée
@@ -500,7 +505,6 @@ document.addEventListener("DOMContentLoaded", function() {
     for (var i = 1; i <= NUM_WORLDS; i++) {
         document.getElementById("btn-world-"+i).addEventListener('click', function(e){
             var num_world = e.target.dataset["world"];
-            console.log("monde "+num_world);
             if (num_world != undefined) {
                 change_world(num_world);
             }
@@ -624,8 +628,10 @@ document.addEventListener("DOMContentLoaded", function() {
         document.querySelector("body").classList.add("background-w"+num_world);
         for (var i = 1; i <= NUM_WORLDS; i++) {
             document.getElementById("world-"+i).style.display = "none";
+            document.getElementById("btn-world-"+i).classList.add("unlock");
         }
         document.getElementById("world-"+num_world).style.display = "block";
+        document.getElementById("btn-world-"+num_world).classList.remove("unlock");
     }
 
     function create_choices(nb_choices) {

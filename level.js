@@ -1,5 +1,5 @@
 class Level{
-    constructor(){
+    constructor(num){
         this.obstacles={
             walls:[],
             sand:[],
@@ -13,6 +13,7 @@ class Level{
             water:[]
         };
         this.hole = null;
+        this.num = num;
     }
 
     createHole(radius, middle_pos){
@@ -67,7 +68,7 @@ class Level{
     }
 
     async createFromJSON(level){
-        var response = await fetch("/"+level);
+        var response = await fetch("/levels/solo/"+level+".json");
         if (response.status == 200) {
 
             var data = await response.json();

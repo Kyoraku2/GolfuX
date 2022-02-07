@@ -3,8 +3,8 @@ class Golfux{
         this.click_down=null;
         this.click_up=null;
         this.balls = [];
-        this.level = new Level();
-        this.level.createFromJSON('level1');
+        this.level = new Level(11);
+        this.level.createFromJSON('levelX');
         addEventListener(this.balls,this.level);
     }
 
@@ -18,7 +18,7 @@ class Golfux{
         this.click_down=null;
         this.click_up=null;
         this.balls = [];
-        this.level = new Level();
+        this.level = new Level(level);
 
         this.level.createFromJSON('level'+level)
         addEventListener(this.balls,this.level);
@@ -28,7 +28,7 @@ class Golfux{
 }
 const MAX_INTENSITIE=8;
 const BUBBLEGUM_LINEAR_DAMPLING = 18;
-const SAND_LINEAR_DAMPLING = 12;
+const SAND_LINEAR_DAMPLING = 8;
 const ICE_LINEAR_DAMPLING = 0.6;
 // Dimensions du monde pour déterminer le PTM (c'est le zoom un peu, le facteur de scale)
 var w_width = 24;
@@ -399,6 +399,40 @@ Golfux.prototype.step = function(){
     var cvs=document.getElementById('canvas');
     var context = cvs.getContext( '2d' );
 
+    // Ground
+    var world_lvl = Math.floor(this.level.num/10) + 1;
+    if (this.level.num % 10 == 0) { world_lvl--;};
+    //console.log(world_lvl);
+    if (document.getElementById("game").style.display == "block") {
+        document.querySelector("body").classList = [];
+        document.querySelector("body").classList.add("background-w"+world_lvl);
+    } else {
+        document.querySelector("body").classList.add("background-w1");
+    }
+    switch (world_lvl) {
+        case 1 :
+            context.fillStyle = 'rgb(0,153,0)';
+            context.fillRect( 0, 0, canvas.width, canvas.height );
+            renderObjectType("spawn", this.level, "rgb(0,110,0)");
+            break;
+        case 2 :
+            context.fillStyle = 'rgb(255, 200, 150)';
+            context.fillRect( 0, 0, canvas.width, canvas.height );
+            renderObjectType("spawn", this.level, "rgb(200,150,100)");
+            break;
+        case 3 :
+            context.fillStyle = 'rgb(200, 200, 255)';
+            context.fillRect( 0, 0, canvas.width, canvas.height );
+            renderObjectType("spawn", this.level, "rgb(150, 150, 255)");
+            break;
+        case 4 :
+            context.fillStyle = 'rgb(150, 150, 150)';
+            context.fillRect( 0, 0, canvas.width, canvas.height );
+            renderObjectType("spawn", this.level, "rgb(100, 100, 100)");
+            break;
+    }
+    context.save();
+
     var endLevel = true;
 
     context.fillStyle = "black";
@@ -430,7 +464,7 @@ Golfux.prototype.step = function(){
     renderObjectType("bumper",this.level,"blue");
 
     // Spawn area
-    renderObjectType("spawn",this.level,"rgb(0,110,0)");
+    //renderObjectType("spawn",this.level,"rgb(0,110,0)");
 
     // Wind
     if(this.level.obstacles["wind"].length>0){
@@ -528,7 +562,7 @@ Golfux.prototype.step = function(){
 
     if(endLevel && this.balls.length !=0){
         console.log("FINI");
-        this.changeLevel(2)
+        this.changeLevel(2);
     }
 }
 

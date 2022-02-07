@@ -163,19 +163,19 @@ button#btn-multi-online:hover, button#btn-creer-partie:hover, #creer-partie butt
 	background-color: blue;
 }
 
-#btn-world-1:hover, .background-w1 {
+#btn-world-1.unlock:hover, .background-w1 {
 	background-color: #02d055;
 }
 
-#btn-world-2:hover, .background-w2 {
+#btn-world-2.unlock:hover, .background-w2 {
 	background-color: rgb(247, 217, 162);
 }
 
-#btn-world-3:hover, .background-w3 {
+#btn-world-3.unlock:hover, .background-w3 {
 	background-color: skyblue;
 }
 
-#btn-world-4:hover, .background-w4 {
+#btn-world-4.unlock:hover, .background-w4 {
 	background-color: gray;
 }
 
