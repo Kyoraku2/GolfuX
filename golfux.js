@@ -4,7 +4,7 @@ class Golfux{
         this.click_up=null;
         this.balls = [];
         this.level = new Level(11);
-        this.level.createFromJSON('levelX');
+        this.level.createFromJSON('levelX'); //TODO changer après lvl 1 par défaut
         addEventListener(this.balls,this.level);
     }
 
@@ -23,6 +23,18 @@ class Golfux{
         this.level.createFromJSON('level'+level)
         addEventListener(this.balls,this.level);
         draw();
+
+        //Save progression
+        if (level > max_lvl) {
+            this.save_progression(level);
+        }
+    }
+
+    save_progression(last_lvl) {
+        var progress = localStorage.getItem("level");
+        progress = (!progress) ? {} : JSON.parse(progress);
+        progress = last_lvl;
+        localStorage.setItem("level", JSON.stringify(progress));
     }
 
 }
@@ -30,6 +42,7 @@ const MAX_INTENSITIE=8;
 const BUBBLEGUM_LINEAR_DAMPLING = 18;
 const SAND_LINEAR_DAMPLING = 8;
 const ICE_LINEAR_DAMPLING = 0.6;
+var max_lvl = parseInt(localStorage.getItem("level"));
 // Dimensions du monde pour déterminer le PTM (c'est le zoom un peu, le facteur de scale)
 var w_width = 24;
 var w_height = 32;
@@ -562,7 +575,7 @@ Golfux.prototype.step = function(){
 
     if(endLevel && this.balls.length !=0){
         console.log("FINI");
-        this.changeLevel(2);
+        this.changeLevel(parseInt(this.level.num) + 1);
     }
 }
 

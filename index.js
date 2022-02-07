@@ -7,7 +7,7 @@ var e_centerOfMassBit = 0x0010;
 var PTM = 32;
 const NUM_LEVELS = 40;
 const NUM_WORLDS = Math.floor(NUM_LEVELS/10);
-var max_lvl = localStorage.getItem("level");
+var max_lvl = parseInt(localStorage.getItem("level"));
 const MANCHES_MAX = 18;
 
 var world = null;
@@ -236,6 +236,12 @@ function createWorld() {
     world.SetDebugDraw(myDebugDraw);
     golfux = new Golfux();
     golfux.setup();
+
+    //Progression
+    if (localStorage.getItem("level") == null) {
+        golfux.save_progression(1);
+    }
+    golfux.save_progression(11); //TODO Supprimer après c'est pour le debug
 }
 
 function resetScene() {
@@ -394,11 +400,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
     //Création levels dynamiques
     create_levels_btn(NUM_LEVELS);
-    //Progression
-    if (localStorage.getItem("level") == null) {
-        save_progression(1);
-    }
-    //save_progression(40);
 
     //Monde par défaut
     change_world(1);
@@ -419,9 +420,10 @@ document.addEventListener("DOMContentLoaded", function() {
     //Liste niveaux 
     document.getElementById("levels").addEventListener('click', function(e) {
         if (e.target.dataset["index"] != undefined) {
-            if (e.target.dataset["index"] <= max_lvl) {
+            if (parseInt(e.target.dataset["index"]) <= max_lvl) {
                 document.getElementById("solo").style.display = "none";
                 //Charger level X
+                golfux.changeLevel(e.target.dataset["index"]);
                 document.getElementById("game").style.display = "block";
             } else {
                 alert("Vous n'avez pas encore débloqué ce niveau.");
@@ -616,12 +618,12 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
-    function save_progression(last_lvl) {
+    /*function save_progression(last_lvl) {
         var progress = localStorage.getItem("level");
         progress = (!progress) ? {} : JSON.parse(progress);
         progress = last_lvl;
         localStorage.setItem("level", JSON.stringify(progress));
-    }
+    }*/
 
     function change_world(num_world) {
         document.querySelector("body").classList = [];
