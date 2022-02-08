@@ -150,7 +150,8 @@ button.unlock:hover {
 }
 
 button#btn-play-solo:hover, #levels button.unlock:hover, #btn-join-code:hover,
-#wait-room button.btn-start.unlock:hover, #multi-online button.btn-wait:hover {
+#wait-room button.btn-start.unlock:hover, #multi-online button.btn-wait:hover,
+#btn-continue:hover {
 	background-color: rgb(255, 208, 0);
 }
 
@@ -181,7 +182,7 @@ button#btn-multi-online:hover, button#btn-creer-partie:hover, #creer-partie butt
 
 .background-w1, .background-w2, .background-w3, .background-w4 {
 	transition-property: background-color;
-	transition-duration: 0.5s;
+	transition-duration: 0.7s;
 }
 
 #menu button {
@@ -210,7 +211,8 @@ button#btn-multi-online:hover, button#btn-creer-partie:hover, #creer-partie butt
 }
 
 button.btn-retour, button.btn-start, #btn-creer-partie, button.btn-retour-2,
-button.btn-wait, #btn-room-quit, #btn-world-1, #btn-world-2, #btn-world-3, #btn-world-4 {
+button.btn-wait, #btn-room-quit, #btn-world-1, #btn-world-2, #btn-world-3, #btn-world-4,
+#btn-continue, #btn-quit {
 	border-radius: 3vh;
 	margin: 3vh;
 	padding: 20px;
@@ -288,9 +290,21 @@ input[type="text"] {
 	font-size: 2vh;
 }
 
-#game, #world-2, #world-3, #world-4 {
+#game, #world-2, #world-3, #world-4, #end-menu {
     text-align: center;
 	display: none;
+}
+
+#end-menu {
+	position: relative;
+	margin-left: 10vw;
+	margin-right: 10vw;
+	top: 10vh;
+}
+
+#end-menu p {
+	text-shadow: none;
+	margin: 2vh;
 }
 
 #canvas {
@@ -304,6 +318,7 @@ input[type="text"] {
 	border-left : 3px solid white;
 	border-right : 3px solid white;
 }
+
 
 /*************** CHECK *****************/
 

@@ -4,7 +4,7 @@ class Golfux{
         this.click_up=null;
         this.balls = [];
         this.level = new Level(11);
-        this.level.createFromJSON('levelX'); //TODO changer après lvl 1 par défaut
+        this.level.createFromJSON('level1'); //Default
         addEventListener(this.balls,this.level);
     }
 
@@ -28,6 +28,8 @@ class Golfux{
         if (level > max_lvl) {
             this.save_progression(level);
         }
+        msg_display = false;
+        ballPlaced = false;
     }
 
     save_progression(last_lvl) {
@@ -36,13 +38,14 @@ class Golfux{
         progress = last_lvl;
         localStorage.setItem("level", JSON.stringify(progress));
     }
-
 }
+
 const MAX_INTENSITIE=8;
 const BUBBLEGUM_LINEAR_DAMPLING = 18;
 const SAND_LINEAR_DAMPLING = 8;
 const ICE_LINEAR_DAMPLING = 0.6;
 var max_lvl = parseInt(localStorage.getItem("level"));
+var msg_display = false;
 // Dimensions du monde pour déterminer le PTM (c'est le zoom un peu, le facteur de scale)
 var w_width = 24;
 var w_height = 32;
@@ -575,7 +578,26 @@ Golfux.prototype.step = function(){
 
     if(endLevel && this.balls.length !=0){
         console.log("FINI");
-        this.changeLevel(parseInt(this.level.num) + 1);
+        document.getElementById("end-menu").style.display = "block";
+        if (msg_display == false) {
+            var rigolo_msg = [
+                "Bien joué <em>Little Player</em> ! Un jour tu deviendras plus grand... &#128170;",
+                "Peut mieux faire... Non non je ne juge pas. &#128064;",
+                "Mouais après le niveau était simple nan ? &#129300;",
+                "Le <em>TrophuX</em> est à portée de main ! &#129351;",
+                "Sans doûte un niveau de petit joueur ! &#128526;",
+                "Trop lent à finir ce niveau : pire que Jube et ses copies... &#128195;",
+                "C'est une première étape, mais il reste encore beaucoup de chemin à faire... &#128579;",
+                "Brillant ! Autant de talent, beauté et intelligence que ceux qui ont conçu le jeu. &#129321;",
+                "Quelle magnifique performance ! Seul un jeu en JavaScript peut nous apporter ça. &#129394;",
+                "+ 1000000 social crédits. &#128200;"
+            ];
+            var rand = Math.floor(Math.random() * rigolo_msg.length);
+            console.log(rand);
+            document.querySelector("#end-menu p").innerHTML = rigolo_msg[rand];
+            msg_display = true;
+        }
+        //this.changeLevel(parseInt(this.level.num) + 1);
     }
 }
 

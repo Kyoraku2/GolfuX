@@ -241,7 +241,7 @@ function createWorld() {
     if (localStorage.getItem("level") == null) {
         golfux.save_progression(1);
     }
-    golfux.save_progression(11); //TODO Supprimer après c'est pour le debug
+    //golfux.save_progression(1); //TODO Supprimer après c'est pour le debug
 }
 
 function resetScene() {
@@ -431,9 +431,21 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
+    //Menu fin continuer
+    document.getElementById("btn-continue").addEventListener('click', function(e){
+        golfux.changeLevel(parseInt(golfux.level.num) + 1);
+        document.getElementById("end-menu").style.display = "none";
+    });
+
+    //Menu fin quitter
+    document.getElementById("btn-quit").addEventListener('click', function(e){
+        golfux.changeLevel(parseInt(golfux.level.num) + 1);
+        window.location.reload();
+    });
+
     //Multi Local
     document.getElementById("btn-multi-local").addEventListener('click', function(e){
-        playType = 1
+        playType = 1;
         display_title(false);
         document.getElementById("multi-local").style.display = "block";
     });
