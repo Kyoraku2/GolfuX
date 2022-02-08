@@ -20,6 +20,14 @@ class Golfux{
         this.balls = [];
         this.level = new Level();
 
+        if(playType === 1){
+            ballPlaced = false;
+        }else{
+            for(var i=0 ; i<localNbPlayers ; ++i){
+                localPlacedBalls[i] = false;
+            }
+        }
+
         this.level.createFromJSON('level'+level)
         addEventListener(this.balls,this.level);
         draw();
@@ -27,6 +35,7 @@ class Golfux{
 
 }
 const MAX_INTENSITIE=8;
+const INTENSIFIE = 8;
 const BUBBLEGUM_LINEAR_DAMPLING = 18;
 const SAND_LINEAR_DAMPLING = 12;
 const ICE_LINEAR_DAMPLING = 0.8;
@@ -331,7 +340,13 @@ Golfux.prototype.onTouchMove = function(canvas, evt) {
 }
 
 Golfux.prototype.onMouseDown = function(canvas, evt) {
-    if(this.balls.length == 0 || (currentBall>=0 && this.balls[currentBall].shot) || !ballPlaced || ballIndex === null || impulsionStack.length>0 ){
+    if(playType===2 && (this.balls.length == 0 || !ballPlaced || ballIndex === null || impulsionStack.length>0 || replacementStack.length>0 || (currentBall>=0 && this.balls[currentBall] && this.balls[currentBall].shot))){
+        return;
+    }
+    if(playType===1 && (this.balls.length == 0 || (ballIndex>=0 && (!localPlacedBalls[ballIndex] || (this.balls[ballIndex] && this.balls[ballIndex].shot))))){
+        return;
+    }
+    if(playType===0 && (!ballPlaced || (this.balls[ballIndex] && this.balls[ballIndex].shot))){
         return;
     }
     // Récuperation de la position du click
@@ -343,7 +358,13 @@ Golfux.prototype.onMouseDown = function(canvas, evt) {
 }
 
 Golfux.prototype.onMouseUp = function(canvas, evt) {
-    if(this.balls.length == 0 || !ballPlaced || ballIndex === null || !this.click_down  || this.balls[ballIndex].shot){
+    if(playType===2 && (!this.click_down || this.balls.length == 0 || !ballPlaced || ballIndex === null || impulsionStack.length>0 || replacementStack.length>0 || (currentBall>=0 && this.balls[currentBall] && this.balls[currentBall].shot))){
+        return;
+    }
+    if(playType===1 && (!this.click_down || this.balls.length == 0 || (ballIndex>=0 && (!localPlacedBalls[ballIndex] || (this.balls[ballIndex] && this.balls[ballIndex].shot))))){
+        return;
+    }
+    if(playType===0 && (!this.click_down || !ballPlaced || (this.balls[ballIndex] && this.balls[ballIndex].shot))){
         return;
     }
     // Récuperation de la position de relachement du click
@@ -353,15 +374,28 @@ Golfux.prototype.onMouseUp = function(canvas, evt) {
     this.click_up={x:x,y:canvas.height-y};
     this.click_up=getWorldPointFromPixelPoint(this.click_up);
 
-    var impulse={
+    var vector={
         x:this.click_down.x-this.click_up.x,
         y:this.click_down.y-this.click_up.y
     };
+    var dest = {
+        y:this.balls[ballIndex].body.GetPosition().y+vector.y,
+        x:this.balls[ballIndex].body.GetPosition().x+vector.x
+    }
+    var norm = Math.sqrt(vector.x*vector.x + vector.y*vector.y);
+    var unit_vector = {
+        x:vector.x/norm,
+        y:vector.y/norm
+    }
+    if(norm > MAX_INTENSITIE){
+        norm = MAX_INTENSITIE;
+        dest.x=this.balls[ballIndex].body.GetPosition().x+MAX_INTENSITIE*unit_vector.x
+        dest.y=this.balls[ballIndex].body.GetPosition().y+MAX_INTENSITIE*unit_vector.y
+    }
 
-    // Intensification en fonction de l'éloignement par rapport au click initial (valuer à changer)
-    var intensifie=Math.sqrt(impulse.x*impulse.x + impulse.y*impulse.y);
-    if(intensifie>MAX_INTENSITIE){
-        intensifie=MAX_INTENSITIE;
+    var impulse = {
+        x:dest.x-this.balls[ballIndex].body.GetPosition().x,
+        y:dest.y-this.balls[ballIndex].body.GetPosition().y
     }
 
     // Impulsion
@@ -369,20 +403,30 @@ Golfux.prototype.onMouseUp = function(canvas, evt) {
         x:this.balls[ballIndex].body.GetPosition().x,
         y:this.balls[ballIndex].body.GetPosition().y
     }
-    this.balls[ballIndex].body.ApplyLinearImpulse(new b2Vec2(impulse.x*intensifie, impulse.y*intensifie),true);
+    this.balls[ballIndex].body.ApplyLinearImpulse(new b2Vec2(impulse.x*INTENSIFIE, impulse.y*INTENSIFIE),true);
     this.balls[ballIndex].shot = true;
     if(playType === 2){
         sock.emit("shoot",{x:impulse.x*intensifie, y:impulse.y*intensifie});
         ballIndex=undefined;
-    }else{
-        ballIndex = (ballIndex < this.balls.length-1) ? ballIndex+1 : 0;
-    }
+    }/*else{
+        if(playType === 1){
+            ballIndex = (ballIndex < localNbPlayers-1) ? ballIndex+1 : 0;
+        }else{
+            ballIndex = 0;
+        }
+    }*/
     this.click_up=null;
     this.click_down=null;
 }
 
 Golfux.prototype.onTouchDown = function(canvas, evt) {
-    if(this.balls.length == 0 || (currentBall>=0 && this.balls[currentBall].shot) || !ballPlaced || ballIndex === null || impulsionStack.length>0 ){
+    if(playType===2 && (this.balls.length == 0 || !ballPlaced || ballIndex === null || impulsionStack.length>0 || replacementStack.length>0 || (currentBall>=0 && this.balls[currentBall] && this.balls[currentBall].shot))){
+        return;
+    }
+    if(playType===1 && (this.balls.length == 0 || (ballIndex>=0 && (!localPlacedBalls[ballIndex] || (this.balls[ballIndex] && this.balls[ballIndex].shot))))){
+        return;
+    }
+    if(playType===0 && !ballPlaced){
         return;
     }
     // Récuperation de la position du click
@@ -394,7 +438,13 @@ Golfux.prototype.onTouchDown = function(canvas, evt) {
 }
 
 Golfux.prototype.onTouchUp = function(canvas, evt) {
-    if(this.balls.length == 0 || !ballPlaced || ballIndex === null || !this.click_down || this.balls[ballIndex].shot){
+    if(playType===2 && (!this.click_down || this.balls.length == 0 || !ballPlaced || ballIndex === null || impulsionStack.length>0 || replacementStack.length>0 || (currentBall>=0 && this.balls[currentBall] && this.balls[currentBall].shot))){
+        return;
+    }
+    if(playType===1 && (!this.click_down || this.balls.length == 0 || (ballIndex>=0 && (!localPlacedBalls[ballIndex] || (this.balls[ballIndex] && this.balls[ballIndex].shot))))){
+        return;
+    }
+    if(playType===0 && (!this.click_down || !ballPlaced)){
         return;
     }
     // Récuperation de la position de relachement du click
@@ -404,28 +454,46 @@ Golfux.prototype.onTouchUp = function(canvas, evt) {
     this.click_up={x:x,y:canvas.height-y};
     this.click_up=getWorldPointFromPixelPoint(this.click_up);
     
-    var impulse={
+    var vector={
         x:this.click_down.x-this.click_up.x,
         y:this.click_down.y-this.click_up.y
     };
-
-    // Intensification en fonction de l'éloignement par rapport au click initial (valuer à changer)
-    var intensifie=Math.sqrt(impulse.x*impulse.x + impulse.y*impulse.y);
-    if(intensifie>MAX_INTENSITIE){
-        intensifie=MAX_INTENSITIE;
+    var dest = {
+        y:this.balls[ballIndex].body.GetPosition().y+vector.y,
+        x:this.balls[ballIndex].body.GetPosition().x+vector.x
     }
+    var norm = Math.sqrt(vector.x*vector.x + vector.y*vector.y);
+    var unit_vector = {
+        x:vector.x/norm,
+        y:vector.y/norm
+    }
+    if(norm > MAX_INTENSITIE){
+        norm = MAX_INTENSITIE;
+        dest.x=this.balls[ballIndex].body.GetPosition().x+MAX_INTENSITIE*unit_vector.x
+        dest.y=this.balls[ballIndex].body.GetPosition().y+MAX_INTENSITIE*unit_vector.y
+    }
+
+    var impulse = {
+        x:dest.x-this.balls[ballIndex].body.GetPosition().x,
+        y:dest.y-this.balls[ballIndex].body.GetPosition().y
+    }
+
     // Impulsion
     this.balls[ballIndex].lastPos = {
         x:this.balls[ballIndex].body.GetPosition().x,
         y:this.balls[ballIndex].body.GetPosition().y
     }
-    this.balls[ballIndex].body.ApplyLinearImpulse(new b2Vec2(impulse.x*intensifie, impulse.y*intensifie),true);
+    this.balls[ballIndex].body.ApplyLinearImpulse(new b2Vec2(impulse.x*INTENSIFIE, impulse.y*INTENSIFIE),true);
     this.balls[ballIndex].shot = true;
     if(playType === 2){
         sock.emit("shoot",{x:impulse.x*intensifie, y:impulse.y*intensifie});
         ballIndex=undefined;
     }else{
-        ballIndex = (ballIndex < this.balls.length-1) ? ballIndex+1 : 0;
+        if(playType === 1){
+            ballIndex = (ballIndex < localNbPlayers-1) ? ballIndex+1 : 0;
+        }else{
+            ballIndex = 0;
+        }
     }
     this.click_up=null;
     this.click_down=null;
@@ -459,10 +527,12 @@ Golfux.prototype.step = function(){
             ball.y=ball.body.GetPosition().y;
             ball.isColliding(this.level.hole);
     
-            if(ball.body.GetLinearVelocity().Length()==0){ // Limite ici
+            if(ball.body.GetLinearVelocity().Length()<1){ // Limite ici
                 ball.isMoving = false;
             }else{
                 ball.isMoving = true;
+            }
+            if(ball.body.GetLinearVelocity().Length() !== 0){
                 allStopped = false;
             }
     
@@ -480,7 +550,7 @@ Golfux.prototype.step = function(){
     }
 
     // Détection de fin de tour
-    if(allStopped && currentBall>=0 && this.balls[currentBall] && this.balls[currentBall].shot){
+    if((playType === 0 || playType === 2) &&allStopped && currentBall>=0 && this.balls[currentBall] && this.balls[currentBall].shot){
         this.balls[currentBall].shot = false;
         if(playType == 2){
             var endPos = [];
@@ -488,6 +558,14 @@ Golfux.prototype.step = function(){
                 endPos.push({index:index,pos:{x:ball.body.GetPosition().x,y:ball.body.GetPosition().y}});
             });
             sock.emit("endPos",endPos);
+        }
+    }
+
+    if(playType === 1 && allStopped && ballIndex>=0 && this.balls[ballIndex] && this.balls[ballIndex].shot){
+        this.balls[ballIndex].shot = false;
+        ballIndex = (ballIndex < localNbPlayers-1) ? ballIndex+1 : 0;
+        if(ballIndex>=0 && this.balls[ballIndex] && this.balls[ballIndex].isInHole){
+            ballIndex = (ballIndex < localNbPlayers-1) ? ballIndex+1 : 0;
         }
     }
 

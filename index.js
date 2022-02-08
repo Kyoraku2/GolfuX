@@ -101,6 +101,9 @@ function placeBallInSpawn(){
     if(ballIndex === null){
         return;
     }
+    if(playType === 1 && localPlacedBalls[ballIndex]){
+        return;
+    }
     var spawn_area;
     for(var i = 0 ; i < golfux.level.obstacles['spawn'].length ; ++i){
         if(clickCollideRect(golfux.level.obstacles['spawn'][i])){
@@ -112,7 +115,11 @@ function placeBallInSpawn(){
         return;
     }
     golfux.balls[ballIndex] = new Ball(new b2Vec2(mousePosWorld.x,mousePosWorld.y), ballIndex);
-    ballPlaced = true;
+    if(playType === 1){
+        localPlacedBalls[ballIndex] = true;
+    }else{
+        ballPlaced = true;
+    }
     if(playType === 2){
         sock.emit("placeBall",{x:mousePosWorld.x,y:mousePosWorld.y});
     }
@@ -293,6 +300,10 @@ let ballPlaced = false;
 let sock;
 let ballIndex = null;
 let currentBall = null;
+let localNbPlayers;
+let localNbManches;
+let localPlacedBalls = [];
+
 let impulsionStack = [];
 let replacementStack = [];
 let lastReplecementLength = 0;
@@ -382,16 +393,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
     sock.on("ballShotFinalPos",function(positions){
         replacementStack.push(positions);
-        /*for(obj of positions){
-            var localPos = golfux.balls[obj.index].body.GetPosition();
-            if(localPos.x != obj.pos.x || localPos.y != obj.pos.y){
-                golfux.balls[obj.index].lastPos = {
-                    x:golfux.balls[obj.index].body.GetPosition().x,
-                    y:golfux.balls[obj.index].body.GetPosition().y
-                }
-                golfux.balls[obj.index].body.SetTransform(new b2Vec2(obj.pos.x, obj.pos.y), 0);
-            }
-        }*/
     });
 
     /********* ECOUTEURS INTERFACES *********************/
@@ -431,7 +432,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
     //Multi Local
     document.getElementById("btn-multi-local").addEventListener('click', function(e){
-        playType = 1
+        playType = 1;
+        ballIndex = 0;
+        currentBall = 0;
         display_title(false);
         document.getElementById("multi-local").style.display = "block";
     });
@@ -474,7 +477,7 @@ document.addEventListener("DOMContentLoaded", function() {
     var btns_start = document.getElementsByClassName("btn-start");
     for (var i = 0; i < btns_start.length; i++) {
         btns_start[i].addEventListener('click', function(e){
-            if (btns_start[i].classList.contains("unlock")) {
+            if (this.classList.contains("unlock")) {
                 if (confirm("Êtes-vous sûr de commencer cette partie avec les paramètres suivants ?")) {
                     display_game();
                 }
@@ -485,9 +488,12 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     document.getElementById("btn-start-local").addEventListener('click', function(e){
-        if (confirm("Êtes-vous sûr de commencer cette partie avec les paramètres suivants ?")) {
-            display_game();
+        localNbPlayers = document.getElementById("localNbPlayers").selectedIndex+2;
+        localNbManches = document.getElementById("localNbManches").value;
+        for(var i=0 ; i<localNbPlayers ; ++i){
+            localPlacedBalls[i] = false;
         }
+        console.log(localPlacedBalls);
     });
 
     //Créer partie
@@ -536,7 +542,6 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function display_waiting_room(game) {
-        // TODO : voir si y'a pas plus propre mdr
         var sec = document.querySelector("time").innerHTML; 
         document.getElementById("wait-room").children[1].innerHTML= '<h3><span class="emoji">&#127757;</span> '+game.name+' :</h3><br>&#128104;&#8205;&#128105;&#8205;&#128103;&#8205;&#128102; Nombre de joueurs : '+game.nbPlayers+'/'+game.maxPlayers+'<br>&#9971;  Nombre de manches : '+game.nbManches+'<br>&#128290; Code : '+game.code+'<br><br>&#8987; Temps d\'attente : <time>'+sec+'</time> seconde(s)';
         document.getElementById("multi-online").style.display = "none";
