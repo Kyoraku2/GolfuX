@@ -104,6 +104,10 @@ strong {
 	font-weight: bold;
 }
 
+u {
+	text-decoration: underline;
+}
+
 header > img {
 	width: 60vw;
 	margin-top: 7vh;

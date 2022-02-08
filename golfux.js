@@ -429,22 +429,18 @@ Golfux.prototype.step = function(){
         case 1 :
             context.fillStyle = 'rgb(0,153,0)';
             context.fillRect( 0, 0, canvas.width, canvas.height );
-            renderObjectType("spawn", this.level, "rgb(0,110,0)");
             break;
         case 2 :
             context.fillStyle = 'rgb(255, 200, 150)';
             context.fillRect( 0, 0, canvas.width, canvas.height );
-            renderObjectType("spawn", this.level, "rgb(200,150,100)");
             break;
         case 3 :
             context.fillStyle = 'rgb(200, 200, 255)';
             context.fillRect( 0, 0, canvas.width, canvas.height );
-            renderObjectType("spawn", this.level, "rgb(150, 150, 255)");
             break;
         case 4 :
             context.fillStyle = 'rgb(150, 150, 150)';
             context.fillRect( 0, 0, canvas.width, canvas.height );
-            renderObjectType("spawn", this.level, "rgb(100, 100, 100)");
             break;
     }
     context.save();
@@ -480,7 +476,7 @@ Golfux.prototype.step = function(){
     renderObjectType("bumper",this.level,"blue");
 
     // Spawn area
-    //renderObjectType("spawn",this.level,"rgb(0,110,0)");
+    renderObjectType("spawn",this.level,"rgba(0,0,0, 0.25)");
 
     // Wind
     if(this.level.obstacles["wind"].length>0){
@@ -490,7 +486,7 @@ Golfux.prototype.step = function(){
                 x:world_pos_wall.x-this.level.obstacles["wind"][i].hx,
                 y:world_pos_wall.y+this.level.obstacles["wind"][i].hy
             };
-            context.fillStyle = 'rgb(0,130,0)';
+            context.fillStyle = "rgba(0, 0, 0, 0.25)";
             var wall_pos_canvas = getPixelPointFromWorldPoint(leftup_corner);
             var wall_pos_canvas_center = getPixelPointFromWorldPoint(world_pos_wall);
             context.fillRect(wall_pos_canvas.x, wall_pos_canvas.y, this.level.obstacles["wind"][i].hx*PTM*2, this.level.obstacles["wind"][i].hy*PTM*2);

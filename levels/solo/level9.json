@@ -4,6 +4,14 @@
             {
                 "middle_pos":{"x":2, "y":2},
                 "heightWidth" : {"width": 1, "height":1}
+            },
+            {
+                "middle_pos":{"x":21, "y":2},
+                "heightWidth" : {"width": 1, "height":1}
+            },
+            {
+                "middle_pos":{"x":9.6875, "y":29},
+                "heightWidth" : {"width": 1, "height":1}
             }
         ],
         "wall":[
@@ -160,7 +168,7 @@
         ]
     },
     "hole":{
-        "pos":{"x":9.6875, "y":29.0625},
+        "pos":{"x":11.5, "y":17.4375},
         "radius":0.5
     }
 }
