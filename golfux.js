@@ -20,7 +20,7 @@ class Golfux{
         this.balls = [];
         this.level = new Level(level);
 
-        if(playType === 1){
+        if(playType === 1 || playType === 0){
             ballPlaced = false;
         }else{
             for(var i=0 ; i<localNbPlayers ; ++i){
@@ -37,7 +37,6 @@ class Golfux{
             this.save_progression(level);
         }
         msg_display = false;
-        ballPlaced = false;
     }
 
     save_progression(last_lvl) {
@@ -49,7 +48,7 @@ class Golfux{
 }
 
 const MAX_INTENSITIE=8;
-const INTENSIFIE = 8;
+const INTENSIFIE = 10;
 const BUBBLEGUM_LINEAR_DAMPLING = 18;
 const SAND_LINEAR_DAMPLING = 8;
 const ICE_LINEAR_DAMPLING = 0.6;
@@ -518,37 +517,6 @@ Golfux.prototype.step = function(){
     var context = cvs.getContext( '2d' );
     var endLevel = true;
 
-    
-    // Ground
-    var world_lvl = Math.floor(this.level.num/10) + 1;
-    if (this.level.num % 10 == 0) { world_lvl--;};
-    if (document.getElementById("game").style.display == "block") {
-        document.querySelector("body").classList = [];
-        document.querySelector("body").classList.add("background-w"+world_lvl);
-    } else {
-        document.querySelector("body").classList.add("background-w1");
-    }
-    switch (world_lvl) {
-        case 1 :
-            contextBack.fillStyle = 'rgb(0,153,0)';
-            contextBack.fillRect( 0, 0, canvasBack.width, canvasBack.height );
-            break;
-        case 2 :
-            contextBack.fillStyle = 'rgb(255, 200, 150)';
-            contextBack.fillRect( 0, 0, canvasBack.width, canvasBack.height );
-            break;
-        case 3 :
-            contextBack.fillStyle = 'rgb(200, 200, 255)';
-            contextBack.fillRect( 0, 0, canvasBack.width, canvasBack.height );
-            break;
-        case 4 :
-            contextBack.fillStyle = 'rgb(150, 150, 150)';
-            contextBack.fillRect( 0, 0, canvasBack.width, canvasBack.height );
-            break;
-    }
-    contextBack.save();
-    
-
     updateBackground(this.level);
 
     // Wind
@@ -557,48 +525,6 @@ Golfux.prototype.step = function(){
             if(this.level.obstacles["wind"][i].enter){
                 this.level.obstacles["wind"][i].enter.ApplyLinearImpulse(new b2Vec2(this.level.obstacles["wind"][i].direction.x*this.level.obstacles["wind"][i].acceleration, this.level.obstacles["wind"][i].direction.y*this.level.obstacles["wind"][i].acceleration), true);
             }
-        }
-    }
-    // Sand
-    renderObjectType("sand",this.level,"white");
-
-    // Ice
-    renderObjectType("ice",this.level,"lime");
-
-    // Bubblegum
-    renderObjectType("bubblegum",this.level,"black");
-
-    // Void
-    renderObjectType("void",this.level,"grey");
-
-    // Water
-    renderObjectType("water",this.level,"yellow");
-
-    // Bumper
-    renderObjectType("bumper",this.level,"blue");
-
-    // Spawn area
-    renderObjectType("spawn",this.level,"rgba(0,0,0, 0.25)");
-
-    // Wind
-    if(this.level.obstacles["wind"].length>0){
-        for(var i=0,l=this.level.obstacles["wind"].length;i<l;++i){
-            var world_pos_wall=this.level.obstacles["wind"][i].body.GetPosition();
-            var leftup_corner={
-                x:world_pos_wall.x-this.level.obstacles["wind"][i].hx,
-                y:world_pos_wall.y+this.level.obstacles["wind"][i].hy
-            };
-            context.fillStyle = "rgba(0, 0, 0, 0.25)";
-            var wall_pos_canvas = getPixelPointFromWorldPoint(leftup_corner);
-            var wall_pos_canvas_center = getPixelPointFromWorldPoint(world_pos_wall);
-            context.fillRect(wall_pos_canvas.x, wall_pos_canvas.y, this.level.obstacles["wind"][i].hx*PTM*2, this.level.obstacles["wind"][i].hy*PTM*2);
-            context.save();
-            context.translate(wall_pos_canvas_center.x,wall_pos_canvas_center.y);
-            var angle = 2*Math.atan(this.level.obstacles["wind"][i].direction.y/(this.level.obstacles["wind"][i].direction.x+Math.sqrt(Math.pow(this.level.obstacles["wind"][i].direction.x,2) + Math.pow(this.level.obstacles["wind"][i].direction.y,2))));
-            context.rotate(Math.PI*1.5);
-            context.rotate(-angle);
-            context.drawImage(this.level.obstacles["wind"][i].sprite, -this.level.obstacles["wind"][i].hx*PTM, -this.level.obstacles["wind"][i].hy*PTM , this.level.obstacles["wind"][i].hx*PTM*2, this.level.obstacles["wind"][i].hy*PTM*2);
-            context.restore();
         }
     }
 
@@ -751,8 +677,38 @@ function updateBackground(level){
         return;
     }
     level.rendered = allImagesLoaded(level);
-    contextBack.fillStyle = 'rgb(0,153,0)';
-    contextBack.fillRect( 0, 0, canvasBack.width, canvasBack.height );
+    
+    // Ground
+    var world_lvl = Math.floor(level.num/10) + 1;
+    if (level.num % 10 == 0) { world_lvl--;};
+    if (document.getElementById("game").style.display == "block") {
+        document.querySelector("body").classList = [];
+        document.querySelector("body").classList.add("background-w"+world_lvl);
+    } else {
+        document.querySelector("body").classList.add("background-w1");
+    }
+    switch (world_lvl) {
+        case 1 :
+            contextBack.fillStyle = 'rgb(0,153,0)';
+            contextBack.fillRect( 0, 0, canvasBack.width, canvasBack.height );
+            break;
+        case 2 :
+            contextBack.fillStyle = 'rgb(255, 200, 150)';
+            contextBack.fillRect( 0, 0, canvasBack.width, canvasBack.height );
+            break;
+        case 3 :
+            contextBack.fillStyle = 'rgb(200, 200, 255)';
+            contextBack.fillRect( 0, 0, canvasBack.width, canvasBack.height );
+            break;
+        case 4 :
+            contextBack.fillStyle = 'rgb(150, 150, 150)';
+            contextBack.fillRect( 0, 0, canvasBack.width, canvasBack.height );
+            break;
+    }
+    contextBack.save();
+    
+    //contextBack.fillStyle = 'rgb(0,153,0)';
+    //contextBack.fillRect( 0, 0, canvasBack.width, canvasBack.height );
     contextBack.fillStyle = "black";
     contextBack.strokeStyle = "black";
     var pos = getPixelPointFromWorldPoint({x:level.hole.body.GetPosition().x,y:level.hole.body.GetPosition().y});
@@ -782,7 +738,7 @@ function updateBackground(level){
     renderObjectType("bumper",level,"blue",contextBack);
 
     // Spawn area
-    renderObjectType("spawn",level,"rgb(0,110,0)",contextBack);
+    renderObjectType("spawn",level,"rgba(0,0,0,0.25)",contextBack);
 
     // Wind
     if(level.obstacles["wind"].length>0){
@@ -792,7 +748,7 @@ function updateBackground(level){
                 x:world_pos_wall.x-level.obstacles["wind"][i].hx,
                 y:world_pos_wall.y+level.obstacles["wind"][i].hy
             };
-            contextBack.fillStyle = 'rgb(0,130,0)';
+            contextBack.fillStyle = "rgba(0,0,0,0.25)";
             var wall_pos_canvas = getPixelPointFromWorldPoint(leftup_corner);
             var wall_pos_canvas_center = getPixelPointFromWorldPoint(world_pos_wall);
             contextBack.fillRect(wall_pos_canvas.x, wall_pos_canvas.y, level.obstacles["wind"][i].hx*PTM*2, level.obstacles["wind"][i].hy*PTM*2);

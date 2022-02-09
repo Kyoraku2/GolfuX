@@ -323,11 +323,8 @@ input[type="text"] {
 	margin: 2vh;
 }
 
-#canvas{
-	z-index: 10;
-}
 #stage{
-	z-index: 0;
+	z-index: -1;
 }
 
 /*************** CHECK *****************/
