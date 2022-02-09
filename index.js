@@ -12,6 +12,8 @@ const MANCHES_MAX = 18;
 var world = null;
 var canvas;
 var context;
+var canvasBack;
+var contextBack;
 var myDebugDraw;        
 var myQueryCallback;      
 var run = true;      
@@ -37,6 +39,7 @@ var viewCenterPixel = {
     y:240
 };
 var golfux;
+var playType; // 0 solo, 1 multi local, 2 multi
 
 function myRound(val,places) {
     var c = 1;
@@ -98,6 +101,9 @@ function placeBallInSpawn(){
     if(ballIndex === null){
         return;
     }
+    if(playType === 1 && localPlacedBalls[ballIndex]){
+        return;
+    }
     var spawn_area;
     for(var i = 0 ; i < golfux.level.obstacles['spawn'].length ; ++i){
         if(clickCollideRect(golfux.level.obstacles['spawn'][i])){
@@ -109,8 +115,14 @@ function placeBallInSpawn(){
         return;
     }
     golfux.balls[ballIndex] = new Ball(new b2Vec2(mousePosWorld.x,mousePosWorld.y), ballIndex);
-    ballPlaced = true;
-    sock.emit("placeBall",{x:mousePosWorld.x,y:mousePosWorld.y});
+    if(playType === 1){
+        localPlacedBalls[ballIndex] = true;
+    }else{
+        ballPlaced = true;
+    }
+    if(playType === 2){
+        sock.emit("placeBall",{x:mousePosWorld.x,y:mousePosWorld.y});
+    }
 }
 
 function onMouseUp(canvas, evt) {
@@ -168,6 +180,8 @@ function init() {
     
     canvas = document.getElementById("canvas");
     context = canvas.getContext( '2d' );
+    canvasBack = document.getElementById("stage");
+    contextBack = canvasBack.getContext( '2d' );
     
     canvasOffset.x = canvas.width/2;
     canvasOffset.y = canvas.height/2;
@@ -245,8 +259,7 @@ function step() { // Equivalent d'update
 }
 
 function draw() {
-    context.fillStyle = 'rgb(0,153,0)';
-    context.fillRect( 0, 0, canvas.width, canvas.height );
+    context.clearRect( 0, 0, canvas.width, canvas.height );
     
     context.save();            
     context.translate(canvasOffset.x, canvasOffset.y);
@@ -258,7 +271,6 @@ function draw() {
     
     context.fillStyle = 'rgb(255,255,0)';
     //world.DrawDebugData(); // Affichage des éléments de débugage
-        
     context.restore();
 }
 
@@ -287,8 +299,102 @@ function animate() {
 let ballPlaced = false;
 let sock;
 let ballIndex = null;
+let currentBall = null;
+let localNbPlayers;
+let localNbManches;
+let localPlacedBalls = [];
+
+let impulsionStack = [];
+let replacementStack = [];
+let lastReplecementLength = 0;
 // TODO faire un truc pour que ça affiche la flèche quand c'est un autre joueur qui joue
 document.addEventListener("DOMContentLoaded", function() {
+    /***************** Partie serveur  *******************/
+    sock = io.connect();
+
+    let partie = { 
+        name:null,
+        nbPlayers: null,
+        nbManches: null,
+        code: null,
+        isPrivate: null
+    };
+
+    var btnCreateGame = document.getElementById("createGame");
+    var joinPrivateGame = document.getElementById("btn-join-code");
+    var gameList = document.getElementById("game-list");
+
+    btnCreateGame.addEventListener("click",function(e){
+        var gameName = document.getElementById("nom-partie").value;
+        var isPrivate = document.getElementById("check-private").checked;
+        var nbPlayers = document.getElementById("onlineNbPlayer").selectedIndex+2;
+        var nbManches = document.getElementById("onlineNbManches").value;
+        partie.name = gameName;
+        partie.nbPlayers = nbPlayers;
+        partie.nbManches = nbManches;
+        partie.isPrivate = isPrivate;
+        sock.emit("CreateGame", partie);
+    });
+
+    gameList.addEventListener("click",function(e){
+        if(e.target.dataset.id){
+            sock.emit("JoinPublicGame",e.target.dataset.id);
+        }
+    });
+
+    joinPrivateGame.addEventListener("click",function(e){
+        sock.emit("JoinPrivateGame",document.getElementById("code").value);
+    });
+
+    sock.on("error",function(msg){
+        alert(msg.message);
+    });
+
+    sock.on("gameList",function(list){
+        create_game_list(list);
+    });
+
+    sock.on("waiting",function(game){
+        display_waiting_room(game);
+    });
+
+    sock.on("playerJoined",function(game){
+        display_waiting_room(game);
+    });
+
+    sock.on("gameStart",function(){
+        display_game();
+    });
+
+    sock.on("endGame",function(obj){
+
+    })
+
+    sock.on("yourTurn",function(index){
+        ballIndex = index;
+        alert("Your turn");
+    });
+
+    sock.on("notYourTurn",function(){
+        ballIndex = null;
+    });
+
+    sock.on("isPlaying",function(id){
+        currentBall = id;
+    });
+
+    sock.on("ballShot",function(obj){
+        impulsionStack.push(obj);
+    });
+
+    sock.on("ballPlaced",function(obj){
+        golfux.balls[obj.index] = new Ball(new b2Vec2(obj.pos.x, obj.pos.y), obj.index);
+    });
+
+    sock.on("ballShotFinalPos",function(positions){
+        replacementStack.push(positions);
+    });
+
     /********* ECOUTEURS INTERFACES *********************/
 
     //Création levels dynamiques
@@ -304,6 +410,9 @@ document.addEventListener("DOMContentLoaded", function() {
     
     //Mode Solo
     document.getElementById("btn-play-solo").addEventListener('click', function(e){
+        playType = 0;
+        ballIndex = 0;
+        currentBall = 0;
         display_title(false);
         document.getElementById("solo").style.display = "block";
     });
@@ -323,6 +432,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
     //Multi Local
     document.getElementById("btn-multi-local").addEventListener('click', function(e){
+        playType = 1;
+        ballIndex = 0;
+        currentBall = 0;
         display_title(false);
         document.getElementById("multi-local").style.display = "block";
     });
@@ -331,6 +443,7 @@ document.addEventListener("DOMContentLoaded", function() {
     document.getElementById("btn-multi-online").addEventListener('click', function(e){
         display_title(false);
         document.getElementById("multi-online").style.display = "block";
+        playType = 2;
     });
 
     //Retour
@@ -364,7 +477,7 @@ document.addEventListener("DOMContentLoaded", function() {
     var btns_start = document.getElementsByClassName("btn-start");
     for (var i = 0; i < btns_start.length; i++) {
         btns_start[i].addEventListener('click', function(e){
-            if (btns_start[i].classList.contains("unlock")) {
+            if (this.classList.contains("unlock")) {
                 if (confirm("Êtes-vous sûr de commencer cette partie avec les paramètres suivants ?")) {
                     display_game();
                 }
@@ -375,9 +488,12 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     document.getElementById("btn-start-local").addEventListener('click', function(e){
-        if (confirm("Êtes-vous sûr de commencer cette partie avec les paramètres suivants ?")) {
-            display_game();
+        localNbPlayers = document.getElementById("localNbPlayers").selectedIndex+2;
+        localNbManches = document.getElementById("localNbManches").value;
+        for(var i=0 ; i<localNbPlayers ; ++i){
+            localPlacedBalls[i] = false;
         }
+        console.log(localPlacedBalls);
     });
 
     //Créer partie
@@ -388,7 +504,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     //Check private
     document.getElementById("btn-private").addEventListener('click', function(e){
-        display_code("");
+        //display_code("");
     });
 
     //Rejoindre partie par code
@@ -426,12 +542,12 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function display_waiting_room(game) {
-        // TODO : voir si y'a pas plus propre mdr
-        document.getElementById("wait-room").children[1].innerHTML= '<div class="block"><h3><span class="emoji">&#127757;</span> '+game.name+' :</h3><br>&#128104;&#8205;&#128105;&#8205;&#128103;&#8205;&#128102; Nombre de joueurs : '+game.nbPlayers+'/'+game.maxPlayers+'<br>&#9971;  Nombre de manches : '+game.nbManches+'<br>&#128290; Code : <br><br>&#8987; Temps d\'attente : <time>0</time> seconde(s)</div>';
+        var sec = document.querySelector("time").innerHTML; 
+        document.getElementById("wait-room").children[1].innerHTML= '<h3><span class="emoji">&#127757;</span> '+game.name+' :</h3><br>&#128104;&#8205;&#128105;&#8205;&#128103;&#8205;&#128102; Nombre de joueurs : '+game.nbPlayers+'/'+game.maxPlayers+'<br>&#9971;  Nombre de manches : '+game.nbManches+'<br>&#128290; Code : '+game.code+'<br><br>&#8987; Temps d\'attente : <time>'+sec+'</time> seconde(s)';
         document.getElementById("multi-online").style.display = "none";
         document.getElementById("creer-partie").style.display = "none";
         document.getElementById("wait-room").style.display = "block";
-        timer();
+        timer(sec);
     }
 
     function display_game() {
@@ -443,14 +559,12 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById("game").style.display = "block";
     }
 
-    function timer() {
+    function timer(sec) {
         var display = document.querySelector("time");
-        var sec = 0;
         display.innerHTML = sec;
         timeout_id = setInterval(add_sec => {
             sec++;
             display.innerHTML = sec;
-            //console.log(sec);
         }, 1000);
     }
 
@@ -535,117 +649,6 @@ document.addEventListener("DOMContentLoaded", function() {
             document.getElementById("game-list").appendChild(btn);
         }
     }
-
-
-    /***************** Partie serveur  *******************/
-    sock = io.connect();
-
-    let partie = { 
-        name:null,
-        nbPlayers: null,
-        nbManches: null,
-        code: null,
-        isPrivate: null
-    };
-
-    var btnCreateGame = document.getElementById("createGame");
-    var joinPrivateGame = document.getElementById("btn-join-code");
-    var gameList = document.getElementById("game-list");
-
-    btnCreateGame.addEventListener("click",function(e){
-        var gameName = document.getElementById("nom-partie").value;
-        var isPrivate = document.getElementById("check-private").checked;
-        var nbPlayers = document.getElementById("onlineNbPlayer").selectedIndex+2;
-        var nbManches = document.getElementById("onlineNbManches").value;
-        partie.name = gameName;
-        partie.nbPlayers = nbPlayers;
-        partie.nbManches = nbManches;
-        partie.isPrivate = isPrivate;
-        partie.code = createPassword();
-        sock.emit("CreateGame", partie);
-    });
-
-    gameList.addEventListener("click",function(e){
-        if(e.target.dataset.id){
-            console.log(e.target);
-            sock.emit("JoinPublicGame",e.target.dataset.id);
-        }
-    });
-
-    joinPrivateGame.addEventListener("click",function(e){
-        sock.emit("JoinPrivateGame",document.getElementById("code").value);
-    });
-
-    sock.on("error",function(msg){
-        alert(msg.message);
-    });
-
-    sock.on("gameList",function(list){
-        create_game_list(list);
-    });
-
-    sock.on("waiting",function(game){
-        display_waiting_room(game);
-    });
-
-    sock.on("playerJoined",function(game){
-        console.log("coucou");
-        display_waiting_room(game);
-    });
-
-    sock.on("gameStart",function(){
-        display_game();
-    });
-
-    sock.on("endGame",function(obj){
-
-    })
-
-    sock.on("yourTurn",function(index){
-        ballIndex = index;
-        alert("Your turn");
-    });
-
-    sock.on("notYourTurn",function(){
-        ballIndex = null;
-    });
-
-    sock.on("ballShot",function(obj){
-        golfux.balls[obj.index].lastPos = {
-            x:golfux.balls[obj.index].body.GetPosition().x,
-            y:golfux.balls[obj.index].body.GetPosition().y
-        }
-        golfux.balls[obj.index].body.ApplyLinearImpulse(new b2Vec2(obj.impulse.x, obj.impulse.y),true);
-    });
-
-    sock.on("ballPlaced",function(obj){
-        golfux.balls[obj.index] = new Ball(new b2Vec2(obj.pos.x, obj.pos.y), obj.index);
-    });
-
-    sock.on("ballShotFinalPos",function(obj){
-        // pas forcément nécessaire
-        var localPos = golfux.balls[obj.index].body.GetPosition();
-        if(localPos.x != obj.pos.x || localPos.y != obj.pos.y){
-            golfux.balls[obj.index].body.SetTransform(new b2Vec2(obj.pos.x, obj.pos.y), 0);
-        }
-    });
-
 });
 
-function createPassword(){
-    var alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-    var number = "0123456789".split("");
-    
-    var code = "";
-
-    for(var i = 0; i<4; i++){
-        if(Math.round(Math.random()*2) == 1){
-            code += alphabet[Math.round(Math.random()*(alphabet.length-1))];
-        }else{
-            code += number[Math.round(Math.random()*(number.length-1))];
-        }
-    }
-    return code;
-
-}
 
