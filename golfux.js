@@ -559,7 +559,7 @@ Golfux.prototype.step = function(){
     }
 
     // Détection de fin de tour
-    if((playType === 0 || playType === 2) &&allStopped && currentBall>=0 && this.balls[currentBall] && this.balls[currentBall].shot){
+    if(playType === 2 && allStopped && currentBall>=0 && this.balls[currentBall] && this.balls[currentBall].shot){
         this.balls[currentBall].shot = false;
         if(playType == 2){
             var endPos = [];
@@ -604,6 +604,10 @@ Golfux.prototype.step = function(){
             this.balls[impulsionStack[0].index].body.ApplyLinearImpulse(new b2Vec2(impulsionStack[0].impulse.x, impulsionStack[0].impulse.y),true);
             impulsionStack.splice(0,1);
         }
+    }
+    
+    if(playType === 0 && allStopped && ballIndex>=0 && this.balls[ballIndex] && this.balls[ballIndex].shot){
+        this.balls[ballIndex].shot = false;
     }
     
 
