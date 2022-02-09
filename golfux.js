@@ -3,8 +3,8 @@ class Golfux{
         this.click_down=null;
         this.click_up=null;
         this.balls = [];
-        this.level = new Level();
-        this.level.createFromJSON('level3');
+        this.level = new Level(11);
+        this.level.createFromJSON('level1'); //Default
         addEventListener(this.balls,this.level);
     }
 
@@ -18,7 +18,7 @@ class Golfux{
         this.click_down=null;
         this.click_up=null;
         this.balls = [];
-        this.level = new Level();
+        this.level = new Level(level);
 
         if(playType === 1){
             ballPlaced = false;
@@ -31,14 +31,30 @@ class Golfux{
         this.level.createFromJSON('level'+level)
         addEventListener(this.balls,this.level);
         draw();
+
+        //Save progression
+        if (level > max_lvl) {
+            this.save_progression(level);
+        }
+        msg_display = false;
+        ballPlaced = false;
     }
 
+    save_progression(last_lvl) {
+        var progress = localStorage.getItem("level");
+        progress = (!progress) ? {} : JSON.parse(progress);
+        progress = last_lvl;
+        localStorage.setItem("level", JSON.stringify(progress));
+    }
 }
+
 const MAX_INTENSITIE=8;
 const INTENSIFIE = 8;
 const BUBBLEGUM_LINEAR_DAMPLING = 18;
-const SAND_LINEAR_DAMPLING = 12;
-const ICE_LINEAR_DAMPLING = 0.8;
+const SAND_LINEAR_DAMPLING = 8;
+const ICE_LINEAR_DAMPLING = 0.6;
+var max_lvl = parseInt(localStorage.getItem("level"));
+var msg_display = false;
 // Dimensions du monde pour déterminer le PTM (c'est le zoom un peu, le facteur de scale)
 var w_width = 24;
 var w_height = 32;
@@ -502,14 +518,87 @@ Golfux.prototype.step = function(){
     var context = cvs.getContext( '2d' );
     var endLevel = true;
 
-    updateBackground(this.level);
     
+    // Ground
+    var world_lvl = Math.floor(this.level.num/10) + 1;
+    if (this.level.num % 10 == 0) { world_lvl--;};
+    if (document.getElementById("game").style.display == "block") {
+        document.querySelector("body").classList = [];
+        document.querySelector("body").classList.add("background-w"+world_lvl);
+    } else {
+        document.querySelector("body").classList.add("background-w1");
+    }
+    switch (world_lvl) {
+        case 1 :
+            contextBack.fillStyle = 'rgb(0,153,0)';
+            contextBack.fillRect( 0, 0, canvasBack.width, canvasBack.height );
+            break;
+        case 2 :
+            contextBack.fillStyle = 'rgb(255, 200, 150)';
+            contextBack.fillRect( 0, 0, canvasBack.width, canvasBack.height );
+            break;
+        case 3 :
+            contextBack.fillStyle = 'rgb(200, 200, 255)';
+            contextBack.fillRect( 0, 0, canvasBack.width, canvasBack.height );
+            break;
+        case 4 :
+            contextBack.fillStyle = 'rgb(150, 150, 150)';
+            contextBack.fillRect( 0, 0, canvasBack.width, canvasBack.height );
+            break;
+    }
+    contextBack.save();
+    
+
+    updateBackground(this.level);
+
     // Wind
     if(this.level.obstacles["wind"].length>0){
         for(var i=0,l=this.level.obstacles["wind"].length;i<l;++i){
             if(this.level.obstacles["wind"][i].enter){
                 this.level.obstacles["wind"][i].enter.ApplyLinearImpulse(new b2Vec2(this.level.obstacles["wind"][i].direction.x*this.level.obstacles["wind"][i].acceleration, this.level.obstacles["wind"][i].direction.y*this.level.obstacles["wind"][i].acceleration), true);
             }
+        }
+    }
+    // Sand
+    renderObjectType("sand",this.level,"white");
+
+    // Ice
+    renderObjectType("ice",this.level,"lime");
+
+    // Bubblegum
+    renderObjectType("bubblegum",this.level,"black");
+
+    // Void
+    renderObjectType("void",this.level,"grey");
+
+    // Water
+    renderObjectType("water",this.level,"yellow");
+
+    // Bumper
+    renderObjectType("bumper",this.level,"blue");
+
+    // Spawn area
+    renderObjectType("spawn",this.level,"rgba(0,0,0, 0.25)");
+
+    // Wind
+    if(this.level.obstacles["wind"].length>0){
+        for(var i=0,l=this.level.obstacles["wind"].length;i<l;++i){
+            var world_pos_wall=this.level.obstacles["wind"][i].body.GetPosition();
+            var leftup_corner={
+                x:world_pos_wall.x-this.level.obstacles["wind"][i].hx,
+                y:world_pos_wall.y+this.level.obstacles["wind"][i].hy
+            };
+            context.fillStyle = "rgba(0, 0, 0, 0.25)";
+            var wall_pos_canvas = getPixelPointFromWorldPoint(leftup_corner);
+            var wall_pos_canvas_center = getPixelPointFromWorldPoint(world_pos_wall);
+            context.fillRect(wall_pos_canvas.x, wall_pos_canvas.y, this.level.obstacles["wind"][i].hx*PTM*2, this.level.obstacles["wind"][i].hy*PTM*2);
+            context.save();
+            context.translate(wall_pos_canvas_center.x,wall_pos_canvas_center.y);
+            var angle = 2*Math.atan(this.level.obstacles["wind"][i].direction.y/(this.level.obstacles["wind"][i].direction.x+Math.sqrt(Math.pow(this.level.obstacles["wind"][i].direction.x,2) + Math.pow(this.level.obstacles["wind"][i].direction.y,2))));
+            context.rotate(Math.PI*1.5);
+            context.rotate(-angle);
+            context.drawImage(this.level.obstacles["wind"][i].sprite, -this.level.obstacles["wind"][i].hx*PTM, -this.level.obstacles["wind"][i].hy*PTM , this.level.obstacles["wind"][i].hx*PTM*2, this.level.obstacles["wind"][i].hy*PTM*2);
+            context.restore();
         }
     }
 
@@ -620,7 +709,26 @@ Golfux.prototype.step = function(){
 
     if(endLevel && this.balls.length !=0){
         console.log("FINI");
-        this.changeLevel(2)
+        document.getElementById("end-menu").style.display = "block";
+        if (msg_display == false) {
+            var rigolo_msg = [
+                "Bien joué <em>Little Player</em> ! Un jour tu deviendras plus grand... &#128170;",
+                "Peut mieux faire... Non non je ne juge pas. &#128064;",
+                "Mouais après le niveau était simple nan ? &#129300;",
+                "Le <em>TrophuX</em> est à portée de main ! &#129351;",
+                "Sans doûte un niveau de petit joueur ! &#128526;",
+                "Trop lent à finir ce niveau : pire que Jube et ses copies... &#128195;",
+                "C'est une première étape, mais il reste encore beaucoup de chemin à faire... &#128579;",
+                "Brillant ! Autant de talent, beauté et intelligence que ceux qui ont conçu le jeu. &#129321;",
+                "Quelle magnifique performance ! Seul un jeu en JavaScript peut nous apporter ça. &#129394;",
+                "+ 1000000 social crédits. &#128200;"
+            ];
+            var rand = Math.floor(Math.random() * rigolo_msg.length);
+            console.log(rand);
+            document.querySelector("#end-menu p").innerHTML = rigolo_msg[rand];
+            msg_display = true;
+        }
+        //this.changeLevel(parseInt(this.level.num) + 1);
     }
 }
 

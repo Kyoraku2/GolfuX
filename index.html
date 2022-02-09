@@ -81,10 +81,26 @@
                     <span class="animated bounce bounce-6">&#128681;</span>
                 </h2>
                 <p>Vous pouvez dans ce mode individuel, vous entrainer sur un maximum de niveaux afin de devenir un golfuXeur expérimenté !
-                <br>&#127937; Arriverez-vous à finir tous nos parcours créés avec notre plus grande fourberie, afin de devenir un <em>Master Player</em> ?</p>
+                <br>&#127937; Arriverez-vous à finir nos <u>40 parcours</u> créés avec notre plus grande fourberie, afin de devenir un <em>Master Player</em> ?</p>
                 <div id="levels">
                     <!-- Boutons insérés via JavaScript -->
+                    <div id="world-1">
+                        <h3><span class="emoji">&#127799;</span> MONDE 1 : "<em>JARDINS MOUILLU<span class="emoji">X</span></em>" <span class="emoji">&#9970;</span></h3>
+                    </div>
+                    <div id="world-2">
+                        <h3><span class="emoji">&#127797;</span> MONDE 2 : "<em>DÉSERT VENTU<span class="emoji">X</span></em>" <span class="emoji">&#128168;</span></h3>
+                    </div>
+                    <div id="world-3">
+                        <h3><span class="emoji">&#129482;</span> MONDE 3 : "<em>BANQUISE BUBBLU<span class="emoji">X</span></em>" <span class="emoji">&#127847;</span></h3>
+                    </div>
+                    <div id="world-4">
+                        <h3><span class="emoji">&#127984;</span> MONDE 4 : "<em>CHÂTEAU TÉLÉPORTU<span class="emoji">X</span></em>" <span class="emoji">&#128225;</span></h3>
+                    </div>
                 </div>
+                <button class="unlock" id="btn-world-1" data-world="1" title="Aller au monde 1">&#127799; MONDE 1</button>
+                <button class="unlock" id="btn-world-2" data-world="2" title="Aller au monde 2">&#127797; MONDE 2</button>
+                <button class="unlock" id="btn-world-3" data-world="3" title="Aller au monde 3">&#129482; MONDE 3</button>
+                <button class="unlock" id="btn-world-4" data-world="4" title="Aller au monde 4">&#127984; MONDE 4</button><br>
                 <button class="btn-retour unlock" title="Retourner au menu principal">&#8617; RETOUR</button>
             </div>
 
@@ -97,7 +113,7 @@
                     <span class="animated bounce bounce-4">&#128681;</span>
                 </h2>
                 <p>Jouez en toute convivialité avec vos amis sur le même appareil grâce à ce mode de jeu ! Ne soyez juste pas violent si vous perdez...
-                <br>&#128187; Ce mode multijoueur est plutôt conseillé aux joueurs sur ordinateur.</p>
+                <br>&#128187; Ce mode multijoueur est plutôt conseillé aux <u>joueurs sur ordinateur</u>.</p>
                 <div class="block">
                     <span class="emoji">&#128104;&#8205;&#128105;&#8205;&#128103;&#8205;&#128102;</span> NOMBRE DE JOUEURS :
                     <select id="localNbPlayers">
@@ -126,7 +142,7 @@
                     <span class="animated bounce bounce-5">&#128681;</span>
                 </h2>
                 <p>Jouez dans une partie privée en ligne en distanciel avec vos amis si vous avez la flemme de les inviter chez vous !
-                <br>&#128170; Ou bien affrontez le monde entier dans une partie publique si vous ne voulez pas rester un <em>Little Player</em>.</p>
+                <br>&#128170; Ou bien <u>affrontez le monde entier</u> dans une partie publique si vous ne voulez pas rester un <em>Little Player</em>.</p>
                 <button id="btn-creer-partie" class="unlock" title="Créer une partie en ligne">&#128295; CRÉER UNE PARTIE</button>
                 <button class="btn-retour unlock" title="Retourner au menu principal">&#8617; RETOUR</button>
                 <div class="block">
@@ -137,9 +153,6 @@
                 <div class="block">
                     <h3><span class="emoji">&#128161;</span> LISTE DES PARTIES PUBLIQUES DISPONIBLES :</h3>
                     <ul id="game-list">
-                        <!-- Parties insérées via JavaScript-->
-                            <!-- bla bla bla -->
-                        <!-- Exemple d'affichage en dur -->
                         <!--<li>
                             <button class="btn-wait unlock" title="Rejoindre la partie publique">
                             <strong>"NOM DE LA PARTIE 1" :</strong> (X/X)<br>
@@ -210,7 +223,7 @@
                     &#128104;&#8205;&#128105;&#8205;&#128103;&#8205;&#128102; Nombre de joueurs : X/X<br>
                     &#9971;  Nombre de manches : X<br>
                     &#128290; Code : <br><br>
-                    &#8987; Temps d'attente : <time>0</time> seconde(s)
+                    &#8987; Temps d'attente : <time>00:00</time> seconde(s)
                 </div>
                 <button id="btn-room-quit" class="unlock" title="Retourner au menu en ligne">&#8617; RETOUR</button>
                 <button class="btn-start" title="Commencer la partie en ligne">&#127942; COMMENCER</button>
@@ -221,7 +234,16 @@
                 <canvas id="canvas" width="640" height="800" tabindex='1'></canvas>
                 <canvas id="stage" width="640" height="800" tabindex='1'></canvas>
             </div>
+
+            <!-- FENÊTRE APRÈS NIVEAU-->
+            <div id="end-menu" class="block">
+                <h3><span class="emoji">&#127937;</span> NIVEAU TERMINÉ ! <span class="emoji">&#127937;</span></h3>
+                <p><!-- JS --></p>
+                <button class="unlock" id="btn-continue" title="Continuer au niveau suivant">&#9193; CONTINUER</button><br>
+                <button class="unlock" id="btn-quit" title="Retourner au menu principal">&#10060; QUITTER</button>
+            </div>
         </main>
+        
         <!-- BAS DE PAGE -->
         <footer>
             <p>&copy; GolfuX Corporation&trade; - 2022<br>Arthur BETARD, Robin GRAPPE, Tayeb HAKKAR<br>CMI Informatique - <em>Université de Franche-Comté</em></p>

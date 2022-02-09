@@ -5,8 +5,9 @@ var e_pairBit = 0x0008;
 var e_centerOfMassBit = 0x0010;
 
 var PTM = 32;
-const NUM_LEVELS = 18;
-var max_lvl = localStorage.getItem("level");
+const NUM_LEVELS = 40;
+const NUM_WORLDS = Math.floor(NUM_LEVELS/10);
+var max_lvl = parseInt(localStorage.getItem("level"));
 const MANCHES_MAX = 18;
 
 var world = null;
@@ -245,6 +246,12 @@ function createWorld() {
     world.SetDebugDraw(myDebugDraw);
     golfux = new Golfux();
     golfux.setup();
+
+    //Progression
+    if (localStorage.getItem("level") == null) {
+        golfux.save_progression(1);
+    }
+    //golfux.save_progression(1); //TODO Supprimer après c'est pour le debug
 }
 
 function resetScene() {
@@ -400,10 +407,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
     //Création levels dynamiques
     create_levels_btn(NUM_LEVELS);
-    //Progression
-    if (localStorage.getItem("level") == null) {
-        save_progression(1);
-    }
+
+    //Monde par défaut
+    change_world(1);
+
     //Création choix
     create_choices(MANCHES_MAX);
     //Check partie privée
@@ -421,14 +428,27 @@ document.addEventListener("DOMContentLoaded", function() {
     //Liste niveaux 
     document.getElementById("levels").addEventListener('click', function(e) {
         if (e.target.dataset["index"] != undefined) {
-            if (e.target.dataset["index"] <= max_lvl) {
+            if (parseInt(e.target.dataset["index"]) <= max_lvl) {
                 document.getElementById("solo").style.display = "none";
                 //Charger level X
+                golfux.changeLevel(e.target.dataset["index"]);
                 document.getElementById("game").style.display = "block";
             } else {
                 alert("Vous n'avez pas encore débloqué ce niveau.");
             }
         }
+    });
+
+    //Menu fin continuer
+    document.getElementById("btn-continue").addEventListener('click', function(e){
+        golfux.changeLevel(parseInt(golfux.level.num) + 1);
+        document.getElementById("end-menu").style.display = "none";
+    });
+
+    //Menu fin quitter
+    document.getElementById("btn-quit").addEventListener('click', function(e){
+        golfux.changeLevel(parseInt(golfux.level.num) + 1);
+        window.location.reload();
     });
 
     //Multi Local
@@ -508,6 +528,16 @@ document.addEventListener("DOMContentLoaded", function() {
         //display_code("");
     });
 
+    //Bouton mondes
+    for (var i = 1; i <= NUM_WORLDS; i++) {
+        document.getElementById("btn-world-"+i).addEventListener('click', function(e){
+            var num_world = e.target.dataset["world"];
+            if (num_world != undefined) {
+                change_world(num_world);
+            }
+        });
+    }
+
     //Rejoindre partie par code
     /*document.getElementById("btn-join-code").addEventListener('click', function(e){ // TODO : modifier ici
         var content = document.getElementById("code").value;
@@ -544,6 +574,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function display_waiting_room(game) {
         var sec = document.querySelector("time").innerHTML; 
+        if (isNaN(sec)) {
+            sec = 0;
+        }
         document.getElementById("wait-room").children[1].innerHTML= '<h3><span class="emoji">&#127757;</span> '+game.name+' :</h3><br>&#128104;&#8205;&#128105;&#8205;&#128103;&#8205;&#128102; Nombre de joueurs : '+game.nbPlayers+'/'+game.maxPlayers+'<br>&#9971;  Nombre de manches : '+game.nbManches+'<br>&#128290; Code : '+game.code+'<br><br>&#8987; Temps d\'attente : <time>'+sec+'</time> seconde(s)';
         document.getElementById("multi-online").style.display = "none";
         document.getElementById("creer-partie").style.display = "none";
@@ -578,34 +611,52 @@ document.addEventListener("DOMContentLoaded", function() {
             document.getElementById("menu").style.display = "block";
             document.querySelector("header").style.display = "block";
             document.querySelector("footer").style.display = "block";
+            change_world(1);
         }
     }
 
     function create_levels_btn(lvl_number) {
-        var levels = document.getElementById("levels");
         for (var i = 0; i < lvl_number; i++) {
+            var world_lvl = Math.floor(i/10) + 1;
+            var num_lvl = i%10 + 1;
+            var levels = document.getElementById("world-"+world_lvl);
             var button = document.createElement("button");
             button.dataset["index"] = i+1;
             var content;
+            var stars = document.createElement("span");
+            stars.classList.add("stars");
             if (i+1 <= max_lvl) {
-                content = i+1;
+                content = world_lvl +"-"+ num_lvl;
                 button.classList.add("unlock");
                 button.title = "Niveau "+content;
+                //stars.appendChild(document.createTextNode("\n\u2B50\u2B50\u2B50"));
             } else {
                 content = "\uD83D\uDD12";
                 button.title = "Verrouillé";
             }
             var txt = document.createTextNode(content);
             button.appendChild(txt);
+            button.appendChild(stars);
             levels.appendChild(button);
         }
     }
 
-    function save_progression(last_lvl) {
+    /*function save_progression(last_lvl) {
         var progress = localStorage.getItem("level");
         progress = (!progress) ? {} : JSON.parse(progress);
         progress = last_lvl;
         localStorage.setItem("level", JSON.stringify(progress));
+    }*/
+
+    function change_world(num_world) {
+        document.querySelector("body").classList = [];
+        document.querySelector("body").classList.add("background-w"+num_world);
+        for (var i = 1; i <= NUM_WORLDS; i++) {
+            document.getElementById("world-"+i).style.display = "none";
+            document.getElementById("btn-world-"+i).classList.add("unlock");
+        }
+        document.getElementById("world-"+num_world).style.display = "block";
+        document.getElementById("btn-world-"+num_world).classList.remove("unlock");
     }
 
     function create_choices(nb_choices) {

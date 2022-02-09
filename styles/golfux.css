@@ -83,6 +83,12 @@ h3 {
 	font-weight: bold;
 }
 
+#levels h3 {
+	font-size: 3vh;
+	text-shadow: #333333 5px 5px 2px;
+	margin-top: 5vh;
+}
+
 p {
 	color: white;
 	font-weight: bold;
@@ -96,6 +102,10 @@ em {
 
 strong {
 	font-weight: bold;
+}
+
+u {
+	text-decoration: underline;
 }
 
 header > img {
@@ -144,7 +154,8 @@ button.unlock:hover {
 }
 
 button#btn-play-solo:hover, #levels button.unlock:hover, #btn-join-code:hover,
-#wait-room button.btn-start.unlock:hover, #multi-online button.btn-wait:hover {
+#wait-room button.btn-start.unlock:hover, #multi-online button.btn-wait:hover,
+#btn-continue:hover {
 	background-color: rgb(255, 208, 0);
 }
 
@@ -155,6 +166,27 @@ button#btn-multi-local:hover {
 button#btn-multi-online:hover, button#btn-creer-partie:hover, #creer-partie button.btn-start:hover,
 #creer-partie button.btn-wait:hover {
 	background-color: blue;
+}
+
+#btn-world-1.unlock:hover, .background-w1 {
+	background-color: #02d055;
+}
+
+#btn-world-2.unlock:hover, .background-w2 {
+	background-color: rgb(247, 217, 162);
+}
+
+#btn-world-3.unlock:hover, .background-w3 {
+	background-color: skyblue;
+}
+
+#btn-world-4.unlock:hover, .background-w4 {
+	background-color: gray;
+}
+
+.background-w1, .background-w2, .background-w3, .background-w4 {
+	transition-property: background-color;
+	transition-duration: 0.7s;
 }
 
 #menu button {
@@ -183,7 +215,8 @@ button#btn-multi-online:hover, button#btn-creer-partie:hover, #creer-partie butt
 }
 
 button.btn-retour, button.btn-start, #btn-creer-partie, button.btn-retour-2,
-button.btn-wait, #btn-room-quit {
+button.btn-wait, #btn-room-quit, #btn-world-1, #btn-world-2, #btn-world-3, #btn-world-4,
+#btn-continue, #btn-quit {
 	border-radius: 3vh;
 	margin: 3vh;
 	padding: 20px;
@@ -202,7 +235,7 @@ button.btn-wait, #btn-room-quit {
 	width: 15vh;
 	margin: 3vh;
 	border-radius: 3vh;
-	font-size: 5vh;
+	font-size: 4vh;
 }
 
 select {
@@ -257,7 +290,11 @@ input[type="text"] {
 	font-size: 5vh;
 }
 
-#game {
+.stars {
+	font-size: 2vh;
+}
+
+#game, #world-2, #world-3, #world-4, #end-menu {
     text-align: center;
 	display: none;
 }
@@ -272,6 +309,18 @@ input[type="text"] {
     transform: translate(-50%, -50%);
 	border-left : 3px solid white;
 	border-right : 3px solid white;
+}
+
+#end-menu {
+	position: relative;
+	margin-left: 10vw;
+	margin-right: 10vw;
+	top: 10vh;
+}
+
+#end-menu p {
+	text-shadow: none;
+	margin: 2vh;
 }
 
 #canvas{
