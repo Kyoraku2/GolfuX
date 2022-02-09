@@ -305,8 +305,8 @@ let localNbManches;
 let localPlacedBalls = [];
 
 let impulsionStack = [];
-let replacementStack = [];
-let lastReplecementLength = 0;
+//let replacementStack = [];
+//let lastReplecementLength = 0;
 // TODO faire un truc pour que ça affiche la flèche quand c'est un autre joueur qui joue
 document.addEventListener("DOMContentLoaded", function() {
     /***************** Partie serveur  *******************/
@@ -384,6 +384,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     sock.on("ballShot",function(obj){
+        console.log("shot")
         impulsionStack.push(obj);
     });
 
@@ -391,9 +392,9 @@ document.addEventListener("DOMContentLoaded", function() {
         golfux.balls[obj.index] = new Ball(new b2Vec2(obj.pos.x, obj.pos.y), obj.index);
     });
 
-    sock.on("ballShotFinalPos",function(positions){
+    /*sock.on("ballShotFinalPos",function(positions){
         replacementStack.push(positions);
-    });
+    });*/
 
     /********* ECOUTEURS INTERFACES *********************/
 
