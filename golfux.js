@@ -20,9 +20,10 @@ class Golfux{
         this.balls = [];
         this.level = new Level(level);
 
-        if(playType === 1 || playType === 0){
+        if(playType === 2 || playType === 0){
             ballPlaced = false;
         }else{
+            localCurrManche++;
             for(var i=0 ; i<localNbPlayers ; ++i){
                 localPlacedBalls[i] = false;
             }
@@ -549,7 +550,15 @@ Golfux.prototype.step = function(){
                 x:ball.x-ball.radius,
                 y:ball.y+ball.radius
             });
+            if(playType == 1){
+                for(placed of localPlacedBalls){
+                    if(!placed){
+                        endLevel = false;
+                    }
+                }
+            }
             if(!ball.isInHole || ball.isMoving){
+                
                 context.drawImage(ball.sprite, pos.x, pos.y,ball.radius*PTM*2,ball.radius*PTM*2);
                 endLevel = false;
             }else{
@@ -656,6 +665,10 @@ Golfux.prototype.step = function(){
             var rand = Math.floor(Math.random() * rigolo_msg.length);
             console.log(rand);
             document.querySelector("#end-menu p").innerHTML = rigolo_msg[rand];
+            if(playType == 1 && localCurrManche >= localNbManches-1){
+                //TODO : afficher leaderBoard
+                document.getElementById("btn-continue").style.display = "none";
+            }
             msg_display = true;
         }
         //this.changeLevel(parseInt(this.level.num) + 1);

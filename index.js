@@ -309,6 +309,7 @@ let ballIndex = null;
 let currentBall = null;
 let localNbPlayers;
 let localNbManches;
+let localCurrManche = 0;
 let localPlacedBalls = [];
 
 let impulsionStack = [];

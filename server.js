@@ -5,9 +5,10 @@ var app = express();
 // cf. https://www.npmjs.com/package/socket.io#in-conjunction-with-express
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
+const port = 3000;
 
-server.listen(process.env.PORT || 3000, function() {
-    console.log("C'est parti ! En attente de connexion sur le port 8080...");
+server.listen(process.env.PORT || port, function() {
+    console.log("C'est parti ! En attente de connexion sur le port "+port+"...");
 });
 
 // Configuration d'express pour utiliser le répertoire "public"
