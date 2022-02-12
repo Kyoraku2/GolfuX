@@ -313,7 +313,9 @@ let localCurrManche = 0;
 let localPlacedBalls = [];
 
 let impulsionStack = [];
-//let replacementStack = [];
+let replacementStack = [];
+let lastImpulsionLength = -1;
+let lastReplacementLength = -1;
 //let lastReplecementLength = 0;
 // TODO faire un truc pour que ça affiche la flèche quand c'est un autre joueur qui joue
 document.addEventListener("DOMContentLoaded", function() {
@@ -370,13 +372,17 @@ document.addEventListener("DOMContentLoaded", function() {
         display_waiting_room(game);
     });
 
+    sock.on("canForceStart",function(){
+        document.getElementById("forceStartOnline").classList.add("unlock");
+    });
+
     sock.on("gameStart",function(){
         display_game();
     });
 
     sock.on("endGame",function(obj){
 
-    })
+    });
 
     sock.on("yourTurn",function(index){
         ballIndex = index;
@@ -400,9 +406,9 @@ document.addEventListener("DOMContentLoaded", function() {
         golfux.balls[obj.index] = new Ball(new b2Vec2(obj.pos.x, obj.pos.y), obj.index);
     });
 
-    /*sock.on("ballShotFinalPos",function(positions){
+    sock.on("ballShotFinalPos",function(positions){
         replacementStack.push(positions);
-    });*/
+    });
 
     /********* ECOUTEURS INTERFACES *********************/
 
@@ -499,11 +505,15 @@ document.addEventListener("DOMContentLoaded", function() {
     var btns_start = document.getElementsByClassName("btn-start");
     for (var i = 0; i < btns_start.length; i++) {
         btns_start[i].addEventListener('click', function(e){
-            if (this.classList.contains("unlock")) {
-                if (confirm("Êtes-vous sûr de commencer cette partie avec les paramètres suivants ?")) {
-                    display_game();
+            if(this.classList.contains("unlock")) {
+                if(confirm("Êtes-vous sûr de commencer cette partie avec les paramètres suivants ?")) {
+                    if(playType == 2){
+                        sock.emit("forceStart");
+                    }else{
+                        display_game();
+                    }
                 }
-            } else {
+            }else{
                 alert("Vous ne pouvez pas commencer la partie pour le moment.");
             }
         });

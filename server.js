@@ -150,6 +150,9 @@ io.on('connection', function (socket) {
                 nbManches: games[game].nbManches,
                 code: games[game].code
             });
+            if(games[game].joueurs.length >= 2){
+                games[game].joueurs[0].socket.emit("canForceStart");
+            }
             if(games[id].joueurs.length == games[id].nbPlayers){
                 games[game].current = Math.floor(Math.random() * games[game].nbPlayers);
                 for(var i=0 ; i<games[game].nbPlayers ; ++i){
@@ -203,6 +206,9 @@ io.on('connection', function (socket) {
                 nbManches: games[game].nbManches,
                 code: games[game].code
             });
+            if(games[game].joueurs.length >= 2){
+                games[game].joueurs[0].socket.emit("canForceStart");
+            }
             if(games[gameId].joueurs.length == games[gameId].nbPlayers){
                 games[game].current = Math.floor(Math.random() * games[game].nbPlayers);
                 for(var i=0 ; i<games[game].nbPlayers ; ++i){
@@ -230,6 +236,20 @@ io.on('connection', function (socket) {
             socket.emit("error", {message: "Erreur, impossible de rejoindre la partie, mot de passe ou id invalide"});
         }
 
+    });
+
+    socket.on("forceStart",function(){
+        games[game].nbPlayers = games[game].joueurs.length;
+        games[game].current = Math.floor(Math.random() * games[game].nbPlayers);
+        for(var i=0 ; i<games[game].nbPlayers ; ++i){
+            games[game].joueurs[i].socket.emit("gameStart");
+            if(i != games[game].current){
+                games[game].joueurs[i].socket.emit("notYourTurn");
+            }
+            games[game].joueurs[i].socket.emit("isPlaying",games[game].current);
+        }
+        games[game].joueurs[games[game].current].socket.emit("yourTurn",games[game].current);
+        console.log(games[game]);
     });
 
     socket.on("placeBall",function(pos){

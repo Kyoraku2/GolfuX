@@ -52,6 +52,8 @@ const MAX_INTENSITIE=8;
 const INTENSIFIE = 10;
 const BUBBLEGUM_LINEAR_DAMPLING = 18;
 const SAND_LINEAR_DAMPLING = 8;
+var allStopped;
+var waitReplacement = false;
 const ICE_LINEAR_DAMPLING = 0.6;
 var max_lvl = parseInt(localStorage.getItem("level"));
 var msg_display = false;
@@ -356,7 +358,7 @@ Golfux.prototype.onTouchMove = function(canvas, evt) {
 }
 
 Golfux.prototype.onMouseDown = function(canvas, evt) {
-    if(playType===2 && (this.balls.length == 0 || !ballPlaced || ballIndex === null || impulsionStack.length>0 /*|| replacementStack.length>0*/ || (currentBall>=0 && this.balls[currentBall] && this.balls[currentBall].shot))){
+    if(playType===2 && (this.balls.length == 0 || !ballPlaced || ballIndex === null || impulsionStack.length>0 || !allStopped || waitReplacement || (currentBall>=0 && this.balls[currentBall] && this.balls[currentBall].shot))){
         return;
     }
     if(playType===1 && (this.balls.length == 0 || (ballIndex>=0 && (!localPlacedBalls[ballIndex] || (this.balls[ballIndex] && this.balls[ballIndex].shot))))){
@@ -374,7 +376,7 @@ Golfux.prototype.onMouseDown = function(canvas, evt) {
 }
 
 Golfux.prototype.onMouseUp = function(canvas, evt) {
-    if(playType===2 && (!this.click_down || this.balls.length == 0 || !ballPlaced || ballIndex === null || impulsionStack.length>0 /*|| replacementStack.length>0*/ || (currentBall>=0 && this.balls[currentBall] && this.balls[currentBall].shot))){
+    if(playType===2 && (!this.click_down || this.balls.length == 0 || !ballPlaced || ballIndex === null || impulsionStack.length>0 || !allStopped || waitReplacement || (currentBall>=0 && this.balls[currentBall] && this.balls[currentBall].shot))){
         return;
     }
     if(playType===1 && (!this.click_down || this.balls.length == 0 || (ballIndex>=0 && (!localPlacedBalls[ballIndex] || (this.balls[ballIndex] && this.balls[ballIndex].shot))))){
@@ -430,7 +432,7 @@ Golfux.prototype.onMouseUp = function(canvas, evt) {
 }
 
 Golfux.prototype.onTouchDown = function(canvas, evt) {
-    if(playType===2 && (this.balls.length == 0 || !ballPlaced || ballIndex === null || impulsionStack.length>0 || /*replacementStack.length>0 ||*/ (currentBall>=0 && this.balls[currentBall] && this.balls[currentBall].shot))){
+    if(playType===2 && (this.balls.length == 0 || !ballPlaced || ballIndex === null || impulsionStack.length>0 || !allStopped || waitReplacement || (currentBall>=0 && this.balls[currentBall] && this.balls[currentBall].shot))){
         return;
     }
     if(playType===1 && (this.balls.length == 0 || (ballIndex>=0 && (!localPlacedBalls[ballIndex] || (this.balls[ballIndex] && this.balls[ballIndex].shot))))){
@@ -448,7 +450,7 @@ Golfux.prototype.onTouchDown = function(canvas, evt) {
 }
 
 Golfux.prototype.onTouchUp = function(canvas, evt) {
-    if(playType===2 && (!this.click_down || this.balls.length == 0 || !ballPlaced || ballIndex === null || impulsionStack.length>0 || /*replacementStack.length>0 ||*/ (currentBall>=0 && this.balls[currentBall] && this.balls[currentBall].shot))){
+    if(playType===2 && (!this.click_down || this.balls.length == 0 || !ballPlaced || ballIndex === null || impulsionStack.length>0 || !allStopped || waitReplacement || (currentBall>=0 && this.balls[currentBall] && this.balls[currentBall].shot))){
         return;
     }
     if(playType===1 && (!this.click_down || this.balls.length == 0 || (ballIndex>=0 && (!localPlacedBalls[ballIndex] || (this.balls[ballIndex] && this.balls[ballIndex].shot))))){
@@ -530,7 +532,7 @@ Golfux.prototype.step = function(){
     }
 
     // Balls
-    var allStopped = (this.balls.length !== 0);
+    allStopped = (this.balls.length !== 0);
     for(ball of this.balls){
         if(ball){
             ball.x=ball.body.GetPosition().x;
@@ -570,30 +572,37 @@ Golfux.prototype.step = function(){
     // Détection de fin de tour
     if(playType === 2 && allStopped && currentBall>=0 && this.balls[currentBall] && this.balls[currentBall].shot){
         this.balls[currentBall].shot = false;
-        if(playType == 2){
-            var endPos = [];
-            this.balls.forEach(function(ball,index){
-                endPos.push({index:index,pos:{x:ball.body.GetPosition().x,y:ball.body.GetPosition().y}});
-            });
-            sock.emit("endPos",endPos);
-        }
+        var endPos = [];
+        this.balls.forEach(function(ball,index){
+            endPos.push({index:index,pos:{x:ball.body.GetPosition().x,y:ball.body.GetPosition().y}});
+        });
+        sock.emit("endPos",endPos);
     }
 
     if(playType === 1 && allStopped && ballIndex>=0 && this.balls[ballIndex] && this.balls[ballIndex].shot){
         this.balls[ballIndex].shot = false;
         ballIndex = (ballIndex < localNbPlayers-1) ? ballIndex+1 : 0;
-        if(ballIndex>=0 && this.balls[ballIndex] && this.balls[ballIndex].isInHole){
+        while(ballIndex>=0 && this.balls[ballIndex] && this.balls[ballIndex].isInHole){
             ballIndex = (ballIndex < localNbPlayers-1) ? ballIndex+1 : 0;
         }
     }
 
     if(allStopped && playType == 2){
-        /*console.log(replacementStack)
-        console.log(lastReplecementLength)
-        if(replacementStack.length > 0 && replacementStack.length === lastReplecementLength){
+        if(impulsionStack.length>0 && !waitReplacement){
+            this.balls[impulsionStack[0].index].lastPos = {
+                x:this.balls[impulsionStack[0].index].body.GetPosition().x,
+                y:this.balls[impulsionStack[0].index].body.GetPosition().y
+            }
+            this.balls[impulsionStack[0].index].body.ApplyLinearImpulse(new b2Vec2(impulsionStack[0].impulse.x, impulsionStack[0].impulse.y),true);
+            impulsionStack.splice(0,1);
+            waitReplacement = true;
+        }
+        if(replacementStack.length > 0 && waitReplacement){
+            console.log("replacement")
             for(obj of replacementStack[0]){
                 var localPos = golfux.balls[obj.index].body.GetPosition();
                 if(localPos.x != obj.pos.x || localPos.y != obj.pos.y){
+                    console.log("replacement++")
                     golfux.balls[obj.index].lastPos = {
                         x:golfux.balls[obj.index].body.GetPosition().x,
                         y:golfux.balls[obj.index].body.GetPosition().y
@@ -602,16 +611,7 @@ Golfux.prototype.step = function(){
                 }
             }
             replacementStack.splice(0,1);
-            lastReplecementLength = replacementStack.length;
-        }*/
-        
-        if(impulsionStack.length>0){
-            this.balls[impulsionStack[0].index].lastPos = {
-                x:this.balls[impulsionStack[0].index].body.GetPosition().x,
-                y:this.balls[impulsionStack[0].index].body.GetPosition().y
-            }
-            this.balls[impulsionStack[0].index].body.ApplyLinearImpulse(new b2Vec2(impulsionStack[0].impulse.x, impulsionStack[0].impulse.y),true);
-            impulsionStack.splice(0,1);
+            waitReplacement = false;
         }
     }
     
