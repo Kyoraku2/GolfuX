@@ -516,10 +516,7 @@ Golfux.prototype.step = function(){
     if(!this.level.hole){
         return;
     }
-    var cvs=document.getElementById('canvas');
-    var context = cvs.getContext( '2d' );
     var endLevel = true;
-
     updateBackground(this.level);
 
     // Wind
@@ -560,13 +557,41 @@ Golfux.prototype.step = function(){
                 }
             }
             if(!ball.isInHole || ball.isMoving){
-                
                 context.drawImage(ball.sprite, pos.x, pos.y,ball.radius*PTM*2,ball.radius*PTM*2);
                 endLevel = false;
             }else{
                 ball.body.GetFixtureList().SetSensor(true);
             }
         }
+    }
+
+    if(endLevel && this.balls.length !=0){
+        console.log("FINI");
+        document.getElementById("end-menu").style.display = "block";
+        if (msg_display == false) {
+            var rigolo_msg = [
+                "Bien joué <em>Little Player</em> ! Un jour tu deviendras plus grand... &#128170;",
+                "Peut mieux faire... Non non je ne juge pas. &#128064;",
+                "Mouais après le niveau était simple nan ? &#129300;",
+                "Le <em>TrophuX</em> est à portée de main ! &#129351;",
+                "Sans doûte un niveau de petit joueur ! &#128526;",
+                "Trop lent à finir ce niveau : pire que Jube et ses copies... &#128195;",
+                "C'est une première étape, mais il reste encore beaucoup de chemin à faire... &#128579;",
+                "Brillant ! Autant de talent, beauté et intelligence que ceux qui ont conçu le jeu. &#129321;",
+                "Quelle magnifique performance ! Seul un jeu en JavaScript peut nous apporter ça. &#129394;",
+                "+ 1000000 social crédits. &#128200;"
+            ];
+            var rand = Math.floor(Math.random() * rigolo_msg.length);
+            console.log(rand);
+            document.querySelector("#end-menu p").innerHTML = rigolo_msg[rand];
+            if(playType == 1 && localCurrManche >= localNbManches-1){
+                //TODO : afficher leaderBoard
+                document.getElementById("btn-continue").style.display = "none";
+            }
+            msg_display = true;
+        }
+        //this.changeLevel(parseInt(this.level.num) + 1);
+        return;
     }
 
     // Détection de fin de tour
@@ -596,9 +621,10 @@ Golfux.prototype.step = function(){
             this.balls[impulsionStack[0].index].body.ApplyLinearImpulse(new b2Vec2(impulsionStack[0].impulse.x, impulsionStack[0].impulse.y),true);
             impulsionStack.splice(0,1);
             waitReplacement = true;
+            allStopped = false;
         }
-        if(replacementStack.length > 0 && waitReplacement){
-            console.log("replacement")
+        if(replacementStack.length > 0 && waitReplacement && allStopped){
+            console.log(replacementStack[0]);
             for(obj of replacementStack[0]){
                 var localPos = golfux.balls[obj.index].body.GetPosition();
                 if(localPos.x != obj.pos.x || localPos.y != obj.pos.y){
@@ -644,34 +670,6 @@ Golfux.prototype.step = function(){
             dest.y=ball_pos.y+MAX_INTENSITIE*PTM*unit_vector.y
         }
         print_segment(norm,ball_pos.x,ball_pos.y,dest.x, dest.y);
-    }
-
-    if(endLevel && this.balls.length !=0){
-        console.log("FINI");
-        document.getElementById("end-menu").style.display = "block";
-        if (msg_display == false) {
-            var rigolo_msg = [
-                "Bien joué <em>Little Player</em> ! Un jour tu deviendras plus grand... &#128170;",
-                "Peut mieux faire... Non non je ne juge pas. &#128064;",
-                "Mouais après le niveau était simple nan ? &#129300;",
-                "Le <em>TrophuX</em> est à portée de main ! &#129351;",
-                "Sans doûte un niveau de petit joueur ! &#128526;",
-                "Trop lent à finir ce niveau : pire que Jube et ses copies... &#128195;",
-                "C'est une première étape, mais il reste encore beaucoup de chemin à faire... &#128579;",
-                "Brillant ! Autant de talent, beauté et intelligence que ceux qui ont conçu le jeu. &#129321;",
-                "Quelle magnifique performance ! Seul un jeu en JavaScript peut nous apporter ça. &#129394;",
-                "+ 1000000 social crédits. &#128200;"
-            ];
-            var rand = Math.floor(Math.random() * rigolo_msg.length);
-            console.log(rand);
-            document.querySelector("#end-menu p").innerHTML = rigolo_msg[rand];
-            if(playType == 1 && localCurrManche >= localNbManches-1){
-                //TODO : afficher leaderBoard
-                document.getElementById("btn-continue").style.display = "none";
-            }
-            msg_display = true;
-        }
-        //this.changeLevel(parseInt(this.level.num) + 1);
     }
 }
 
