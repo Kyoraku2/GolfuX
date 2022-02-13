@@ -6,7 +6,7 @@ TODO :
 - Supprimer une partie vide ou finie (bouttons quitter, etc)
 - Faire le système de points
 - Niveaux multi
-
+- Faire en sorte qu'on se connecte au serveur quand on clique sur multi
 - Multi : Tester une partie pour voir si y'a toujours des problèmes de synchro
 
 Bonus :
