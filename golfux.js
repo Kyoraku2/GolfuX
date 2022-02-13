@@ -38,6 +38,7 @@ class Golfux{
             this.save_progression(level);
         }
         msg_display = false;
+        waitReplacement = false;
     }
 
     save_progression(last_lvl) {
@@ -535,6 +536,11 @@ Golfux.prototype.step = function(){
             ball.x=ball.body.GetPosition().x;
             ball.y=ball.body.GetPosition().y;
             ball.isColliding(this.level.hole);
+            if(playType == 2 && ball.isInHole && !ball.awareServerInHole && ballIndex !== null){
+                console.log("inhole")
+                sock.emit("inHole",this.balls.indexOf(ball));
+                ball.awareServerInHole = true;
+            }
     
             if(ball.body.GetLinearVelocity().Length()<1){ // Limite ici
                 ball.isMoving = false;
@@ -565,7 +571,7 @@ Golfux.prototype.step = function(){
         }
     }
 
-    if(endLevel && this.balls.length !=0){
+    if(endLevel && this.balls.length !=0 && playType != 2){
         console.log("FINI");
         document.getElementById("end-menu").style.display = "block";
         if (msg_display == false) {

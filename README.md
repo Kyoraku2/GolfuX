@@ -3,9 +3,9 @@ Projet minigolf, projet de fin de licence
 
 TODO :
 - Retirer le joueur d'une partie quand il quitte (si token, au bout de deux tours pas joués ou 30s ?)
-- Supprimer une partie vide ou finie
-- Détecter la fin de partie coté serveur (pour ça il faut la/les positions du/des trou(s))
+- Supprimer une partie vide ou finie (bouttons quitter, etc)
 - Faire le système de points
+- Niveaux multi
 
 - Multi : Tester une partie pour voir si y'a toujours des problèmes de synchro
 

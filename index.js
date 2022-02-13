@@ -314,9 +314,6 @@ let localPlacedBalls = [];
 
 let impulsionStack = [];
 let replacementStack = [];
-let lastImpulsionLength = -1;
-let lastReplacementLength = -1;
-//let lastReplecementLength = 0;
 // TODO faire un truc pour que ça affiche la flèche quand c'est un autre joueur qui joue
 document.addEventListener("DOMContentLoaded", function() {
     /***************** Partie serveur  *******************/
@@ -376,12 +373,34 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById("forceStartOnline").classList.add("unlock");
     });
 
-    sock.on("gameStart",function(){
+    sock.on("gameStart",function(level){
+        console.log(level)
+        golfux.changeLevel(level);
         display_game();
     });
 
     sock.on("endGame",function(obj){
-
+        document.getElementById("end-menu").style.display = "block";
+        if (msg_display == false) {
+            var rigolo_msg = [
+                "Bien joué <em>Little Player</em> ! Un jour tu deviendras plus grand... &#128170;",
+                "Peut mieux faire... Non non je ne juge pas. &#128064;",
+                "Mouais après le niveau était simple nan ? &#129300;",
+                "Le <em>TrophuX</em> est à portée de main ! &#129351;",
+                "Sans doûte un niveau de petit joueur ! &#128526;",
+                "Trop lent à finir ce niveau : pire que Jube et ses copies... &#128195;",
+                "C'est une première étape, mais il reste encore beaucoup de chemin à faire... &#128579;",
+                "Brillant ! Autant de talent, beauté et intelligence que ceux qui ont conçu le jeu. &#129321;",
+                "Quelle magnifique performance ! Seul un jeu en JavaScript peut nous apporter ça. &#129394;",
+                "+ 1000000 social crédits. &#128200;"
+            ];
+            var rand = Math.floor(Math.random() * rigolo_msg.length);
+            console.log(rand);
+            document.querySelector("#end-menu p").innerHTML = rigolo_msg[rand];
+            //TODO : afficher leaderBoard
+            document.getElementById("btn-continue").style.display = "none";
+            msg_display = true;
+        }
     });
 
     sock.on("yourTurn",function(index){
@@ -410,6 +429,20 @@ document.addEventListener("DOMContentLoaded", function() {
         replacementStack.push(positions);
     });
 
+    sock.on("nextManche",function(level){
+        ballPlaced = false;
+        ballIndex = null;
+        currentBall = null;
+        impulsionStack = [];
+        replacementStack = [];
+        setTimeout(function(game,level){
+            game.changeLevel(level);
+            alert("next")
+        },1000,golfux,level);
+        
+        
+    });
+    
     /********* ECOUTEURS INTERFACES *********************/
 
     //Création levels dynamiques
