@@ -5,9 +5,10 @@ var app = express();
 // cf. https://www.npmjs.com/package/socket.io#in-conjunction-with-express
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
+const port = 3000;
 
-server.listen(process.env.PORT || 8080, function() {
-    console.log("C'est parti ! En attente de connexion sur le port 8080...");
+server.listen(process.env.PORT || port, function() {
+    console.log("C'est parti ! En attente de connexion sur le port "+port+"...");
 });
 
 // Configuration d'express pour utiliser le répertoire "public"
@@ -100,7 +101,7 @@ io.on('connection', function (socket) {
     socket.emit("gameList",generateGameList());
 
     socket.on("CreateGame", function(partie){
-        if(!(game === null || index < 0)){
+        if(game !== null || index >= 0){
             socket.emit("error", {message: "Erreur, une partie est déjà en cours."});
             return;
         }
@@ -129,7 +130,7 @@ io.on('connection', function (socket) {
     });
 
     socket.on("JoinPublicGame", function(id){
-        if(!(game === null || index < 0)){
+        if(game !== null || index >= 0){
             socket.emit("error", {message: "Erreur, une partie est déjà en cours."});
             return;
         }
@@ -149,6 +150,9 @@ io.on('connection', function (socket) {
                 nbManches: games[game].nbManches,
                 code: games[game].code
             });
+            if(games[game].joueurs.length >= 2){
+                games[game].joueurs[0].socket.emit("canForceStart");
+            }
             if(games[id].joueurs.length == games[id].nbPlayers){
                 games[game].current = Math.floor(Math.random() * games[game].nbPlayers);
                 for(var i=0 ; i<games[game].nbPlayers ; ++i){
@@ -156,7 +160,7 @@ io.on('connection', function (socket) {
                     if(i != games[game].current){
                         games[game].joueurs[i].socket.emit("notYourTurn");
                     }
-                    //games[game].joueurs[i].socket.emit("isPlaying",games[game].current);
+                    games[game].joueurs[i].socket.emit("isPlaying",games[game].current);
                 }
                 games[game].joueurs[games[game].current].socket.emit("yourTurn",games[game].current);
             }else{
@@ -166,7 +170,8 @@ io.on('connection', function (socket) {
                             name: games[game].name,
                             nbPlayers: games[game].joueurs.length,
                             maxPlayers: games[game].nbPlayers,
-                            nbManches: games[game].nbManches
+                            nbManches: games[game].nbManches,
+                            code: games[game].code
                         });
                     }
                 }
@@ -177,7 +182,7 @@ io.on('connection', function (socket) {
     });
 
     socket.on("JoinPrivateGame", function(code){
-        if(!(game === null || index < 0)){
+        if(game !== null || index >= 0){
             socket.emit("error", {message: "Erreur, une partie est déjà en cours."});
             return;
         }
@@ -201,6 +206,9 @@ io.on('connection', function (socket) {
                 nbManches: games[game].nbManches,
                 code: games[game].code
             });
+            if(games[game].joueurs.length >= 2){
+                games[game].joueurs[0].socket.emit("canForceStart");
+            }
             if(games[gameId].joueurs.length == games[gameId].nbPlayers){
                 games[game].current = Math.floor(Math.random() * games[game].nbPlayers);
                 for(var i=0 ; i<games[game].nbPlayers ; ++i){
@@ -208,7 +216,7 @@ io.on('connection', function (socket) {
                     if(i != games[game].current){
                         games[game].joueurs[i].socket.emit("notYourTurn");
                     }
-                    //games[game].joueurs[i].socket.emit("isPlaying",games[game].current);
+                    games[game].joueurs[i].socket.emit("isPlaying",games[game].current);
                 }
                 games[game].joueurs[games[game].current].socket.emit("yourTurn",games[game].current);
             }else{
@@ -218,7 +226,8 @@ io.on('connection', function (socket) {
                             name: games[game].name,
                             nbPlayers: games[game].joueurs.length,
                             maxPlayers: games[game].nbPlayers,
-                            nbManches: games[game].nbManches
+                            nbManches: games[game].nbManches,
+                            code: games[game].code
                         });
                     }
                 }
@@ -229,9 +238,23 @@ io.on('connection', function (socket) {
 
     });
 
+    socket.on("forceStart",function(){
+        games[game].nbPlayers = games[game].joueurs.length;
+        games[game].current = Math.floor(Math.random() * games[game].nbPlayers);
+        for(var i=0 ; i<games[game].nbPlayers ; ++i){
+            games[game].joueurs[i].socket.emit("gameStart");
+            if(i != games[game].current){
+                games[game].joueurs[i].socket.emit("notYourTurn");
+            }
+            games[game].joueurs[i].socket.emit("isPlaying",games[game].current);
+        }
+        games[game].joueurs[games[game].current].socket.emit("yourTurn",games[game].current);
+        console.log(games[game]);
+    });
+
     socket.on("placeBall",function(pos){
         if(game === null || index < 0){
-            socket.emit("error", {message: "Erreur, pas de partie en cours."});
+            socket.emit("error", {message: "Erreur, vous n'êtes pas dans la partie"});
             return;
         }
         if(games[game].current != index){
@@ -247,7 +270,7 @@ io.on('connection', function (socket) {
 
     socket.on("shoot",function(impulse){
         if(game === null || index < 0){
-            socket.emit("error", {message: "Erreur, pas de partie en cours."});
+            socket.emit("error", {message: "Erreur, vous n'êtes pas dans la partie"});
             return;
         }
         if(games[game].current != index){
@@ -259,16 +282,11 @@ io.on('connection', function (socket) {
                 games[game].joueurs[i].socket.emit("ballShot",{index:games[game].current,impulse:impulse});
             }
         }
-        console.log(games[game].current);
-        games[game].joueurs[games[game].current].socket.emit("notYourTurn");
-        games[game].current = (games[game].current + 1) % games[game].nbPlayers;
-        games[game].joueurs[games[game].current].socket.emit("yourTurn",games[game].current);
     });
 
-    socket.on("endPos",function(pos){
-        // Pas vraiment nécessaire avant le trou
+    socket.on("endPos",function(allPos){
         if(game === null || index < 0){
-            socket.emit("error", {message: "Erreur, pas de partie en cours."});
+            socket.emit("error", {message: "Erreur, vous n'êtes pas dans la partie"});
             return;
         }
         if(games[game].current != index){
@@ -277,17 +295,16 @@ io.on('connection', function (socket) {
         }
         for(var i=0 ; i<games[game].nbPlayers ; ++i){
             if(i != games[game].current){
-                games[game].joueurs[i].socket.emit("ballShotFinalPos",{index:games[game].current,pos:pos});
+                games[game].joueurs[i].socket.emit("ballShotFinalPos",allPos);
             }
         }
 
-        // TODO : faut faire le changement de joueur courant ici pour faire en sorte qu'il attendre que l'autre bouge plus
-        // Faudra faire en sorte que l'autre bouge plus coté golfux.js osi
-        // Faudra qu'on récupère peut-être la position du trou ici pour pouvoir vérifier quand il met la balle
+        console.log(games[game].current);
+        games[game].joueurs[games[game].current].socket.emit("notYourTurn");
+        games[game].current = (games[game].current + 1) % games[game].nbPlayers;
+        games[game].joueurs[games[game].current].socket.emit("yourTurn",games[game].current);
+        for(var i=0 ; i<games[game].nbPlayers ; ++i){
+            games[game].joueurs[i].socket.emit("isPlaying",games[game].current);
+        }
     });
-    
-
-
-
-
 });

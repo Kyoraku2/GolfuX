@@ -164,53 +164,26 @@ class Wind extends FloorObstacle{
 }
 
 class Portal{
-    constructor(enter_pos,exit_pos,userdata,hx1,hy1,hx2,hy2){
+    constructor(enter_pos,exit_pos,userdata,hx1,hy1,hx2,hy2,direction1,direction2){
         this.enter = new Obstacle(enter_pos,"box",userdata,true,true,hx1,hy1,-1,-1,-1); // 2O3
         this.exit = new Obstacle(exit_pos,"box",userdata,true,true,hx2,hy2,-1,-1,-1); // 2O3
         this.enter_pos = enter_pos;
         this.exit_pos = exit_pos;
+        this.direction1 = direction1;
+        this.direction2 = direction2;
         this.bidirectional = (userdata == 203);
     }
 }
 
 class BiDirectionPortal extends Portal{
-    constructor(enter_pos,exit_pos,hx1,hy1,hx2,hy2){
-        super(enter_pos,exit_pos,203,hx1,hy1,hx2,hy2);
+    constructor(enter_pos,exit_pos,hx1,hy1,hx2,hy2,direction1,direction2){
+        super(enter_pos,exit_pos,203,hx1,hy1,hx2,hy2,direction1,direction2);
         this.entered = false;
     }
 }
 
 class UniDirectionPortal extends Portal{
-    constructor(enter_pos,exit_pos,hx1,hy1,hx2,hy2){
-        super(enter_pos,exit_pos,204,hx1,hy1,hx2,hy2);
+    constructor(enter_pos,exit_pos,hx1,hy1,hx2,hy2,direction1,direction2){
+        super(enter_pos,exit_pos,204,hx1,hy1,hx2,hy2,direction1,direction2);
     }
 }
-
-/*
-class Portal{
-    constructor(enter_pos,exit_pos,userdata,direction1,direction2){
-        var hx1 = (direction1 === 'N' || direction1 == 'S')? 1 : 0.3;
-        var hy1 = (direction1 === 'W' || direction1 == 'E')? 1 : 0.3;
-        var hx2 = (direction2 === 'N' || direction2 == 'S')? 1 : 0.3;
-        var hy2 = (direction2 === 'W' || direction2 == 'E')? 1 : 0.3;
-        this.enter = new Obstacle(enter_pos,"box",userdata,true,true,hx1,hy1,-1,-1); // 2O3
-        this.exit = new Obstacle(exit_pos,"box",userdata,true,true,hx2,hy2,-1,-1); // 2O3
-        this.enter_pos = enter_pos;
-        this.exit_pos = exit_pos;
-        this.bidirectional = (userdata == 203);
-    }
-}
-
-class BiDirectionPortal extends Portal{
-    constructor(enter_pos,exit_pos,direction1,direction2){
-        super(enter_pos,exit_pos,203,direction1,direction2);
-        this.entered = false;
-    }
-}
-
-class UniDirectionPortal extends Portal{
-    constructor(enter_pos,exit_pos,direction1,direction2){
-        super(enter_pos,exit_pos,204,direction1,direction2);
-    }
-}
-*/

@@ -6,7 +6,8 @@
         <title>GolfuX</title>
 
         <link type="text/css" rel="stylesheet" href="./styles/golfux.css">
-        
+        <link rel="icon" type="image/x-icon" href="./favicon.svg">
+
         <script src="./build/Box2D_v2.2.1_min.js"></script>
         <script src="./helpers/embox2d-helpers.js"></script>
         <script src="./helpers/embox2d-html5canvas-debugDraw.js"></script>
@@ -16,10 +17,6 @@
         <script src="./level.js"></script>
         <script src="./Obstacle.js"></script>
         <script src="./hole.js"></script>
-        <!--<script src="https://code.createjs.com/1.0.0/createjs.min.js"></script>-->
-        <!--
-        <script type="text/javascript" src="tests/template.js"></script>
-        -->
         
         <script>  
             var Box2D;
@@ -119,7 +116,7 @@
                 <br>&#128187; Ce mode multijoueur est plutôt conseillé aux <u>joueurs sur ordinateur</u>.</p>
                 <div class="block">
                     <span class="emoji">&#128104;&#8205;&#128105;&#8205;&#128103;&#8205;&#128102;</span> NOMBRE DE JOUEURS :
-                    <select>
+                    <select id="localNbPlayers">
                         <option>2</option>
                         <option>3</option>
                         <option>4</option>
@@ -127,7 +124,7 @@
                 </div>
                 <div class="block">
                     <span class="emoji">&#9971;</span> NOMBRE DE MANCHES :
-                    <select class="manches">
+                    <select class="manches"  id="localNbManches">
                         <!-- Choix insérés via JavaScript -->
                     </select>
                 </div>
@@ -229,12 +226,13 @@
                     &#8987; Temps d'attente : <time>00:00</time> seconde(s)
                 </div>
                 <button id="btn-room-quit" class="unlock" title="Retourner au menu en ligne">&#8617; RETOUR</button>
-                <button class="btn-start" title="Commencer la partie en ligne">&#127942; COMMENCER</button>
+                <button class="btn-start" title="Commencer la partie en ligne" id="forceStartOnline">&#127942; COMMENCER</button>
             </div>
 
             <!-- INTERFACE JEU -->
             <div id="game">           
                 <canvas id="canvas" width="640" height="800" tabindex='1'></canvas>
+                <canvas id="stage" width="640" height="800" tabindex='1'></canvas>
             </div>
 
             <!-- FENÊTRE APRÈS NIVEAU-->

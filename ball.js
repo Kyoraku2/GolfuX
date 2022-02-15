@@ -2,12 +2,13 @@ class Ball{
     constructor(start_pos=new b2Vec2(9.5,1), index){
         this.bodydef=null;
         this.body=null;
-        this.start_pos=start_pos;//new b2Vec2(9.5,1);
+        this.start_pos=start_pos;
         this.sprite=new Image();
         this.collide = false;
         this.sprite.src = './textures/ball.png';
         this.isInHole = false;
         this.isMoving = false;
+        this.shot = false;
         this.lastPos = undefined;
     
         // The shape

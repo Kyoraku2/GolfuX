@@ -299,6 +299,18 @@ input[type="text"] {
 	display: none;
 }
 
+#canvas, #stage {
+    position: absolute;
+    top: 50%; left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    -o-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+	border-left : 3px solid white;
+	border-right : 3px solid white;
+}
+
 #end-menu {
 	position: relative;
 	margin-left: 10vw;
@@ -311,18 +323,9 @@ input[type="text"] {
 	margin: 2vh;
 }
 
-#canvas {
-    position: absolute;
-    top: 50%; left: 50%;
-    -webkit-transform: translate(-50%, -50%);
-    -moz-transform: translate(-50%, -50%);
-    -ms-transform: translate(-50%, -50%);
-    -o-transform: translate(-50%, -50%);
-    transform: translate(-50%, -50%);
-	border-left : 3px solid white;
-	border-right : 3px solid white;
+#stage{
+	z-index: -1;
 }
-
 
 /*************** CHECK *****************/
 
