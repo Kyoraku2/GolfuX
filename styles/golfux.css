@@ -216,7 +216,7 @@ button#btn-multi-online:hover, button#btn-creer-partie:hover, #creer-partie butt
 
 button.btn-retour, button.btn-start, #btn-creer-partie, button.btn-retour-2,
 button.btn-wait, #btn-room-quit, #btn-world-1, #btn-world-2, #btn-world-3, #btn-world-4,
-#btn-continue, #btn-quit {
+#btn-continue, button.btn-quit {
 	border-radius: 3vh;
 	margin: 3vh;
 	padding: 20px;
@@ -311,11 +311,50 @@ input[type="text"] {
 	border-right : 3px solid white;
 }
 
+#leaderboard {
+	background-color: rgba(0, 0, 0, 0.5);
+	padding: 1vh;
+	position: absolute;
+	top: 1vh;
+	left: 1vw;
+	font-size: 3vh;
+	border : 2px solid white;
+}
+
+#leaderboard :nth-child(1) {
+	color: red;
+}
+
+#leaderboard :nth-child(2) {
+	color: #02ccff;;
+}
+
+#leaderboard :nth-child(3) {
+	color: rgb(255, 208, 0);
+}
+
+#leaderboard :nth-child(4) {
+	color: #02d055;
+}
+
+#quit-game {
+	opacity: 0.5;
+	font-size: 2vh;
+	transition-property: opacity, background-color, box-shadow, bottom;
+	transition-duration: 0.2s;
+	left: 30vw;
+}
+
+#quit-game:hover {
+	opacity: 1;
+	transition-property: opacity, background-color, box-shadow, bottom;
+	transition-duration: 0.2s;
+}
+
 #end-menu {
 	position: relative;
 	margin-left: 10vw;
 	margin-right: 10vw;
-	top: 10vh;
 }
 
 #end-menu p {

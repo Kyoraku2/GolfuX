@@ -38,6 +38,10 @@ class Golfux{
             this.save_progression(level);
         }
         msg_display = false;
+
+        if (playType == 0) {
+            document.getElementById("leaderboard").style.display = "none";
+        }
     }
 
     save_progression(last_lvl) {
@@ -702,23 +706,28 @@ function updateBackground(level){
     } else {
         document.querySelector("body").classList.add("background-w1");
     }
-    switch (world_lvl) {
-        case 1 :
-            contextBack.fillStyle = 'rgb(0,153,0)';
-            contextBack.fillRect( 0, 0, canvasBack.width, canvasBack.height );
-            break;
-        case 2 :
-            contextBack.fillStyle = 'rgb(255, 200, 150)';
-            contextBack.fillRect( 0, 0, canvasBack.width, canvasBack.height );
-            break;
-        case 3 :
-            contextBack.fillStyle = 'rgb(200, 200, 255)';
-            contextBack.fillRect( 0, 0, canvasBack.width, canvasBack.height );
-            break;
-        case 4 :
-            contextBack.fillStyle = 'rgb(150, 150, 150)';
-            contextBack.fillRect( 0, 0, canvasBack.width, canvasBack.height );
-            break;
+    if (playType == 0) {
+        switch (world_lvl) {
+            case 1 :
+                contextBack.fillStyle = 'rgb(0,153,0)';
+                contextBack.fillRect( 0, 0, canvasBack.width, canvasBack.height );
+                break;
+            case 2 :
+                contextBack.fillStyle = 'rgb(255, 200, 150)';
+                contextBack.fillRect( 0, 0, canvasBack.width, canvasBack.height );
+                break;
+            case 3 :
+                contextBack.fillStyle = 'rgb(200, 200, 255)';
+                contextBack.fillRect( 0, 0, canvasBack.width, canvasBack.height );
+                break;
+            case 4 :
+                contextBack.fillStyle = 'rgb(150, 150, 150)';
+                contextBack.fillRect( 0, 0, canvasBack.width, canvasBack.height );
+                break;
+        }
+    } else {
+        contextBack.fillStyle = 'rgb(0,153,0)';
+        contextBack.fillRect( 0, 0, canvasBack.width, canvasBack.height );
     }
     contextBack.save();
     

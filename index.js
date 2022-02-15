@@ -251,7 +251,7 @@ function createWorld() {
     if (localStorage.getItem("level") == null) {
         golfux.save_progression(1);
     }
-    //golfux.save_progression(1); //TODO Supprimer après c'est pour le debug
+    //golfux.save_progression(15); //TODO Supprimer après c'est pour le debug
 }
 
 function resetScene() {
@@ -435,7 +435,7 @@ document.addEventListener("DOMContentLoaded", function() {
     //Liste niveaux 
     document.getElementById("levels").addEventListener('click', function(e) {
         if (e.target.dataset["index"] != undefined) {
-            if (parseInt(e.target.dataset["index"]) <= max_lvl) {
+            if (parseInt(e.target.dataset["index"]) <= max_lvl || parseInt(e.target.dataset["index"]) == 1) {
                 document.getElementById("solo").style.display = "none";
                 //Charger level X
                 golfux.changeLevel(e.target.dataset["index"]);
@@ -453,10 +453,15 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     //Menu fin quitter
-    document.getElementById("btn-quit").addEventListener('click', function(e){
-        golfux.changeLevel(parseInt(golfux.level.num) + 1);
-        window.location.reload();
-    });
+    var btns_quit = document.getElementsByClassName("btn-quit");
+    for (var i = 0; i < btns_quit.length; i++) {
+        btns_quit[i].addEventListener('click', function(e){
+            if (e.target.id != "quit-game") {
+                golfux.changeLevel(parseInt(golfux.level.num) + 1);
+            }
+            window.location.reload();
+        });
+    }
 
     //Multi Local
     document.getElementById("btn-multi-local").addEventListener('click', function(e){
@@ -636,7 +641,7 @@ document.addEventListener("DOMContentLoaded", function() {
             var content;
             var stars = document.createElement("span");
             stars.classList.add("stars");
-            if (i+1 <= max_lvl) {
+            if (i+1 <= max_lvl || i+1 == 1) {
                 content = world_lvl +"-"+ num_lvl;
                 button.classList.add("unlock");
                 button.title = "Niveau "+content;
