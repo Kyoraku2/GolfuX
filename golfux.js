@@ -604,7 +604,7 @@ Golfux.prototype.step = function(){
     }
 
     // Détection de fin de tour
-    if(playType === 2 && allStopped && currentBall>=0 && this.balls[currentBall] && this.balls[currentBall].shot){
+    if(playType === 2 && allStopped && currentBall>=0 && this.balls[currentBall] && this.balls[currentBall].shot && !endLevel){
         this.balls[currentBall].shot = false;
         var endPos = [];
         this.balls.forEach(function(ball,index){

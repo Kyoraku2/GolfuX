@@ -125,7 +125,7 @@ io.on('connection', function (socket) {
             socket.emit("error", {message: "Erreur, une partie est déjà en cours."});
             return;
         }
-        if(partie.nbPlayers < 2 || partie.nbPlayers > 4 || partie.nbManches < 1 || partie.nbManches > 18){
+        if(partie.nbPlayers < 2 || partie.nbPlayers > 4 || partie.nbManches < 1 || partie.nbManches > 18 || games[game]){
             socket.emit("error", {message: "Erreur, mauvaises options de partie."});
             return;
         }
@@ -141,7 +141,7 @@ io.on('connection', function (socket) {
         games[game].levels = getRandomLevels(games[game].nbManches);
         games[game]["current"] = -1;
         games[game].joueurs = [];
-        //games[game].holes = [];
+        games[game].turnTimer = null;
         games[game].joueurs[index] = {socket: socket, points: 0, inHole:false};
         console.log("Partie créée à l'indice "+game);
         console.log("Joueur connecté à l'indice "+index);
@@ -154,8 +154,10 @@ io.on('connection', function (socket) {
         });
     });
 
+    // TODO : retirer l'attribue index et travailler directement avec la position dans le tableau joueurs (ça simplifiera tout ce qui est gestion de "quitter la waiting room")
+
     socket.on("JoinPublicGame", function(id){
-        if(game !== null || index >= 0){
+        if(game !== null || index >= 0 || !games[id]){
             socket.emit("error", {message: "Erreur, une partie est déjà en cours."});
             return;
         }
@@ -195,8 +197,6 @@ io.on('connection', function (socket) {
         }
 
         var gameId = findGameByCode(code);
-        console.log(code);
-        console.log(gameId);
         if(gameId < 0 || !games[gameId].isPrivate){
             socket.emit("error", {message: "Erreur, la partie n'existe pas ou n'est pas privée."});
             return;
@@ -227,13 +227,24 @@ io.on('connection', function (socket) {
 
     });
 
+    /*socket.on("leaveWaitingRoom",function(){
+        if(game === null || index < 0 || !games[game]){
+            socket.emit("error", {message: "Erreur, vous n'êtes pas dans la partie"});
+            return;
+        }
+
+        if(){
+
+        }
+    });*/
+
     socket.on("forceStart",function(){
         games[game].nbPlayers = games[game].joueurs.length;
         startGame();
     });
 
     socket.on("placeBall",function(pos){
-        if(game === null || index < 0){
+        if(game === null || index < 0 || !games[game]){
             socket.emit("error", {message: "Erreur, vous n'êtes pas dans la partie"});
             return;
         }
@@ -249,7 +260,7 @@ io.on('connection', function (socket) {
     });
 
     socket.on("shoot",function(impulse){
-        if(game === null || index < 0){
+        if(game === null || index < 0 || !games[game]){
             socket.emit("error", {message: "Erreur, vous n'êtes pas dans la partie"});
             return;
         }
@@ -265,7 +276,7 @@ io.on('connection', function (socket) {
     });
 
     socket.on("endPos",function(allPos){
-        if(game === null || index < 0){
+        if(game === null || index < 0 || !games[game]){
             socket.emit("error", {message: "Erreur, vous n'êtes pas dans la partie"});
             return;
         }
@@ -296,10 +307,16 @@ io.on('connection', function (socket) {
             for(var i=0 ; i<games[game].nbPlayers ; ++i){
                 games[game].joueurs[i].socket.emit("isPlaying",games[game].current);
             }
+            clearTimeout(games[game].turnTimer);
+            setTurnTimer(game);
         }
     });
 
     socket.on("inHole",function(id){
+        if(game === null || index < 0 || !games[game]){
+            socket.emit("error", {message: "Erreur, vous n'êtes pas dans la partie"});
+            return;
+        }
         games[game].joueurs[id].inHole = true;
         var allInHole = true;
         for(player of  games[game].joueurs){
@@ -318,11 +335,14 @@ io.on('connection', function (socket) {
                 for(var i=0 ; i<games[game].nbPlayers ; ++i){
                     games[game].joueurs[i].socket.emit("isPlaying",games[game].current);
                 }
+                clearTimeout(games[game].turnTimer);
+                setTurnTimer(game);
                 games[game].levels.splice(0,1);
             }else{
                 for(player of  games[game].joueurs){
                     player.socket.emit("endGame");
                 }  
+                deleteGame(game);
             }
         }
     });
@@ -343,8 +363,8 @@ io.on('connection', function (socket) {
         }
         games[game].levels.splice(0,1);
         games[game].joueurs[games[game].current].socket.emit("yourTurn",games[game].current);
-        //games[game].holes = readLevel("./levels/solo/level"+games[game].levels[0])['hole'];
-        //console.log(games[game].holes);
+        clearTimeout(games[game].turnTimer);
+        setTurnTimer(game);
     }
 
     function updateWaitingRoom(){
@@ -360,4 +380,31 @@ io.on('connection', function (socket) {
             }
         }
     }
+
+    function deleteGame(game) {
+        console.log("Suppression de la partie " + game);
+        delete games[game];
+    }
+
+    function setTurnTimer(game){
+        console.log("salut")
+        games[game].turnTimer = setTimeout(function(current,sock){
+            console.log(current)
+            console.log(games[game].current)
+            if(games[game].current === current){
+                sock.emit("notYourTurn");
+                do{
+                    games[game].current = (games[game].current + 1) % games[game].nbPlayers;
+                }while(games[game].joueurs[games[game].current].inHole);
+                games[game].joueurs[games[game].current].socket.emit("yourTurn",games[game].current);
+                for(var i=0 ; i<games[game].nbPlayers ; ++i){
+                    games[game].joueurs[i].socket.emit("isPlaying",games[game].current);
+                }
+                clearTimeout(games[game].turnTimer);
+                setTurnTimer(game);
+            }
+        },15000,games[game].current,games[game].joueurs[index].socket);
+    }
 });
+
+// TODO : faire quand on place la balle
