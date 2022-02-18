@@ -436,13 +436,13 @@ Golfux.prototype.onMouseUp = function(canvas, evt) {
 }
 
 Golfux.prototype.onTouchDown = function(canvas, evt) {
-    if(playType===2 && (this.balls.length == 0 || !ballPlaced || ballIndex === null || impulsionStack.length>0 || !allStopped || waitReplacement || (currentBall>=0 && this.balls[currentBall] && this.balls[currentBall].shot))){
+    if(playType===2 && (!this.click_down || this.balls.length == 0 || !ballPlaced || ballIndex === null || impulsionStack.length>0 || !allStopped || waitReplacement || (currentBall>=0 && this.balls[currentBall] && this.balls[currentBall].shot))){
         return;
     }
-    if(playType===1 && (this.balls.length == 0 || (ballIndex>=0 && (!localPlacedBalls[ballIndex] || (this.balls[ballIndex] && this.balls[ballIndex].shot))))){
+    if(playType===1 && (!this.click_down || this.balls.length == 0 || (ballIndex>=0 && (!localPlacedBalls[ballIndex] || (this.balls[ballIndex] && this.balls[ballIndex].shot))))){
         return;
     }
-    if(playType===0 && !ballPlaced){
+    if(playType===0 && (!this.click_down || !ballPlaced || (this.balls[ballIndex] && this.balls[ballIndex].shot))){
         return;
     }
     // Récuperation de la position du click
@@ -460,7 +460,7 @@ Golfux.prototype.onTouchUp = function(canvas, evt) {
     if(playType===1 && (!this.click_down || this.balls.length == 0 || (ballIndex>=0 && (!localPlacedBalls[ballIndex] || (this.balls[ballIndex] && this.balls[ballIndex].shot))))){
         return;
     }
-    if(playType===0 && (!this.click_down || !ballPlaced)){
+    if(playType===0 && (!this.click_down || !ballPlaced || (this.balls[ballIndex] && this.balls[ballIndex].shot))){
         return;
     }
     // Récuperation de la position de relachement du click
