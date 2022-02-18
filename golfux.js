@@ -436,15 +436,17 @@ Golfux.prototype.onMouseUp = function(canvas, evt) {
 }
 
 Golfux.prototype.onTouchDown = function(canvas, evt) {
-    if(playType===2 && (!this.click_down || this.balls.length == 0 || !ballPlaced || ballIndex === null || impulsionStack.length>0 || !allStopped || waitReplacement || (currentBall>=0 && this.balls[currentBall] && this.balls[currentBall].shot))){
+    if(playType===2 && (this.click_down !== null || this.balls.length == 0 || !ballPlaced || ballIndex === null || impulsionStack.length>0 || !allStopped || waitReplacement || (currentBall>=0 && this.balls[currentBall] && this.balls[currentBall].shot))){
         return;
     }
-    if(playType===1 && (!this.click_down || this.balls.length == 0 || (ballIndex>=0 && (!localPlacedBalls[ballIndex] || (this.balls[ballIndex] && this.balls[ballIndex].shot))))){
+    if(playType===1 && (this.click_down !== null || this.balls.length == 0 || (ballIndex>=0 && (!localPlacedBalls[ballIndex] || (this.balls[ballIndex] && this.balls[ballIndex].shot))))){
         return;
     }
-    if(playType===0 && (!this.click_down || !ballPlaced || (this.balls[ballIndex] && this.balls[ballIndex].shot))){
+    if(playType===0 && (this.click_down !== null || !ballPlaced || this.balls[ballIndex].shot)){
+        console.log(this.click_down)
         return;
     }
+    console.log("toucheDown")
     // Récuperation de la position du click
     let rect = canvas.getBoundingClientRect();
     let x = evt.touches[0].clientX - rect.left;
@@ -460,7 +462,7 @@ Golfux.prototype.onTouchUp = function(canvas, evt) {
     if(playType===1 && (!this.click_down || this.balls.length == 0 || (ballIndex>=0 && (!localPlacedBalls[ballIndex] || (this.balls[ballIndex] && this.balls[ballIndex].shot))))){
         return;
     }
-    if(playType===0 && (!this.click_down || !ballPlaced || (this.balls[ballIndex] && this.balls[ballIndex].shot))){
+    if(playType===0 && (!this.click_down || !ballPlaced)){
         return;
     }
     // Récuperation de la position de relachement du click
@@ -504,12 +506,6 @@ Golfux.prototype.onTouchUp = function(canvas, evt) {
     if(playType === 2){
         sock.emit("shoot",{x:impulse.x*INTENSIFIE, y:impulse.y*INTENSIFIE});
         ballIndex=undefined;
-    }else{
-        if(playType === 1){
-            ballIndex = (ballIndex < localNbPlayers-1) ? ballIndex+1 : 0;
-        }else{
-            ballIndex = 0;
-        }
     }
     this.click_up=null;
     this.click_down=null;
