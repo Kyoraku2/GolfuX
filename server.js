@@ -150,8 +150,7 @@ io.on('connection', function (socket) {
             nbPlayers: games[game].joueurs.length,
             maxPlayers: games[game].nbPlayers,
             nbManches: games[game].nbManches,
-            code: games[game].code,
-            id: game
+            code: games[game].code
         });
     });
 

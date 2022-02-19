@@ -326,18 +326,10 @@ document.addEventListener("DOMContentLoaded", function() {
         code: null,
         isPrivate: null
     };
-    console.log(window.location.href.split("?"));
-    var gameId = (window.location.href.split("?").length == 2 && window.location.href.split("?")[1].match("gameId\=.*")) ? window.location.href.split("?")[1].split('=')[1] : "";
+
     var btnCreateGame = document.getElementById("createGame");
     var joinPrivateGame = document.getElementById("btn-join-code");
     var gameList = document.getElementById("game-list");
-
-    if(gameId){
-        display_title(false);
-        document.getElementById("multi-online").style.display = "block";
-        playType = 2;
-        sock.emit("JoinPublicGame",gameId);
-    }
 
     btnCreateGame.addEventListener("click",function(e){
         var gameName = document.getElementById("nom-partie").value;
@@ -634,11 +626,10 @@ document.addEventListener("DOMContentLoaded", function() {
         if (isNaN(sec)) {
             sec = 0;
         }
-        document.getElementById("wait-room").children[1].innerHTML= '<h3><span class="emoji">&#127757;</span> '+game.name+' :</h3><br>&#128104;&#8205;&#128105;&#8205;&#128103;&#8205;&#128102; Nombre de joueurs : '+game.nbPlayers+'/'+game.maxPlayers+'<br>&#9971;  Nombre de manches : '+game.nbManches+'<br>&#128290; Code : '+game.code+'<br><br>&#8987; Temps d\'attente : <time>'+sec+'</time> seconde(s)<br>&#128206; Partager la partie : <input id=\'gameId\' type=\'text\' value=\''+window.location.href+"?gameId="+game.id+"'></input><button id='copyBtn'>&#128203</button>";
+        document.getElementById("wait-room").children[1].innerHTML= '<h3><span class="emoji">&#127757;</span> '+game.name+' :</h3><br>&#128104;&#8205;&#128105;&#8205;&#128103;&#8205;&#128102; Nombre de joueurs : '+game.nbPlayers+'/'+game.maxPlayers+'<br>&#9971;  Nombre de manches : '+game.nbManches+'<br>&#128290; Code : '+game.code+'<br><br>&#8987; Temps d\'attente : <time>'+sec+'</time> seconde(s)';
         document.getElementById("multi-online").style.display = "none";
         document.getElementById("creer-partie").style.display = "none";
         document.getElementById("wait-room").style.display = "block";
-        document.getElementById("copyBtn").addEventListener("click",function(e){copyClipboard();});
         timer(sec);
     }
 
@@ -758,18 +749,6 @@ document.addEventListener("DOMContentLoaded", function() {
             btn.innerHTML = '<strong>"'+list[i].name+'" :</strong> ('+list[i].nbPlayers+'/'+list[i].maxPlayers+')<br>Manches :'+list[i].nbManches+'</button>'
             document.getElementById("game-list").appendChild(btn);
         }
-    }
-
-    function copyClipboard(){
-        /* Get the text field */
-        var copyText = document.getElementById("gameId");
-
-        /* Select the text field */
-        copyText.select();
-        copyText.setSelectionRange(0, 99999); /* For mobile devices */
-
-        /* Copy the text inside the text field */
-        navigator.clipboard.writeText(copyText.value);
     }
 });
 

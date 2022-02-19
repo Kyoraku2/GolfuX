@@ -1,5 +1,5 @@
 class Level{
-    constructor(num){
+    constructor(num,color){
         this.obstacles={
             walls:[],
             sand:[],
@@ -15,6 +15,7 @@ class Level{
         this.rendered = false;
         this.hole = null;
         this.num = num;
+        this.backgroundColor = color;
     }
 
     createHole(radius, middle_pos){
@@ -73,6 +74,7 @@ class Level{
         if (response.status == 200) {
 
             var data = await response.json();
+            this.backgroundColor = data.backgroundColor;
             this.createHole(data.hole.radius,new b2Vec2(data.hole.pos.x,data.hole.pos.y));
             for(const [name,array] of Object.entries(data.obstacles)){
                 array.forEach(object => {
