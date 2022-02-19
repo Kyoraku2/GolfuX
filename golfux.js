@@ -707,7 +707,10 @@ function updateBackground(level){
     } else {
         document.querySelector("body").classList.add("background-w1");
     }
-    if (playType == 0) {
+
+    contextBack.fillStyle = level.backgroundColor;
+    contextBack.fillRect( 0, 0, canvasBack.width, canvasBack.height );
+    /*if (playType == 0) {
         switch (world_lvl) {
             case 1 :
                 contextBack.fillStyle = 'rgb(0,153,0)';
@@ -729,13 +732,8 @@ function updateBackground(level){
     } else {
         contextBack.fillStyle = 'rgb(0,153,0)';
         contextBack.fillRect( 0, 0, canvasBack.width, canvasBack.height );
-    }
-    // Add color to level
-    // JSON etc
+    }*/
     contextBack.save();
-    
-    //contextBack.fillStyle = 'rgb(0,153,0)';
-    //contextBack.fillRect( 0, 0, canvasBack.width, canvasBack.height );
     contextBack.fillStyle = "black";
     contextBack.strokeStyle = "black";
     var pos = getPixelPointFromWorldPoint({x:level.hole.body.GetPosition().x,y:level.hole.body.GetPosition().y});

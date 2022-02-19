@@ -1,4 +1,5 @@
 {
+    "backgroundColor":"rgb(0,153,0)",
     "obstacles":{
         "wall":[
             {
