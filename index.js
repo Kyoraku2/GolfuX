@@ -366,11 +366,17 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     sock.on("playerJoined",function(game){
+        alert("update");
+        console.log(game)
         display_waiting_room(game);
     });
 
     sock.on("canForceStart",function(){
         document.getElementById("forceStartOnline").classList.add("unlock");
+    });
+    
+    sock.on("unableForceStart",function(){
+        document.getElementById("forceStartOnline").classList.remove("unlock");
     });
 
     sock.on("gameStart",function(level){
@@ -536,6 +542,8 @@ document.addEventListener("DOMContentLoaded", function() {
     document.getElementById("btn-room-quit").addEventListener('click', function(e){
         if (confirm("Voulez-vous quitter cette partie en cours ?")) {
             display_retour_online();
+            sock.emit("leaveRoom");
+            document.querySelector("time").innerHTML = 0;
         }
     });
 

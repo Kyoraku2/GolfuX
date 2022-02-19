@@ -2,7 +2,6 @@
 Projet minigolf, projet de fin de licence
 
 TODO :
-- Quand un joueur quitte la waiting room, faut gérer les index de tout le monde
 - Faire le système de points
 - Faire en sorte qu'on se connecte au serveur quand on clique sur multi
 - Ajouter des sons

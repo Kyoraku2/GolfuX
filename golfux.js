@@ -316,7 +316,6 @@ function addEventListener(balls, level){
     };
     listener.PostSolve = function(contactPtr) {
     };
-    // TODO : check si y'a mieux ici aussi
     if(!world){
         return;
     }
@@ -512,7 +511,6 @@ Golfux.prototype.onTouchUp = function(canvas, evt) {
 }
 
 Golfux.prototype.step = function(){
-    // TODO : voir si on peut pas faire mieux
     if(!this.level.hole){
         return;
     }
