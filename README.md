@@ -5,6 +5,7 @@ TODO :
 - Quand un joueur quitte la waiting room, faut gérer les index de tout le monde
 - Faire le système de points
 - Faire en sorte qu'on se connecte au serveur quand on clique sur multi
+- Ajouter des sons
 
 Bonus :
 - Faire en sorte qu'un joueur puisse rejoindre une partie quittée ? (avec les tokens, c'est ce que dado disait)

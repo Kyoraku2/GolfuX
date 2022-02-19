@@ -730,6 +730,8 @@ function updateBackground(level){
         contextBack.fillStyle = 'rgb(0,153,0)';
         contextBack.fillRect( 0, 0, canvasBack.width, canvasBack.height );
     }
+    // Add color to level
+    // JSON etc
     contextBack.save();
     
     //contextBack.fillStyle = 'rgb(0,153,0)';
