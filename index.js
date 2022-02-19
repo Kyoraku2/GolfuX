@@ -251,7 +251,7 @@ function createWorld() {
     if (localStorage.getItem("level") == null) {
         golfux.save_progression(1);
     }
-    //golfux.save_progression(1); //TODO Supprimer après c'est pour le debug
+    //golfux.save_progression(15); //TODO Supprimer après c'est pour le debug
 }
 
 function resetScene() {
@@ -314,9 +314,6 @@ let localPlacedBalls = [];
 
 let impulsionStack = [];
 let replacementStack = [];
-let lastImpulsionLength = -1;
-let lastReplacementLength = -1;
-//let lastReplecementLength = 0;
 // TODO faire un truc pour que ça affiche la flèche quand c'est un autre joueur qui joue
 document.addEventListener("DOMContentLoaded", function() {
     /***************** Partie serveur  *******************/
@@ -384,12 +381,34 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById("forceStartOnline").classList.add("unlock");
     });
 
-    sock.on("gameStart",function(){
+    sock.on("gameStart",function(level){
+        console.log(level)
+        golfux.changeLevel(level);
         display_game();
     });
 
     sock.on("endGame",function(obj){
-
+        document.getElementById("end-menu").style.display = "block";
+        if (msg_display == false) {
+            var rigolo_msg = [
+                "Bien joué <em>Little Player</em> ! Un jour tu deviendras plus grand... &#128170;",
+                "Peut mieux faire... Non non je ne juge pas. &#128064;",
+                "Mouais après le niveau était simple nan ? &#129300;",
+                "Le <em>TrophuX</em> est à portée de main ! &#129351;",
+                "Sans doûte un niveau de petit joueur ! &#128526;",
+                "Trop lent à finir ce niveau : pire que Jube et ses copies... &#128195;",
+                "C'est une première étape, mais il reste encore beaucoup de chemin à faire... &#128579;",
+                "Brillant ! Autant de talent, beauté et intelligence que ceux qui ont conçu le jeu. &#129321;",
+                "Quelle magnifique performance ! Seul un jeu en JavaScript peut nous apporter ça. &#129394;",
+                "+ 1000000 social crédits. &#128200;"
+            ];
+            var rand = Math.floor(Math.random() * rigolo_msg.length);
+            console.log(rand);
+            document.querySelector("#end-menu p").innerHTML = rigolo_msg[rand];
+            //TODO : afficher leaderBoard
+            document.getElementById("btn-continue").style.display = "none";
+            msg_display = true;
+        }
     });
 
     sock.on("yourTurn",function(index){
@@ -418,6 +437,20 @@ document.addEventListener("DOMContentLoaded", function() {
         replacementStack.push(positions);
     });
 
+    sock.on("nextManche",function(level){
+        ballPlaced = false;
+        ballIndex = null;
+        currentBall = null;
+        impulsionStack = [];
+        replacementStack = [];
+        setTimeout(function(game,level){
+            game.changeLevel(level);
+            alert("next")
+        },1000,golfux,level);
+        
+        
+    });
+    
     /********* ECOUTEURS INTERFACES *********************/
 
     //Création levels dynamiques
@@ -443,7 +476,7 @@ document.addEventListener("DOMContentLoaded", function() {
     //Liste niveaux 
     document.getElementById("levels").addEventListener('click', function(e) {
         if (e.target.dataset["index"] != undefined) {
-            if (parseInt(e.target.dataset["index"]) <= max_lvl) {
+            if (parseInt(e.target.dataset["index"]) <= max_lvl || parseInt(e.target.dataset["index"]) == 1) {
                 document.getElementById("solo").style.display = "none";
                 //Charger level X
                 golfux.changeLevel(e.target.dataset["index"]);
@@ -461,10 +494,15 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     //Menu fin quitter
-    document.getElementById("btn-quit").addEventListener('click', function(e){
-        golfux.changeLevel(parseInt(golfux.level.num) + 1);
-        window.location.reload();
-    });
+    var btns_quit = document.getElementsByClassName("btn-quit");
+    for (var i = 0; i < btns_quit.length; i++) {
+        btns_quit[i].addEventListener('click', function(e){
+            if (e.target.id != "quit-game") {
+                golfux.changeLevel(parseInt(golfux.level.num) + 1);
+            }
+            window.location.reload();
+        });
+    }
 
     //Multi Local
     document.getElementById("btn-multi-local").addEventListener('click', function(e){
@@ -645,7 +683,7 @@ document.addEventListener("DOMContentLoaded", function() {
             var content;
             var stars = document.createElement("span");
             stars.classList.add("stars");
-            if (i+1 <= max_lvl) {
+            if (i+1 <= max_lvl || i+1 == 1) {
                 content = world_lvl +"-"+ num_lvl;
                 button.classList.add("unlock");
                 button.title = "Niveau "+content;

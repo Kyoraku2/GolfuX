@@ -38,6 +38,10 @@ class Golfux{
             this.save_progression(level);
         }
         msg_display = false;
+        waitReplacement = false;
+        if (playType == 0) {
+            document.getElementById("leaderboard").style.display = "none";
+        }
     }
 
     save_progression(last_lvl) {
@@ -432,15 +436,17 @@ Golfux.prototype.onMouseUp = function(canvas, evt) {
 }
 
 Golfux.prototype.onTouchDown = function(canvas, evt) {
-    if(playType===2 && (this.balls.length == 0 || !ballPlaced || ballIndex === null || impulsionStack.length>0 || !allStopped || waitReplacement || (currentBall>=0 && this.balls[currentBall] && this.balls[currentBall].shot))){
+    if(playType===2 && (this.click_down !== null || this.balls.length == 0 || !ballPlaced || ballIndex === null || impulsionStack.length>0 || !allStopped || waitReplacement || (currentBall>=0 && this.balls[currentBall] && this.balls[currentBall].shot))){
         return;
     }
-    if(playType===1 && (this.balls.length == 0 || (ballIndex>=0 && (!localPlacedBalls[ballIndex] || (this.balls[ballIndex] && this.balls[ballIndex].shot))))){
+    if(playType===1 && (this.click_down !== null || this.balls.length == 0 || (ballIndex>=0 && (!localPlacedBalls[ballIndex] || (this.balls[ballIndex] && this.balls[ballIndex].shot))))){
         return;
     }
-    if(playType===0 && !ballPlaced){
+    if(playType===0 && (this.click_down !== null || !ballPlaced || this.balls[ballIndex].shot)){
+        console.log(this.click_down)
         return;
     }
+    console.log("toucheDown")
     // Récuperation de la position du click
     let rect = canvas.getBoundingClientRect();
     let x = evt.touches[0].clientX - rect.left;
@@ -500,12 +506,6 @@ Golfux.prototype.onTouchUp = function(canvas, evt) {
     if(playType === 2){
         sock.emit("shoot",{x:impulse.x*INTENSIFIE, y:impulse.y*INTENSIFIE});
         ballIndex=undefined;
-    }else{
-        if(playType === 1){
-            ballIndex = (ballIndex < localNbPlayers-1) ? ballIndex+1 : 0;
-        }else{
-            ballIndex = 0;
-        }
     }
     this.click_up=null;
     this.click_down=null;
@@ -535,6 +535,11 @@ Golfux.prototype.step = function(){
             ball.x=ball.body.GetPosition().x;
             ball.y=ball.body.GetPosition().y;
             ball.isColliding(this.level.hole);
+            if(playType == 2 && ball.isInHole && !ball.awareServerInHole && ballIndex !== null){
+                console.log("inhole")
+                sock.emit("inHole",this.balls.indexOf(ball));
+                ball.awareServerInHole = true;
+            }
     
             if(ball.body.GetLinearVelocity().Length()<1){ // Limite ici
                 ball.isMoving = false;
@@ -565,7 +570,7 @@ Golfux.prototype.step = function(){
         }
     }
 
-    if(endLevel && this.balls.length !=0){
+    if(endLevel && this.balls.length !=0 && playType != 2){
         console.log("FINI");
         document.getElementById("end-menu").style.display = "block";
         if (msg_display == false) {
@@ -595,7 +600,7 @@ Golfux.prototype.step = function(){
     }
 
     // Détection de fin de tour
-    if(playType === 2 && allStopped && currentBall>=0 && this.balls[currentBall] && this.balls[currentBall].shot){
+    if(playType === 2 && allStopped && currentBall>=0 && this.balls[currentBall] && this.balls[currentBall].shot && !endLevel){
         this.balls[currentBall].shot = false;
         var endPos = [];
         this.balls.forEach(function(ball,index){
@@ -702,24 +707,31 @@ function updateBackground(level){
     } else {
         document.querySelector("body").classList.add("background-w1");
     }
-    switch (world_lvl) {
-        case 1 :
-            contextBack.fillStyle = 'rgb(0,153,0)';
-            contextBack.fillRect( 0, 0, canvasBack.width, canvasBack.height );
-            break;
-        case 2 :
-            contextBack.fillStyle = 'rgb(255, 200, 150)';
-            contextBack.fillRect( 0, 0, canvasBack.width, canvasBack.height );
-            break;
-        case 3 :
-            contextBack.fillStyle = 'rgb(200, 200, 255)';
-            contextBack.fillRect( 0, 0, canvasBack.width, canvasBack.height );
-            break;
-        case 4 :
-            contextBack.fillStyle = 'rgb(150, 150, 150)';
-            contextBack.fillRect( 0, 0, canvasBack.width, canvasBack.height );
-            break;
+    if (playType == 0) {
+        switch (world_lvl) {
+            case 1 :
+                contextBack.fillStyle = 'rgb(0,153,0)';
+                contextBack.fillRect( 0, 0, canvasBack.width, canvasBack.height );
+                break;
+            case 2 :
+                contextBack.fillStyle = 'rgb(255, 200, 150)';
+                contextBack.fillRect( 0, 0, canvasBack.width, canvasBack.height );
+                break;
+            case 3 :
+                contextBack.fillStyle = 'rgb(200, 200, 255)';
+                contextBack.fillRect( 0, 0, canvasBack.width, canvasBack.height );
+                break;
+            case 4 :
+                contextBack.fillStyle = 'rgb(150, 150, 150)';
+                contextBack.fillRect( 0, 0, canvasBack.width, canvasBack.height );
+                break;
+        }
+    } else {
+        contextBack.fillStyle = 'rgb(0,153,0)';
+        contextBack.fillRect( 0, 0, canvasBack.width, canvasBack.height );
     }
+    // Add color to level
+    // JSON etc
     contextBack.save();
     
     //contextBack.fillStyle = 'rgb(0,153,0)';

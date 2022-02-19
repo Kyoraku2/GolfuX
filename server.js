@@ -5,7 +5,7 @@ var app = express();
 // cf. https://www.npmjs.com/package/socket.io#in-conjunction-with-express
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
-const port = 3000;
+const port = 8080;
 
 server.listen(process.env.PORT || port, function() {
     console.log("C'est parti ! En attente de connexion sur le port "+port+"...");
@@ -19,7 +19,7 @@ app.get('/', function(req, res) {
 });
 
 
-app.get('/level*', function(req, res) {
+/*app.get('/level*', function(req, res) {
     //console.log("Reçu : GET "+req.url);
     res.setHeader('Content-type', 'application/json');
     //couleur = JSON.stringify(couleur);
@@ -27,11 +27,10 @@ app.get('/level*', function(req, res) {
 
     var level = readLevel(req.url.split('/')[1]);
     res.json(level);
-});
+});*/
 
 function readLevel(level){
     const fs = require('fs');
-
     let rawdata = fs.readFileSync(level+'.json');
     let jsonRes = JSON.parse(rawdata);
     //console.log(jsonRes);
@@ -44,10 +43,10 @@ function readLevel(level){
 ***************************************************************/
 
 
-
-
 let games = {};
 let counter = 0;
+let bMinLevels = 1; // TODO : à changer quand on ajoute/supprime des niveaux
+let bMaxLevels = 10;
 
 function createPassword(){
     var alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
@@ -83,7 +82,6 @@ function generateGameList(){
 }
 
 function findGameByCode(code){
-    console.log(code)
     for(const [key, value] of Object.entries(games)) {
         if(value.code.toLowerCase() === code.toLowerCase()){
             return key;
@@ -91,6 +89,28 @@ function findGameByCode(code){
     }
     return -1;
 }
+
+function getRandomLevels(n){
+    var levels = [];
+    var levelsBank = [];
+    for(var i = bMinLevels ; i <= bMaxLevels ; ++i){
+        levelsBank.push(i);
+    }
+    for(var i = 0 ; i < n ; ++i){
+        var id = Math.floor(Math.random() * levelsBank.length);
+        levels.push(levelsBank[id]);
+        levelsBank.splice(id,1);
+    }
+    return levels;
+}
+
+/*function collideCircles(obj1, obj2){
+    var dx = obj1.x - obj1.x;
+    var dy = obj1.y - obj1.y;
+    var distance = Math.sqrt(dx * dx + dy * dy);
+    return distance < obj1.radius + obj2.radius;
+}*/
+
 
 io.on('connection', function (socket) {
     console.log("Un client s'est connecté");
@@ -105,6 +125,10 @@ io.on('connection', function (socket) {
             socket.emit("error", {message: "Erreur, une partie est déjà en cours."});
             return;
         }
+        if(partie.nbPlayers < 2 || partie.nbPlayers > 4 || partie.nbManches < 1 || partie.nbManches > 18 || games[game]){
+            socket.emit("error", {message: "Erreur, mauvaises options de partie."});
+            return;
+        }
         index = 0;
         counter++;
         game = counter;
@@ -114,9 +138,11 @@ io.on('connection', function (socket) {
         }
         games[game] = partie;
         games[game].code = code;
+        games[game].levels = getRandomLevels(games[game].nbManches);
         games[game]["current"] = -1;
         games[game].joueurs = [];
-        games[game].joueurs[index] = {socket: socket, points: 0, tour: -1};
+        games[game].turnTimer = null;
+        games[game].joueurs[index] = {socket: socket, points: 0, inHole:false};
         console.log("Partie créée à l'indice "+game);
         console.log("Joueur connecté à l'indice "+index);
         socket.emit("waiting",{
@@ -127,11 +153,12 @@ io.on('connection', function (socket) {
             code: games[game].code,
             id: game
         });
-        //TODO Afficher l'id de la partie au createur de la partie afin qu'il puisse la partager aux autres 
     });
 
+    // TODO : retirer l'attribue index et travailler directement avec la position dans le tableau joueurs (ça simplifiera tout ce qui est gestion de "quitter la waiting room")
+
     socket.on("JoinPublicGame", function(id){
-        if(game !== null || index >= 0){
+        if(game !== null || index >= 0 || !games[id]){
             socket.emit("error", {message: "Erreur, une partie est déjà en cours."});
             return;
         }
@@ -141,7 +168,7 @@ io.on('connection', function (socket) {
         }
         if(games[id] && games[id].joueurs.length < games[id].nbPlayers){
             index = games[id].joueurs.length;
-            games[id].joueurs[index] = {socket: socket, points: 0, tour: -1};
+            games[id].joueurs[index] = {socket: socket, points: 0, inHole:false};
             game = id;
             console.log("Joueur connecté à l'indice "+index);
             socket.emit("waiting",{
@@ -155,27 +182,9 @@ io.on('connection', function (socket) {
                 games[game].joueurs[0].socket.emit("canForceStart");
             }
             if(games[id].joueurs.length == games[id].nbPlayers){
-                games[game].current = Math.floor(Math.random() * games[game].nbPlayers);
-                for(var i=0 ; i<games[game].nbPlayers ; ++i){
-                    games[game].joueurs[i].socket.emit("gameStart");
-                    if(i != games[game].current){
-                        games[game].joueurs[i].socket.emit("notYourTurn");
-                    }
-                    games[game].joueurs[i].socket.emit("isPlaying",games[game].current);
-                }
-                games[game].joueurs[games[game].current].socket.emit("yourTurn",games[game].current);
+                startGame();
             }else{
-                for(var i=0, l=games[game].joueurs.length ; i<l-1 ; ++i){
-                    if(i != index){
-                        games[game].joueurs[i].socket.emit("playerJoined",{
-                            name: games[game].name,
-                            nbPlayers: games[game].joueurs.length,
-                            maxPlayers: games[game].nbPlayers,
-                            nbManches: games[game].nbManches,
-                            code: games[game].code
-                        });
-                    }
-                }
+                updateWaitingRoom();
             }
         }else{
             socket.emit("error", {message: "Erreur, impossible de rejoindre la partie"});
@@ -189,15 +198,13 @@ io.on('connection', function (socket) {
         }
 
         var gameId = findGameByCode(code);
-        console.log(code);
-        console.log(gameId);
         if(gameId < 0 || !games[gameId].isPrivate){
             socket.emit("error", {message: "Erreur, la partie n'existe pas ou n'est pas privée."});
             return;
         }
         if(games[gameId] && games[gameId].joueurs.length < games[gameId].nbPlayers){
             index = games[gameId].joueurs.length;
-            games[gameId].joueurs[index] = {socket: socket, points: 0, tour: -1};
+            games[gameId].joueurs[index] = {socket: socket, points: 0, inHole:false};
             game = gameId;
             console.log("Joueur connecté à l'indice "+index);
             socket.emit("waiting",{
@@ -211,27 +218,9 @@ io.on('connection', function (socket) {
                 games[game].joueurs[0].socket.emit("canForceStart");
             }
             if(games[gameId].joueurs.length == games[gameId].nbPlayers){
-                games[game].current = Math.floor(Math.random() * games[game].nbPlayers);
-                for(var i=0 ; i<games[game].nbPlayers ; ++i){
-                    games[game].joueurs[i].socket.emit("gameStart");
-                    if(i != games[game].current){
-                        games[game].joueurs[i].socket.emit("notYourTurn");
-                    }
-                    games[game].joueurs[i].socket.emit("isPlaying",games[game].current);
-                }
-                games[game].joueurs[games[game].current].socket.emit("yourTurn",games[game].current);
+                startGame();
             }else{
-                for(var i=0, l=games[game].joueurs.length ; i<l-1 ; ++i){
-                    if(i != index){
-                        games[game].joueurs[i].socket.emit("playerJoined",{
-                            name: games[game].name,
-                            nbPlayers: games[game].joueurs.length,
-                            maxPlayers: games[game].nbPlayers,
-                            nbManches: games[game].nbManches,
-                            code: games[game].code
-                        });
-                    }
-                }
+                updateWaitingRoom();
             }
         }else{
             socket.emit("error", {message: "Erreur, impossible de rejoindre la partie, mot de passe ou id invalide"});
@@ -239,22 +228,24 @@ io.on('connection', function (socket) {
 
     });
 
+    /*socket.on("leaveWaitingRoom",function(){
+        if(game === null || index < 0 || !games[game]){
+            socket.emit("error", {message: "Erreur, vous n'êtes pas dans la partie"});
+            return;
+        }
+
+        if(){
+
+        }
+    });*/
+
     socket.on("forceStart",function(){
         games[game].nbPlayers = games[game].joueurs.length;
-        games[game].current = Math.floor(Math.random() * games[game].nbPlayers);
-        for(var i=0 ; i<games[game].nbPlayers ; ++i){
-            games[game].joueurs[i].socket.emit("gameStart");
-            if(i != games[game].current){
-                games[game].joueurs[i].socket.emit("notYourTurn");
-            }
-            games[game].joueurs[i].socket.emit("isPlaying",games[game].current);
-        }
-        games[game].joueurs[games[game].current].socket.emit("yourTurn",games[game].current);
-        console.log(games[game]);
+        startGame();
     });
 
     socket.on("placeBall",function(pos){
-        if(game === null || index < 0){
+        if(game === null || index < 0 || !games[game]){
             socket.emit("error", {message: "Erreur, vous n'êtes pas dans la partie"});
             return;
         }
@@ -270,7 +261,7 @@ io.on('connection', function (socket) {
     });
 
     socket.on("shoot",function(impulse){
-        if(game === null || index < 0){
+        if(game === null || index < 0 || !games[game]){
             socket.emit("error", {message: "Erreur, vous n'êtes pas dans la partie"});
             return;
         }
@@ -286,7 +277,7 @@ io.on('connection', function (socket) {
     });
 
     socket.on("endPos",function(allPos){
-        if(game === null || index < 0){
+        if(game === null || index < 0 || !games[game]){
             socket.emit("error", {message: "Erreur, vous n'êtes pas dans la partie"});
             return;
         }
@@ -300,12 +291,121 @@ io.on('connection', function (socket) {
             }
         }
 
-        console.log(games[game].current);
-        games[game].joueurs[games[game].current].socket.emit("notYourTurn");
-        games[game].current = (games[game].current + 1) % games[game].nbPlayers;
-        games[game].joueurs[games[game].current].socket.emit("yourTurn",games[game].current);
-        for(var i=0 ; i<games[game].nbPlayers ; ++i){
-            games[game].joueurs[i].socket.emit("isPlaying",games[game].current);
+        var allInHole = true;
+        for(player of  games[game].joueurs){
+            if(!player.inHole){
+                allInHole = false; 
+            }
+        }
+        if(!allInHole){
+            console.log(games[game].current);
+            games[game].joueurs[games[game].current].socket.emit("notYourTurn");
+            
+            do{
+                games[game].current = (games[game].current + 1) % games[game].nbPlayers;
+            }while(games[game].joueurs[games[game].current].inHole);
+            games[game].joueurs[games[game].current].socket.emit("yourTurn",games[game].current);
+            for(var i=0 ; i<games[game].nbPlayers ; ++i){
+                games[game].joueurs[i].socket.emit("isPlaying",games[game].current);
+            }
+            clearTimeout(games[game].turnTimer);
+            setTurnTimer(game);
         }
     });
+
+    socket.on("inHole",function(id){
+        if(game === null || index < 0 || !games[game]){
+            socket.emit("error", {message: "Erreur, vous n'êtes pas dans la partie"});
+            return;
+        }
+        games[game].joueurs[id].inHole = true;
+        var allInHole = true;
+        for(player of  games[game].joueurs){
+            if(!player.inHole){
+                allInHole = false; 
+            }
+        }
+        if(allInHole){
+            if(games[game].levels.length > 0){
+                for(player of  games[game].joueurs){
+                    player.inHole = false;
+                    player.socket.emit("nextManche",games[game].levels[0]);
+                }
+                games[game].joueurs[games[game].current].socket.emit("notYourTurn");
+                games[game].joueurs[games[game].current].socket.emit("yourTurn",games[game].current);
+                for(var i=0 ; i<games[game].nbPlayers ; ++i){
+                    games[game].joueurs[i].socket.emit("isPlaying",games[game].current);
+                }
+                clearTimeout(games[game].turnTimer);
+                setTurnTimer(game);
+                games[game].levels.splice(0,1);
+            }else{
+                for(player of  games[game].joueurs){
+                    player.socket.emit("endGame");
+                }  
+                deleteGame(game);
+            }
+        }
+    });
+
+    /****************
+    *   Functions   *
+    *****************/
+
+    function startGame(){
+        games[game].current = Math.floor(Math.random() * games[game].nbPlayers);
+        console.log(games[game].levels)
+        for(var i=0 ; i<games[game].nbPlayers ; ++i){
+            games[game].joueurs[i].socket.emit("gameStart",games[game].levels[0]);
+            if(i != games[game].current){
+                games[game].joueurs[i].socket.emit("notYourTurn");
+            }
+            games[game].joueurs[i].socket.emit("isPlaying",games[game].current);
+        }
+        games[game].levels.splice(0,1);
+        games[game].joueurs[games[game].current].socket.emit("yourTurn",games[game].current);
+        clearTimeout(games[game].turnTimer);
+        setTurnTimer(game);
+    }
+
+    function updateWaitingRoom(){
+        for(var i=0, l=games[game].joueurs.length ; i<l-1 ; ++i){
+            if(i != index){
+                games[game].joueurs[i].socket.emit("playerJoined",{
+                    name: games[game].name,
+                    nbPlayers: games[game].joueurs.length,
+                    maxPlayers: games[game].nbPlayers,
+                    nbManches: games[game].nbManches,
+                    code: games[game].code
+                });
+            }
+        }
+    }
+
+    function deleteGame(game) {
+        console.log("Suppression de la partie " + game);
+        delete games[game];
+    }
+
+    function setTurnTimer(game){
+        console.log("salut")
+        games[game].turnTimer = setTimeout(function(current,sock){
+            console.log(current)
+            console.log(games[game].current)
+            if(games[game].current === current){
+                sock.emit("notYourTurn");
+                do{
+                    games[game].current = (games[game].current + 1) % games[game].nbPlayers;
+                }while(games[game].joueurs[games[game].current].inHole);
+                games[game].joueurs[games[game].current].socket.emit("yourTurn",games[game].current);
+                for(var i=0 ; i<games[game].nbPlayers ; ++i){
+                    games[game].joueurs[i].socket.emit("isPlaying",games[game].current);
+                }
+                clearTimeout(games[game].turnTimer);
+                setTurnTimer(game);
+            }
+        },15000,games[game].current,games[game].joueurs[index].socket);
+    }
 });
+
+// TODO : faire quand on place la balle

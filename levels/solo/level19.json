@@ -1,0 +1,408 @@
+{
+    "obstacles":{
+        "spawn":[
+            {
+                "middle_pos":{"x":8.5, "y":29},
+                "heightWidth" : {"width": 1.5, "height":1}
+            },
+            {
+                "middle_pos":{"x":14.5, "y":29},
+                "heightWidth" : {"width": 1.5, "height":1}
+            }
+        ],
+        "wall":[
+            {
+                "middle_pos":{"x":11.5, "y":0},
+                "shape": "box",
+                "heightWidth" : {"width": 11.5, "height":0.25},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":11.5, "y":31},
+                "shape": "box",
+                "heightWidth" : {"width": 11.5, "height":0.25},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":0, "y":15.5},
+                "shape": "box",
+                "heightWidth" : {"width": 0.25, "height":15.75},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":23, "y":15.5},
+                "shape": "box",
+                "heightWidth" : {"width": 0.25, "height":15.75},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":0, "y":0},
+                "shape": "polygon",
+                "vectrices":[
+                    {"x":3, "y":5},
+                    {"x":20, "y":5},
+                    {"x":11.5, "y":15}
+                ]
+            },
+            {
+                "middle_pos":{"x":0, "y":0},
+                "shape": "polygon",
+                "vectrices":[
+                    {"x":5, "y":12},
+                    {"x":10, "y":18},
+                    {"x":0, "y":18}
+                    
+                ]
+            },
+            {
+                "middle_pos":{"x":0, "y":0},
+                "shape": "polygon",
+                "vectrices":[
+                    {"x":18, "y":12},
+                    {"x":23, "y":18},
+                    {"x":13, "y":18}
+                    
+                ]
+            },
+            {
+                "middle_pos":{"x":0, "y":0},
+                "shape": "polygon",
+                "vectrices":[
+                    {"x":5, "y":21},
+                    {"x":18, "y":21},
+                    {"x":11.5, "y":28}
+                ]
+            },
+            {
+                "middle_pos":{"x":11.5, "y":29},
+                "shape": "box",
+                "heightWidth" : {"width": 0.25, "height":3},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":20, "y":28},
+                "shape": "box",
+                "heightWidth" : {"width": 0.25, "height":4},
+                "angle":-0.79
+            },
+            {
+                "middle_pos":{"x":19.25, "y":22.5},
+                "shape": "box",
+                "heightWidth" : {"width": 0.25, "height":2},
+                "angle":-0.79
+            },
+            {
+                "middle_pos":{"x":3, "y":28},
+                "shape": "box",
+                "heightWidth" : {"width": 0.25, "height":4},
+                "angle":0.79
+            },
+            {
+                "middle_pos":{"x":3.75, "y":22.5},
+                "shape": "box",
+                "heightWidth" : {"width": 0.25, "height":2},
+                "angle":0.79
+            },
+            {
+                "middle_pos":{"x":3.75, "y":8},
+                "shape": "box",
+                "heightWidth" : {"width": 0.25, "height":1.5},
+                "angle":0.79
+            },
+            {
+                "middle_pos":{"x":19.25, "y":8},
+                "shape": "box",
+                "heightWidth" : {"width": 0.25, "height":1.5},
+                "angle":-0.79
+            }
+        ],
+        "water":[
+            {
+                "middle_pos":{"x":0, "y":0},
+                "shape": "polygon",
+                "vectrices":[
+                    {"x":2.75, "y":4.75},
+                    {"x":20.25, "y":4.75},
+                    {"x":11.5, "y":13}
+                ]
+            },
+            {
+                "middle_pos":{"x":0, "y":0},
+                "shape": "polygon",
+                "vectrices":[
+                    {"x":5, "y":11.75},
+                    {"x":10.25, "y":18.25},
+                    {"x":-0.25, "y":18.25}
+                    
+                ]
+            },
+            {
+                "middle_pos":{"x":0, "y":0},
+                "shape": "polygon",
+                "vectrices":[
+                    {"x":18, "y":11.75},
+                    {"x":23.25, "y":18.25},
+                    {"x":12.75, "y":18.25}
+                    
+                ]
+            }
+        ],
+        "sand":[
+            {
+                "middle_pos":{"x":2.5, "y":15},
+                "shape": "box",
+                "heightWidth" : {"width": 2.5, "height":3},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":20.5, "y":15},
+                "shape": "box",
+                "heightWidth" : {"width": 2.5, "height":3},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":0, "y":0},
+                "shape": "polygon",
+                "vectrices":[
+                    {"x":11.5, "y":15},
+                    {"x":14, "y":18},
+                    {"x":9, "y":18}
+                ]
+            }
+        ],
+        "wind":[
+            {
+                "middle_pos":{"x":9, "y":19.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 1,
+                "direction":{"x":1, "y":-1}
+            },
+            {
+                "middle_pos":{"x":7.5, "y":19.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 1,
+                "direction":{"x":1, "y":-1}
+            },
+            {
+                "middle_pos":{"x":6, "y":19.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 1,
+                "direction":{"x":1, "y":-1}
+            },
+            {
+                "middle_pos":{"x":14, "y":19.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 1,
+                "direction":{"x":-1, "y":-1}
+            },
+            {
+                "middle_pos":{"x":15.5, "y":19.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 1,
+                "direction":{"x":-1, "y":-1}
+            },
+            {
+                "middle_pos":{"x":17, "y":19.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 1,
+                "direction":{"x":-1, "y":-1}
+            },
+            {
+                "middle_pos":{"x":9, "y":14.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 1,
+                "direction":{"x":-1, "y":0.00001}
+            },
+            {
+                "middle_pos":{"x":7.75, "y":13},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 1,
+                "direction":{"x":-1, "y":0.00001}
+            },
+            {
+                "middle_pos":{"x":6.5, "y":11.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 1,
+                "direction":{"x":-1, "y":0.00001}
+            },
+            {
+                "middle_pos":{"x":5.25, "y":10},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 1,
+                "direction":{"x":-1, "y":0.00001}
+            },
+            {
+                "middle_pos":{"x":14, "y":14.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 1,
+                "direction":{"x":1, "y":0.00001}
+            },
+            {
+                "middle_pos":{"x":15.25, "y":13},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 1,
+                "direction":{"x":1, "y":0.00001}
+            },
+            {
+                "middle_pos":{"x":16.5, "y":11.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 1,
+                "direction":{"x":1, "y":0.00001}
+            },
+            {
+                "middle_pos":{"x":17.75, "y":10},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 1,
+                "direction":{"x":1, "y":0.00001}
+            },
+            {
+                "middle_pos":{"x":9, "y":1},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":1, "y":1}
+            },
+            {
+                "middle_pos":{"x":9, "y":2.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":1, "y":1}
+            },
+            {
+                "middle_pos":{"x":9, "y":4},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":1, "y":1}
+            },
+            {
+                "middle_pos":{"x":7.5, "y":1},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":1, "y":1}
+            },
+            {
+                "middle_pos":{"x":7.5, "y":2.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":1, "y":1}
+            },
+            {
+                "middle_pos":{"x":7.5, "y":4},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":1, "y":1}
+            },
+            {
+                "middle_pos":{"x":6, "y":1},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":1, "y":1}
+            },
+            {
+                "middle_pos":{"x":6, "y":2.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":1, "y":1}
+            },
+            {
+                "middle_pos":{"x":6, "y":4},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":1, "y":1}
+            },
+            {
+                "middle_pos":{"x":4.5, "y":1},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":1, "y":1}
+            },
+            {
+                "middle_pos":{"x":4.5, "y":2.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":1, "y":1}
+            },
+            {
+                "middle_pos":{"x":4.5, "y":4},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":1, "y":1}
+            },
+            {
+                "middle_pos":{"x":14, "y":1},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":-1, "y":1}
+            },
+            {
+                "middle_pos":{"x":14, "y":2.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":-1, "y":1}
+            },
+            {
+                "middle_pos":{"x":14, "y":4},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":-1, "y":1}
+            },
+            {
+                "middle_pos":{"x":15.5, "y":1},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":-1, "y":1}
+            },
+            {
+                "middle_pos":{"x":15.5, "y":2.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":-1, "y":1}
+            },
+            {
+                "middle_pos":{"x":15.5, "y":4},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":-1, "y":1}
+            },
+            {
+                "middle_pos":{"x":17, "y":1},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":-1, "y":1}
+            },
+            {
+                "middle_pos":{"x":17, "y":2.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":-1, "y":1}
+            },
+            {
+                "middle_pos":{"x":17, "y":4},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":-1, "y":1}
+            },
+            {
+                "middle_pos":{"x":18.5, "y":1},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":-1, "y":1}
+            },
+            {
+                "middle_pos":{"x":18.5, "y":2.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":-1, "y":1}
+            },
+            {
+                "middle_pos":{"x":18.5, "y":4},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":-1, "y":1}
+            }
+        ]
+    },
+    "hole":{
+        "pos":{"x":11.5, "y":2.5},
+        "radius":0.5
+    }
+}

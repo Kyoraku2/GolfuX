@@ -10,6 +10,7 @@ class Ball{
         this.isMoving = false;
         this.shot = false;
         this.lastPos = undefined;
+        this.awareServerInHole = false;
     
         // The shape
         var shape = new b2CircleShape();

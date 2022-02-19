@@ -2,12 +2,10 @@
 Projet minigolf, projet de fin de licence
 
 TODO :
-- Retirer le joueur d'une partie quand il quitte (si token, au bout de deux tours pas joués ou 30s ?)
-- Supprimer une partie vide ou finie
-- Détecter la fin de partie coté serveur (pour ça il faut la/les positions du/des trou(s))
+- Quand un joueur quitte la waiting room, faut gérer les index de tout le monde
 - Faire le système de points
-
-- Multi : Tester une partie pour voir si y'a toujours des problèmes de synchro
+- Faire en sorte qu'on se connecte au serveur quand on clique sur multi
+- Ajouter des sons
 
 Bonus :
 - Faire en sorte qu'un joueur puisse rejoindre une partie quittée ? (avec les tokens, c'est ce que dado disait)
