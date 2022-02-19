@@ -337,6 +337,8 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById("multi-online").style.display = "block";
         playType = 2;
         sock.emit("JoinPublicGame",gameId);
+        history.replaceState({}, '', '/');
+
     }
 
     btnCreateGame.addEventListener("click",function(e){
