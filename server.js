@@ -124,7 +124,8 @@ io.on('connection', function (socket) {
             nbPlayers: games[game].joueurs.length,
             maxPlayers: games[game].nbPlayers,
             nbManches: games[game].nbManches,
-            code: games[game].code
+            code: games[game].code,
+            id: game
         });
         //TODO Afficher l'id de la partie au createur de la partie afin qu'il puisse la partager aux autres 
     });
