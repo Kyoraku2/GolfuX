@@ -568,6 +568,8 @@ Golfux.prototype.step = function(){
             }else{
                 ball.body.GetFixtureList().SetSensor(true);
             }
+        }else{
+            endLevel = false;
         }
     }
 
@@ -606,7 +608,6 @@ Golfux.prototype.step = function(){
         this.balls.forEach(function(ball,index){
             endPos.push({index:index,pos:{x:ball.body.GetPosition().x,y:ball.body.GetPosition().y}});
         });
-        alert("endPos")
         sock.emit("endPos",endPos);
     }
 
