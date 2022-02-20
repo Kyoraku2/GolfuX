@@ -76,9 +76,9 @@ function addEventListener(balls, level){
         var idB = bodyB.GetUserData();
         if((idA >= 0 && idA < 99 && idB >= 100 && idB < 199) || (idA < 199 && idA >= 100 && idB < 99 && idB >= 0)){ //EVENEMENT COLLISION TROU (100 à 199)
             if(idA >= 0 && idA<99){
-                balls[idA].collide = true;
+                balls[idA].collide = bodyB;
             }else{
-                balls[idB].collide = true;
+                balls[idB].collide = bodyA;
             }
         }
 
@@ -511,7 +511,7 @@ Golfux.prototype.onTouchUp = function(canvas, evt) {
 }
 
 Golfux.prototype.step = function(){
-    if(!this.level.hole){
+    if(this.level.holes.length === 0){
         return;
     }
     var endLevel = true;
@@ -532,11 +532,14 @@ Golfux.prototype.step = function(){
         if(ball){
             ball.x=ball.body.GetPosition().x;
             ball.y=ball.body.GetPosition().y;
-            ball.isColliding(this.level.hole);
+            for(hole of this.level.holes){
+                ball.isColliding(hole);
+            }
             if(playType == 2 && ball.isInHole && !ball.awareServerInHole && ballIndex !== null){
                 console.log("inhole")
                 sock.emit("inHole",this.balls.indexOf(ball));
                 ball.awareServerInHole = true;
+                ball.body.SetLinearVelocity(0);
             }
     
             if(ball.body.GetLinearVelocity().Length()<1){ // Limite ici
@@ -569,7 +572,6 @@ Golfux.prototype.step = function(){
     }
 
     if(endLevel && this.balls.length !=0 && playType != 2){
-        console.log("FINI");
         document.getElementById("end-menu").style.display = "block";
         if (msg_display == false) {
             var rigolo_msg = [
@@ -604,6 +606,7 @@ Golfux.prototype.step = function(){
         this.balls.forEach(function(ball,index){
             endPos.push({index:index,pos:{x:ball.body.GetPosition().x,y:ball.body.GetPosition().y}});
         });
+        alert("endPos")
         sock.emit("endPos",endPos);
     }
 
@@ -732,13 +735,15 @@ function updateBackground(level){
         contextBack.fillRect( 0, 0, canvasBack.width, canvasBack.height );
     }*/
     contextBack.save();
-    contextBack.fillStyle = "black";
-    contextBack.strokeStyle = "black";
-    var pos = getPixelPointFromWorldPoint({x:level.hole.body.GetPosition().x,y:level.hole.body.GetPosition().y});
-    contextBack.beginPath();
-    contextBack.arc(pos.x, pos.y, level.hole.radius*PTM, 0, 2 * Math.PI);
-    contextBack.fill();
-    contextBack.stroke();
+    for(hole of level.holes){
+        contextBack.fillStyle = "black";
+        contextBack.strokeStyle = "black";
+        var pos = getPixelPointFromWorldPoint({x:hole.body.GetPosition().x,y:hole.body.GetPosition().y});
+        contextBack.beginPath();
+        contextBack.arc(pos.x, pos.y, hole.radius*PTM, 0, 2 * Math.PI);
+        contextBack.fill();
+        contextBack.stroke();
+    }
 
     contextBack.fillStyle = '#FF0000';
     

@@ -1,9 +1,10 @@
 class Hole{
-    constructor(){
+    constructor(userdata){
         this.pos = null;
         this.radius = null;
         this.body = null;
-        
+        this.dataIndex = userdata;
+
     }
 
     setRadius(radius){
@@ -30,7 +31,7 @@ class Hole{
         this.bodyDef.userData = 100;
         // Create the body itself
         this.body = world.CreateBody(this.bodyDef);
-        
+        this.bodyDef.set_userData(this.dataIndex);
     
         // Create the fixture
         var fix = new b2FixtureDef();

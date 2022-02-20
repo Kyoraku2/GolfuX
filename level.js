@@ -13,16 +13,17 @@ class Level{
             water:[]
         };
         this.rendered = false;
-        this.hole = null;
+        this.holes = [];
         this.num = num;
         this.backgroundColor = color;
     }
 
     createHole(radius, middle_pos){
-        this.hole = new Hole();
-        this.hole.setPos(middle_pos);
-        this.hole.setRadius(radius);
-        this.hole.createHole();
+        var hole = new Hole(100+this.holes.length);
+        hole.setPos(middle_pos);
+        hole.setRadius(radius);
+        hole.createHole();
+        this.holes.push(hole);
     }
 
     createWall(middle_pos,shape,hx,hy,radius,vectrices,angle){
@@ -75,7 +76,12 @@ class Level{
 
             var data = await response.json();
             this.backgroundColor = data.backgroundColor;
-            this.createHole(data.hole.radius,new b2Vec2(data.hole.pos.x,data.hole.pos.y));
+            /*for(const [name,object] of Object.entries(data.holes)){
+                this.createHole(data.hole.radius,new b2Vec2(data.hole.pos.x,data.hole.pos.y));
+            }*/
+            for(const object of data.holes){
+                this.createHole(object.radius,new b2Vec2(object.pos.x,object.pos.y));
+            }
             for(const [name,array] of Object.entries(data.obstacles)){
                 array.forEach(object => {
                     var radius = (object.shape == "circle") ? object.radius : -1;
