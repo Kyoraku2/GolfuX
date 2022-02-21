@@ -4,6 +4,7 @@ Projet minigolf, projet de fin de licence
 TODO :
 - Faire le système de points
 - Ajouter des sons
+- Tester beaucoup
 
 Bonus :
 - Obstacles qui se détruisent ?
