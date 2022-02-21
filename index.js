@@ -387,6 +387,10 @@ document.addEventListener("DOMContentLoaded", function() {
         /***************** Partie serveur  *******************/
         sock = io.connect();
 
+        if(localStorage.getItem("playerToken") == null){
+            sock.emit("askToken");
+        }
+
         let partie = { 
             name:null,
             nbPlayers: null,
@@ -408,21 +412,28 @@ document.addEventListener("DOMContentLoaded", function() {
             partie.nbPlayers = nbPlayers;
             partie.nbManches = nbManches;
             partie.isPrivate = isPrivate;
-            sock.emit("CreateGame", partie);
+            sock.emit("CreateGame", {partie:partie,token:localStorage.getItem("playerToken")});
         });
 
         gameList.addEventListener("click",function(e){
             if(e.target.dataset.id){
-                sock.emit("JoinPublicGame",e.target.dataset.id);
+                sock.emit("JoinPublicGame",{id:e.target.dataset.id,token:localStorage.getItem("playerToken")});
             }
         });
 
         joinPrivateGame.addEventListener("click",function(e){
-            sock.emit("JoinPrivateGame",document.getElementById("code").value);
+            sock.emit("JoinPrivateGame",{code:document.getElementById("code").value,token:localStorage.getItem("playerToken")});
         });
 
         sock.on("error",function(msg){
             alert(msg.message);
+        });
+
+        sock.on("getToken",function(token){
+            var tok = localStorage.getItem("playerToken");
+            tok = (!tok) ? {} : JSON.parse(tok);
+            tok = token;
+            localStorage.setItem("playerToken", JSON.stringify(tok));
         });
 
         sock.on("gameList",function(list){

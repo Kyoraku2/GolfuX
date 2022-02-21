@@ -104,7 +104,7 @@ function getRandomLevels(n){
 }
 
 function token(){
-    return Math.random().toString(36).substring(2) + Math.random().toString(36).substring(2);
+    return Math.random().toString(36).substring(2) + Math.random().toString(36).substring(2) + Math.random().toString(36).substring(2) + Math.random().toString(36).substring(2);
 }
 
 function getPlayerFromSock(game,sock){
@@ -116,6 +116,23 @@ function getPlayerFromSock(game,sock){
     return undefined;
 }
 
+function getPlayerFromToken(game,token){
+    for(var i=0 ; i<game.joueurs.length ; ++i){
+        if(game.joueurs[i].token === token){
+            return i;
+        }
+    }
+    return undefined;
+}
+
+function computePlayersPos(game){
+    var pos = {};
+    for(var i=0 ; i<game.joueurs.length ; ++i){
+        pos[i] = game.joueurs[i].pos;
+    }
+    return pos;
+}
+
 
 io.on('connection', function (socket) {
     console.log("Un client s'est connecté");
@@ -124,15 +141,15 @@ io.on('connection', function (socket) {
     socket.emit("gameList",generateGameList());
 
     socket.on("askToken",function(){
-        socket.emit("token",token());
+        socket.emit("getToken",token());
     });
 
-    socket.on("CreateGame", function(partie){
+    socket.on("CreateGame", function(obj){
         if(game !== null){
             socket.emit("error", {message: "Erreur, une partie est déjà en cours."});
             return;
         }
-        if(partie.nbPlayers < 2 || partie.nbPlayers > 4 || partie.nbManches < 1 || partie.nbManches > 18 || games[game]){
+        if(obj.partie.nbPlayers < 2 || obj.partie.nbPlayers > 4 || obj.partie.nbManches < 1 || obj.partie.nbManches > 18 || games[game]){
             socket.emit("error", {message: "Erreur, mauvaises options de partie."});
             return;
         }
@@ -142,13 +159,13 @@ io.on('connection', function (socket) {
         while(findGameByCode(code) !== -1){
             code = createPassword();
         }
-        games[game] = partie;
+        games[game] = obj.partie;
         games[game].code = code;
         games[game].levels = getRandomLevels(games[game].nbManches);
         games[game]["current"] = -1;
         games[game].joueurs = [];
         games[game].turnTimer = null;
-        games[game].joueurs[0] = {socket: socket, points: 0, inHole:false};
+        games[game].joueurs[0] = {socket: socket, points: 0, inHole:false, token: obj.token, pos:null};
         console.log("Partie créée à l'indice "+game);
         console.log("Joueur connecté à l'indice 0");
         socket.emit("waiting",{
@@ -160,18 +177,25 @@ io.on('connection', function (socket) {
         });
     });
 
-    socket.on("JoinPublicGame", function(id){
-        if(game !== null || !games[id] || getPlayerFromSock(games[id],socket) !== undefined){
+    socket.on("JoinPublicGame", function(obj){
+        if(game !== null || !games[obj.id] || getPlayerFromSock(games[obj.id],socket) !== undefined){
             socket.emit("error", {message: "Erreur, une partie est déjà en cours."});
             return;
         }
-        if(id < 0 || games[id].isPrivate){
+        if(obj.id < 0 || games[obj.id].isPrivate){
             socket.emit("error", {message: "Erreur, la partie sélectionnée est privée."});
             return;
         }
-        if(games[id] && games[id].joueurs.length < games[id].nbPlayers){
-            games[id].joueurs[games[id].joueurs.length] = {socket: socket, points: 0, inHole:false};
-            game = id;
+
+        var joiningPlayer = getPlayerFromToken(game,obj.token);
+        if(joiningPlayer !== undefined){
+            games[game].joueurs.emit("joinBack",computePlayersPos(games[game]));
+            return;
+        }
+
+        if(games[obj.id] && games[obj.id].joueurs.length < games[obj.id].nbPlayers){
+            games[obj.id].joueurs[games[obj.id].joueurs.length] = {socket: socket, points: 0, inHole:false, token:obj.token, pos:null};
+            game = obj.id;
             console.log("Joueur connecté à l'indice "+(games[game].joueurs.length-1));
             socket.emit("waiting",{
                 name: games[game].name,
@@ -183,7 +207,7 @@ io.on('connection', function (socket) {
             if(games[game].joueurs.length >= 2){
                 games[game].joueurs[0].socket.emit("canForceStart");
             }
-            if(games[id].joueurs.length == games[id].nbPlayers){
+            if(games[obj.id].joueurs.length == games[obj.id].nbPlayers){
                 startGame();
             }else{
                 updateWaitingRoom();
@@ -193,20 +217,26 @@ io.on('connection', function (socket) {
         }
     });
 
-    socket.on("JoinPrivateGame", function(code){
+    socket.on("JoinPrivateGame", function(obj){
         if(game !== null){
             socket.emit("error", {message: "Erreur, une partie est déjà en cours."});
             return;
         }
 
-        var gameId = findGameByCode(code);
-        if(gameId < 0 || !games[gameId].isPrivate){
-            socket.emit("error", {message: "Erreur, la partie n'existe pas ou n'est pas privée."});
+        var gameId = findGameByCode(obj.code);
+        if(gameId < 0){
+            socket.emit("error", {message: "Erreur, la partie n'existe pas."});
             return;
         }
-        // TODO : maybe check  || getPlayerFromSock(games[game],socket) !== undefined
+
+        var joiningPlayer = getPlayerFromToken(game,obj.token);
+        if(joiningPlayer !== undefined){
+            games[game].joueurs.emit("joinBack",computePlayersPos(games[game]));
+            return;
+        }
+
         if(games[gameId] && games[gameId].joueurs.length < games[gameId].nbPlayers){
-            games[gameId].joueurs[games[gameId].joueurs.length] = {socket: socket, points: 0, inHole:false};
+            games[gameId].joueurs[games[gameId].joueurs.length] = {socket: socket, points: 0, inHole:false, token:obj.token, pos:null};
             game = gameId;
             console.log("Joueur connecté à l'indice "+games[game].joueurs.length-1);
             socket.emit("waiting",{
@@ -270,6 +300,7 @@ io.on('connection', function (socket) {
             socket.emit("error", {message: "Erreur, ce n'est pas ton tour."});
             return;
         }
+        games[game].joueurs[games[game].current].pos = pos;
         for(var i=0 ; i<games[game].nbPlayers ; ++i){
             if(i != games[game].current){
                 games[game].joueurs[i].socket.emit("ballPlaced",{index:games[game].current,pos:pos});
@@ -309,6 +340,7 @@ io.on('connection', function (socket) {
             if(i != games[game].current){
                 games[game].joueurs[i].socket.emit("ballShotFinalPos",allPos);
             }
+            games[game].joueurs[i] = allPos[i];
         }
 
         var allInHole = true;
@@ -317,7 +349,6 @@ io.on('connection', function (socket) {
                 allInHole = false; 
             }
         }
-        console.log(allInHole)
         if(!allInHole){
             console.log(games[game].current);
             games[game].joueurs[games[game].current].socket.emit("notYourTurn");

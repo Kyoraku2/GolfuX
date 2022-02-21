@@ -82,6 +82,10 @@ function addEventListener(balls, level){
             }
         }
 
+        if((idA >= 0 && idA < 99 && idB == 9999) || (idA == 9999 && idB < 99 && idB >= 0)){ //EVENEMENT COLLISION TROU (100 à 199)
+            console.log("wall") // TODO Put sound here
+        }
+
         if((idA >= 0 && idA < 99 && idB>=200 && idB <=299) || (idA >= 200 && idA <= 299 && idB >= 0 && idB <= 99)){ //EVENEMENT COLLISIONS OBSTACLES SOLS (de 200 à 299)
             if(idA >= 0 && idA<99){
                 switch(idB){
