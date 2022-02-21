@@ -309,6 +309,7 @@ let ballIndex = null;
 let currentBall = null;
 let onlineNbPlayer;
 let canLeaveOnlineGame = true;
+let joinMiddleGame;
 let localNbPlayers;
 let localNbManches;
 let localCurrManche = 0;
@@ -472,7 +473,7 @@ document.addEventListener("DOMContentLoaded", function() {
         });
 
         sock.on("joinBack",function(obj){
-            console.log(obj)
+            joinMiddleGame = true;
             //golfux.changeLevel(obj.level);
             golfux.changeLevel(1);
             onlineNbPlayer = obj.players;
@@ -488,7 +489,6 @@ document.addEventListener("DOMContentLoaded", function() {
                     }
                 }
             }
-            console.log(golfux.balls)
         });
 
         sock.on("endGame",function(obj){
@@ -523,6 +523,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
         sock.on("notYourTurn",function(){
             ballIndex = null;
+            golfux.click_down=null;
+            golfux.click_up=null;
             canLeaveOnlineGame = true;
         });
 
@@ -541,6 +543,28 @@ document.addEventListener("DOMContentLoaded", function() {
 
         sock.on("ballShotFinalPos",function(positions){
             replacementStack.push(positions);
+            if(joinMiddleGame){
+                alert("salut")
+                joinMiddleGame = undefined;
+                if(replacementStack.length===0){
+                    return;
+                }
+                for(obj of replacementStack[replacementStack.length-1]){
+                    if(golfux.balls[obj.index] === undefined){
+                        golfux.balls[obj.index] = new Ball(new b2Vec2(obj.pos.x, obj.pos.y),obj.index);
+                        continue;
+                    }
+                    var localPos = golfux.balls[obj.index].body.GetPosition();
+                    if(localPos.x != obj.pos.x || localPos.y != obj.pos.y){
+                        golfux.balls[obj.index].lastPos = {
+                            x:golfux.balls[obj.index].body.GetPosition().x,
+                            y:golfux.balls[obj.index].body.GetPosition().y
+                        }
+                        golfux.balls[obj.index].body.SetTransform(new b2Vec2(obj.pos.x, obj.pos.y), 0);
+                    }
+                }
+                replacementStack = [];
+            }
         });
 
         sock.on("nextManche",function(level){
