@@ -77,26 +77,34 @@ function addEventListener(balls, level){
         if((idA >= 0 && idA < 99 && idB >= 100 && idB < 199) || (idA < 199 && idA >= 100 && idB < 99 && idB >= 0)){ //EVENEMENT COLLISION TROU (100 à 199)
             if(idA >= 0 && idA<99){
                 balls[idA].collide = bodyB;
+                playHoleSound();
             }else{
                 balls[idB].collide = bodyA;
+                playHoleSound();
             }
         }
 
-        if((idA >= 0 && idA < 99 && idB == 9999) || (idA == 9999 && idB < 99 && idB >= 0)){ //EVENEMENT COLLISION TROU (100 à 199)
-            console.log("wall") // TODO Put sound here
+        if((idA >= 0 && idA < 99 && idB == 9999) || (idA == 9999 && idB < 99 && idB >= 0)){
+            playBonkSound();
+        }
+        if(idA >= 0 && idA < 99 && idB >= 0 && idB < 99){
+            playBonkSound();
         }
 
         if((idA >= 0 && idA < 99 && idB>=200 && idB <=299) || (idA >= 200 && idA <= 299 && idB >= 0 && idB <= 99)){ //EVENEMENT COLLISIONS OBSTACLES SOLS (de 200 à 299)
             if(idA >= 0 && idA<99){
                 switch(idB){
                     case 200:
+                        playSandSound();
                         balls[idA].body.SetLinearDamping(SAND_LINEAR_DAMPLING);
                         break;
                     case 201:
+                        playBubblegumSound();
                         balls[idA].body.SetLinearDamping(BUBBLEGUM_LINEAR_DAMPLING);
                         break;
                     case 202:
-                        setTimeout(function(body,start){ // C'est une douille, paske l'environnement veut pas faire simplemennt l'instruction
+                        playVoidSound();
+                        setTimeout(function(body,start){
                             body.SetTransform(start,0);
                         },0,balls[idA].body,balls[idA].start_pos);
                         balls[idA].body.SetLinearVelocity(0);
@@ -109,6 +117,7 @@ function addEventListener(balls, level){
                             taken.entered = false;
                             return;
                         }
+                        playPortalSound();
                         taken.entered = true;
                         var impulse = {
                             x:balls[idA].body.GetLinearVelocity().x,
@@ -137,6 +146,7 @@ function addEventListener(balls, level){
                         if(taken == undefined){
                             return;
                         }
+                        playPortalSound();
                         var impulse = {
                             x:balls[idA].body.GetLinearVelocity().x,
                             y:balls[idA].body.GetLinearVelocity().y,
@@ -149,6 +159,7 @@ function addEventListener(balls, level){
                         },0,balls[idA].body,taken,impulse);
                         break;
                     case 205:
+                        playWindSound();
                         var wind = level.obstacles['wind'].find(function(e){
                             return bodyB==e.body;
                         },bodyB);
@@ -158,9 +169,11 @@ function addEventListener(balls, level){
                         wind.enter = balls[idA].body;
                         break;
                     case 207:
+                        playIceSound();
                         balls[idA].body.SetLinearDamping(ICE_LINEAR_DAMPLING);
                         break;
                     case 208:
+                        playWaterSound();
                         setTimeout(function(body,lastPos){
                             body.SetTransform(new b2Vec2(lastPos.x,lastPos.y),0);
                             body.SetLinearVelocity(new b2Vec2(0,0));
@@ -172,15 +185,18 @@ function addEventListener(balls, level){
                 switch(idA){
                     case 200:
                         balls[idB].body.SetLinearDamping(SAND_LINEAR_DAMPLING);
+                        playSandSound();
                         break;
                     case 201:
                         balls[idB].body.SetLinearDamping(BUBBLEGUM_LINEAR_DAMPLING);
+                        playBubblegumSound();
                         break;
                     case 202:
                         setTimeout(function(body,start){
                             body.SetTransform(start,0);
                         },0,balls[idB].body,balls[idB].start_pos); 
-                        balls[idB].body.SetLinearVelocity(0);  
+                        balls[idB].body.SetLinearVelocity(0);
+                        playVoidSound();  
                         break;
                     case 203:
                         var taken = level.obstacles['portal'].find(function(e){
@@ -190,6 +206,7 @@ function addEventListener(balls, level){
                             taken.entered = false;
                             return;
                         }
+                        playPortalSound();
                         taken.entered = true;
                         var impulse = {
                             x:balls[idB].body.GetLinearVelocity().x,
@@ -218,6 +235,7 @@ function addEventListener(balls, level){
                         if(taken == undefined){
                             return;
                         }
+                        playPortalSound();
                         var impulse = {
                             x:balls[idB].body.GetLinearVelocity().x,
                             y:balls[idB].body.GetLinearVelocity().y,
@@ -237,11 +255,14 @@ function addEventListener(balls, level){
                             return;
                         }
                         wind.enter = balls[idB].body;
+                        playWindSound();
                         break;
                     case 207:
+                        playIceSound();
                         balls[idB].body.SetLinearDamping(ICE_LINEAR_DAMPLING);
                         break;
                     case 208:
+                        playWaterSound();
                         setTimeout(function(body,lastPos){
                             body.SetTransform(new b2Vec2(lastPos.x,lastPos.y),0);
                             body.SetLinearVelocity(new b2Vec2(0,0));
@@ -428,6 +449,7 @@ Golfux.prototype.onMouseUp = function(canvas, evt) {
         x:this.balls[ballIndex].body.GetPosition().x,
         y:this.balls[ballIndex].body.GetPosition().y
     }
+    playShootSound();
     this.balls[ballIndex].body.ApplyLinearImpulse(new b2Vec2(impulse.x*INTENSIFIE, impulse.y*INTENSIFIE),true);
     this.balls[ballIndex].shot = true;
     if(playType === 2){
@@ -504,6 +526,7 @@ Golfux.prototype.onTouchUp = function(canvas, evt) {
         x:this.balls[ballIndex].body.GetPosition().x,
         y:this.balls[ballIndex].body.GetPosition().y
     }
+    playShootSound();
     this.balls[ballIndex].body.ApplyLinearImpulse(new b2Vec2(impulse.x*INTENSIFIE, impulse.y*INTENSIFIE),true);
     this.balls[ballIndex].shot = true;
     if(playType === 2){
@@ -988,4 +1011,41 @@ function portalNormalForce(impulse,dirEnter,dirExit){
             break;
     }
     return impulse;
+}
+
+function playShootSound(){
+    shootSound.play();
+}
+
+function playBonkSound(){
+   bonkSound.play();
+}
+
+function playBubblegumSound(){
+    bubblegumSound.play();
+}
+
+function playPortalSound(){
+    portalSound.play();
+}
+
+function playSandSound(){
+    sandSound.play();
+}
+
+function playVoidSound(){
+    voidSound.play();
+}
+
+function playWaterSound(){
+    console.log("salut")
+    waterSound.play();
+}
+
+function playWindSound(){
+    windSound.play();
+}
+
+function playHoleSound(){
+    holeSound.play();
 }

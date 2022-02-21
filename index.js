@@ -10,6 +10,16 @@ const NUM_WORLDS = Math.floor(NUM_LEVELS/10);
 var max_lvl = parseInt(localStorage.getItem("level"));
 const MANCHES_MAX = 18;
 
+var shootSound = new Audio('./sounds/shoot.mp3');
+var bonkSound = new Audio('./sounds/bonk.mp3');
+var bubblegumSound = new Audio('./sounds/sand.mp3');
+var portalSound = new Audio('./sounds/sand.mp3');
+var sandSound = new Audio('./sounds/sand.mp3');
+var voidSound = new Audio('./sounds/lava.mp3');
+var waterSound = new Audio('./sounds/water.mp3');
+var windSound = new Audio('./sounds/sand.mp3');
+var holeSound = new Audio('./sounds/hole.mp3');
+
 var world = null;
 var canvas;
 var context;
