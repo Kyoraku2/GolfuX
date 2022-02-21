@@ -577,6 +577,10 @@ Golfux.prototype.step = function(){
         }
     }
 
+    if(playType == 2 && this.balls.length < onlineNbPlayer){
+        endLevel = false;
+    }
+
     if(endLevel && this.balls.length !=0 && playType != 2){
         document.getElementById("end-menu").style.display = "block";
         if (msg_display == false) {
@@ -613,6 +617,7 @@ Golfux.prototype.step = function(){
             endPos.push({index:index,pos:{x:ball.body.GetPosition().x,y:ball.body.GetPosition().y}});
         });
         sock.emit("endPos",endPos);
+        canLeaveOnlineGame = true;
     }
 
     if(playType === 1 && allStopped && ballIndex>=0 && this.balls[ballIndex] && this.balls[ballIndex].shot){

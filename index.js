@@ -308,6 +308,7 @@ let sock;
 let ballIndex = null;
 let currentBall = null;
 let onlineNbPlayer;
+let canLeaveOnlineGame = true;
 let localNbPlayers;
 let localNbManches;
 let localCurrManche = 0;
@@ -365,6 +366,10 @@ document.addEventListener("DOMContentLoaded", function() {
         btns_quit[i].addEventListener('click', function(e){
             if (e.target.id != "quit-game") {
                 golfux.changeLevel(parseInt(golfux.level.num) + 1);
+            }else{
+                if(!canLeaveOnlineGame){
+                    return;
+                }
             }
             window.location.reload();
         });
@@ -460,9 +465,30 @@ document.addEventListener("DOMContentLoaded", function() {
 
         sock.on("gameStart",function(obj){
             console.log(obj.level)
+            //golfux.changeLevel(obj.level);
             golfux.changeLevel(1);
             onlineNbPlayer = obj.players;
             display_game();
+        });
+
+        sock.on("joinBack",function(obj){
+            console.log(obj)
+            //golfux.changeLevel(obj.level);
+            golfux.changeLevel(1);
+            onlineNbPlayer = obj.players;
+            display_game();
+            ballPlaced = obj.placed;
+            var keys = Object.keys(obj.positions);
+            for(const key of keys){
+                if(obj.positions[key] != null && obj.positions[key].pos != null ){
+                    if(golfux.balls[obj.positions[key].index] === undefined){
+                        golfux.balls[obj.positions[key].index] = new Ball(new b2Vec2(obj.positions[key].pos.x,obj.positions[key].pos.y), obj.positions[key].index);
+                    }else{
+                        golfux.balls[obj.positions[key].index].body.SetTransform(new b2Vec2(obj.positions[key].pos.x, obj.positions[key].pos.y), 0);
+                    }
+                }
+            }
+            console.log(golfux.balls)
         });
 
         sock.on("endGame",function(obj){
@@ -491,11 +517,13 @@ document.addEventListener("DOMContentLoaded", function() {
 
         sock.on("yourTurn",function(index){
             ballIndex = index;
+            canLeaveOnlineGame = false;
             alert("Your turn");
         });
 
         sock.on("notYourTurn",function(){
             ballIndex = null;
+            canLeaveOnlineGame = true;
         });
 
         sock.on("isPlaying",function(id){
