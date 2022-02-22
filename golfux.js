@@ -39,6 +39,8 @@ class Golfux{
         }
         msg_display = false;
         
+        document.getElementById("restart-game").style.display = "block";
+        document.getElementById("quit-game").style.display = "block";
         if (playType == 0) {
             document.getElementById("leaderboard").style.display = "none";
         }
@@ -54,8 +56,8 @@ class Golfux{
 
 const MAX_INTENSITIE=8;
 const INTENSIFIE = 10;
-const BUBBLEGUM_LINEAR_DAMPLING = 18;
-const SAND_LINEAR_DAMPLING = 8;
+const BUBBLEGUM_LINEAR_DAMPLING = 10;
+const SAND_LINEAR_DAMPLING = 5;
 var allStopped;
 var waitReplacement = false;
 const ICE_LINEAR_DAMPLING = 0.6;
@@ -572,6 +574,8 @@ Golfux.prototype.step = function(){
     if(endLevel && this.balls.length !=0){
         console.log("FINI");
         document.getElementById("end-menu").style.display = "block";
+        document.getElementById("restart-game").style.display = "none";
+        document.getElementById("quit-game").style.display = "none";
         if (msg_display == false) {
             var rigolo_msg = [
                 "Bien joué <em>Little Player</em> ! Un jour tu deviendras plus grand... &#128170;",
@@ -733,14 +737,6 @@ function updateBackground(level){
     
     //contextBack.fillStyle = 'rgb(0,153,0)';
     //contextBack.fillRect( 0, 0, canvasBack.width, canvasBack.height );
-    contextBack.fillStyle = "black";
-    contextBack.strokeStyle = "black";
-    var pos = getPixelPointFromWorldPoint({x:level.hole.body.GetPosition().x,y:level.hole.body.GetPosition().y});
-    contextBack.beginPath();
-    contextBack.arc(pos.x, pos.y, level.hole.radius*PTM, 0, 2 * Math.PI);
-    contextBack.fill();
-    contextBack.stroke();
-
     contextBack.fillStyle = '#FF0000';
     
     // Sand
@@ -763,6 +759,14 @@ function updateBackground(level){
 
     // Spawn area
     renderObjectType("spawn",level,"rgba(0,0,0,0.25)",contextBack);
+
+    contextBack.fillStyle = "black";
+    contextBack.strokeStyle = "black";
+    var pos = getPixelPointFromWorldPoint({x:level.hole.body.GetPosition().x,y:level.hole.body.GetPosition().y});
+    contextBack.beginPath();
+    contextBack.arc(pos.x, pos.y, level.hole.radius*PTM, 0, 2 * Math.PI);
+    contextBack.fill();
+    contextBack.stroke();
 
     // Wind
     if(level.obstacles["wind"].length>0){
