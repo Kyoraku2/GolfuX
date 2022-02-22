@@ -1,5 +1,5 @@
 class Ball{
-    constructor(start_pos=new b2Vec2(9.5,1), index){
+    constructor(start_pos=new b2Vec2(9.5,1), index, worldServer = undefined){
         this.bodydef=null;
         this.body=null;
         this.start_pos=start_pos;
@@ -11,6 +11,7 @@ class Ball{
         this.shot = false;
         this.lastPos = undefined;
         this.awareServerInHole = false;
+        this.dataIndex = index;
     
         // The shape
         var shape = new b2CircleShape();
@@ -24,7 +25,11 @@ class Ball{
         this.bodydef.set_userData(index);
     
         // Create the body itself
-        this.body = world.CreateBody(this.bodydef);
+        if(worldServer === undefined){
+            this.body = world.CreateBody(this.bodydef);
+        }else{
+            this.body = worldServer.CreateBody(this.bodydef);
+        }
     
         // Create the fixture
         var fix = new b2FixtureDef();
@@ -58,3 +63,4 @@ class Ball{
         }
     }
 }
+module.exports = Ball;

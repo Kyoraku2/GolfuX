@@ -19,6 +19,7 @@
   "homepage": "https://github.com/Kyoraku2/GolfuX.github.io#readme",
   "dependencies": {
     "express": "^4.17.1",
+    "node-fecth": "^0.0.1-security",
     "socket.io": "^4.3.1"
   }
 }

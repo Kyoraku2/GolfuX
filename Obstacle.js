@@ -1,5 +1,5 @@
 class Obstacle{
-    constructor(middle_pos,shape,userdata,isstatic,issensor,hx,hy,radius,vectrices,angle){ // Constructeur
+    constructor(middle_pos,shape,userdata,isstatic,issensor,hx,hy,radius,vectrices,angle,worldServer = undefined){ // Constructeur
         // other attribute
         this.middle_pos=middle_pos;
         this.static = isstatic;
@@ -50,7 +50,11 @@ class Obstacle{
         this.fix.set_shape(this.shape);
 
         // body
-        this.body = world.CreateBody(this.bodydef);
+        if(worldServer === undefined){
+            this.body = world.CreateBody(this.bodydef);
+        }else{
+            this.body = worldServer.CreateBody(this.bodydef);
+        }
         this.body.CreateFixture(this.fix);
     }
 }
@@ -187,3 +191,5 @@ class UniDirectionPortal extends Portal{
         super(enter_pos,exit_pos,204,hx1,hy1,hx2,hy2,direction1,direction2);
     }
 }
+
+module.exports = Obstacle;

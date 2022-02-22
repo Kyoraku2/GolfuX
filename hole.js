@@ -19,7 +19,7 @@ class Hole{
         return this.pos;
     }
 
-    createHole(){
+    createHole(worldServer = undefined){
         var shape = new b2CircleShape();
         shape.set_m_radius(this.radius);
         
@@ -30,7 +30,11 @@ class Hole{
         
         this.bodyDef.userData = 100;
         // Create the body itself
-        this.body = world.CreateBody(this.bodyDef);
+        if(worldServer === undefined){
+            this.body = world.CreateBody(this.bodydef);
+        }else{
+            this.body = worldServer.CreateBody(this.bodydef);
+        }
         this.bodyDef.set_userData(this.dataIndex);
     
         // Create the fixture
@@ -48,3 +52,5 @@ class Hole{
 
     }
 }
+
+module.exports = Hole;
