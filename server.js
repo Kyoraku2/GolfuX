@@ -466,6 +466,6 @@ io.on('connection', function (socket) {
                 clearTimeout(games[game].turnTimer);
                 setTurnTimer(game);
             }
-        },15000,games[game].current);
+        },30000,games[game].current);
     }
 });
