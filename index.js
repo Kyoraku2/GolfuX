@@ -476,16 +476,16 @@ document.addEventListener("DOMContentLoaded", function() {
 
         sock.on("gameStart",function(obj){
             console.log(obj.level)
-            //golfux.changeLevel(obj.level);
-            golfux.changeLevel(1);
+            golfux.changeLevel(obj.level);
+            //golfux.changeLevel(1);
             onlineNbPlayer = obj.players;
             display_game();
         });
 
         sock.on("joinBack",function(obj){
             joinMiddleGame = true;
-            //golfux.changeLevel(obj.level);
-            golfux.changeLevel(1);
+            golfux.changeLevel(obj.level);
+            //golfux.changeLevel(1);
             onlineNbPlayer = obj.players;
             display_game();
             ballPlaced = obj.placed;
