@@ -2,8 +2,11 @@
 Projet minigolf, projet de fin de licence
 
 TODO :
-- Faire le système de points
-- Ajouter des sons
+- Faire le système de points 
+- Limite de tour
+- Problème quand quitte au milieu d'un tour
+- Ajustement coef
+- Ajouter des sons (des vrais sons)
 - Tester beaucoup
 
 Bonus :
