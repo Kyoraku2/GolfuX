@@ -38,7 +38,7 @@ class Golfux{
             this.save_progression(level);
         }
         msg_display = false;
-
+        
         if (playType == 0) {
             document.getElementById("leaderboard").style.display = "none";
         }

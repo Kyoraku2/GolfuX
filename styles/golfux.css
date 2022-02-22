@@ -155,7 +155,7 @@ button.unlock:hover {
 
 button#btn-play-solo:hover, #levels button.unlock:hover, #btn-join-code:hover,
 #wait-room button.btn-start.unlock:hover, #multi-online button.btn-wait:hover,
-#btn-continue:hover {
+#btn-continue:hover, #restart-game:hover {
 	background-color: rgb(255, 208, 0);
 }
 
@@ -216,7 +216,7 @@ button#btn-multi-online:hover, button#btn-creer-partie:hover, #creer-partie butt
 
 button.btn-retour, button.btn-start, #btn-creer-partie, button.btn-retour-2,
 button.btn-wait, #btn-room-quit, #btn-world-1, #btn-world-2, #btn-world-3, #btn-world-4,
-#btn-continue, button.btn-quit {
+#btn-continue, button.btn-quit, #restart-game {
 	border-radius: 3vh;
 	margin: 3vh;
 	padding: 20px;
@@ -334,18 +334,20 @@ input[type="text"] {
 }
 
 #leaderboard :nth-child(4) {
-	color: #02d055;
+	color: palevioletred;
 }
 
-#quit-game {
+#quit-game, #restart-game {
 	opacity: 0.5;
 	font-size: 2vh;
 	transition-property: opacity, background-color, box-shadow, bottom;
 	transition-duration: 0.2s;
-	left: 30vw;
+	float: right;
+	margin-left: 2vw;
+	margin-right: 2vw;
 }
 
-#quit-game:hover {
+#quit-game:hover, #restart-game:hover {
 	opacity: 1;
 	transition-property: opacity, background-color, box-shadow, bottom;
 	transition-duration: 0.2s;

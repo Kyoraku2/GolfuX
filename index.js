@@ -446,6 +446,11 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
+    //Recommencer
+    document.getElementById("restart-game").addEventListener('click', function(e){
+        golfux.changeLevel(parseInt(golfux.level.num));
+    });
+
     //Menu fin continuer
     document.getElementById("btn-continue").addEventListener('click', function(e){
         golfux.changeLevel(parseInt(golfux.level.num) + 1);
@@ -516,6 +521,9 @@ document.addEventListener("DOMContentLoaded", function() {
                         sock.emit("forceStart");
                     }else{
                         display_game();
+                    }
+                    if (playType != 0) {
+                        document.getElementById("restart-game").style.display = "none";
                     }
                 }
             }else{
