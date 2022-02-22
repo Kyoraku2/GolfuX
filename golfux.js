@@ -386,6 +386,16 @@ Golfux.prototype.onTouchMove = function(canvas, evt) {
 }
 
 Golfux.prototype.onMouseDown = function(canvas, evt) {
+    /*console.log("==============================")
+    console.log(this.balls.length)
+    console.log(ballPlaced)
+    console.log(ballIndex)
+    console.log(impulsionStack)
+    console.log(allStopped)
+    console.log(waitReplacement)
+    console.log(currentBall)
+    console.log(this.balls)*/
+
     if(playType===2 && (this.balls.length == 0 || !ballPlaced || ballIndex === null || impulsionStack.length>0 || !allStopped || waitReplacement || (currentBall>=0 && this.balls[currentBall] && this.balls[currentBall].shot))){
         return;
     }
@@ -468,10 +478,8 @@ Golfux.prototype.onTouchDown = function(canvas, evt) {
         return;
     }
     if(playType===0 && (this.click_down !== null || !ballPlaced || this.balls[ballIndex].shot)){
-        console.log(this.click_down)
         return;
     }
-    console.log("toucheDown")
     // Récuperation de la position du click
     let rect = canvas.getBoundingClientRect();
     let x = evt.touches[0].clientX - rect.left;
@@ -563,7 +571,6 @@ Golfux.prototype.step = function(){
                 ball.isColliding(hole);
             }
             if(playType == 2 && ball.isInHole && !ball.awareServerInHole && ballIndex !== null){
-                console.log("inhole")
                 sock.emit("inHole",this.balls.indexOf(ball));
                 ball.awareServerInHole = true;
                 ball.body.SetLinearVelocity(0);
@@ -620,7 +627,6 @@ Golfux.prototype.step = function(){
                 "+ 1000000 social crédits. &#128200;"
             ];
             var rand = Math.floor(Math.random() * rigolo_msg.length);
-            console.log(rand);
             document.querySelector("#end-menu p").innerHTML = rigolo_msg[rand];
             if(playType == 1 && localCurrManche >= localNbManches-1){
                 //TODO : afficher leaderBoard
@@ -633,6 +639,12 @@ Golfux.prototype.step = function(){
     }
 
     // Détection de fin de tour
+    console.log("==================");
+    console.log(endLevel);
+    console.log(allStopped);
+    console.log(currentBall,ballIndex)
+    console.log(this.balls);
+    //console.log(currentBall,ballIndex)
     if(playType === 2 && allStopped && currentBall>=0 && this.balls[currentBall] && this.balls[currentBall].shot && !endLevel){
         this.balls[currentBall].shot = false;
         var endPos = [];
@@ -641,6 +653,7 @@ Golfux.prototype.step = function(){
         });
         sock.emit("endPos",endPos);
         canLeaveOnlineGame = true;
+        console.log("endpos")
     }
 
     if(playType === 1 && allStopped && ballIndex>=0 && this.balls[ballIndex] && this.balls[ballIndex].shot){
@@ -653,6 +666,7 @@ Golfux.prototype.step = function(){
 
     if(allStopped && playType == 2){
         if(impulsionStack.length>0 && !waitReplacement){
+            console.log("impulse")
             this.balls[impulsionStack[0].index].lastPos = {
                 x:this.balls[impulsionStack[0].index].body.GetPosition().x,
                 y:this.balls[impulsionStack[0].index].body.GetPosition().y
@@ -662,12 +676,12 @@ Golfux.prototype.step = function(){
             waitReplacement = true;
             allStopped = false;
         }
+        //console.log(replacementStack)
         if(replacementStack.length > 0 && waitReplacement && allStopped){
-            console.log(replacementStack[0]);
+            console.log("replacement")
             for(obj of replacementStack[0]){
                 var localPos = golfux.balls[obj.index].body.GetPosition();
                 if(localPos.x != obj.pos.x || localPos.y != obj.pos.y){
-                    console.log("replacement++")
                     golfux.balls[obj.index].lastPos = {
                         x:golfux.balls[obj.index].body.GetPosition().x,
                         y:golfux.balls[obj.index].body.GetPosition().y
@@ -744,29 +758,6 @@ function updateBackground(level){
 
     contextBack.fillStyle = level.backgroundColor;
     contextBack.fillRect( 0, 0, canvasBack.width, canvasBack.height );
-    /*if (playType == 0) {
-        switch (world_lvl) {
-            case 1 :
-                contextBack.fillStyle = 'rgb(0,153,0)';
-                contextBack.fillRect( 0, 0, canvasBack.width, canvasBack.height );
-                break;
-            case 2 :
-                contextBack.fillStyle = 'rgb(255, 200, 150)';
-                contextBack.fillRect( 0, 0, canvasBack.width, canvasBack.height );
-                break;
-            case 3 :
-                contextBack.fillStyle = 'rgb(200, 200, 255)';
-                contextBack.fillRect( 0, 0, canvasBack.width, canvasBack.height );
-                break;
-            case 4 :
-                contextBack.fillStyle = 'rgb(150, 150, 150)';
-                contextBack.fillRect( 0, 0, canvasBack.width, canvasBack.height );
-                break;
-        }
-    } else {
-        contextBack.fillStyle = 'rgb(0,153,0)';
-        contextBack.fillRect( 0, 0, canvasBack.width, canvasBack.height );
-    }*/
     contextBack.save();
     for(hole of level.holes){
         contextBack.fillStyle = "black";
@@ -1038,7 +1029,6 @@ function playVoidSound(){
 }
 
 function playWaterSound(){
-    console.log("salut")
     waterSound.play();
 }
 

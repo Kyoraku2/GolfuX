@@ -231,7 +231,6 @@ io.on('connection', function (socket) {
         var joiningPlayer = getPlayerFromToken(games[gameId],obj.token);
         if(joiningPlayer !== undefined){
             game = gameId;
-            console.log(games[game])
             games[gameId].joueurs[joiningPlayer].socket = socket;
             games[gameId].joueurs[joiningPlayer].socket.emit("joinBack",{
                 positions:computePlayersPos(games[gameId]),
@@ -240,21 +239,30 @@ io.on('connection', function (socket) {
                 placed:!((games[gameId].joueurs[joiningPlayer].pos === null || games[gameId].joueurs[joiningPlayer].pos === undefined)),
                 inHole:games[gameId].joueurs[joiningPlayer].inHole
             });
-            //console.log(games[gameId].joueurs[0].pos)
-            //console.log(games[gameId].joueurs[1].pos)
 
-            //console.log(games[gameId].joueurs[joiningPlayer].pos)
-            games[gameId].joueurs[joiningPlayer].socket.emit("isPlaying",games[gameId].current);
-            if(joiningPlayer === games[gameId].current && !games[gameId].joueurs[joiningPlayer].shot){
-                games[gameId].joueurs[joiningPlayer].socket.emit("yourTurn",games[gameId].current);
+            if(joiningPlayer === games[gameId].current){
+                if(!games[gameId].joueurs[joiningPlayer].shot){
+                    games[gameId].joueurs[joiningPlayer].socket.emit("yourTurn",games[gameId].current);
+                    games[game].joueurs[joiningPlayer].socket.emit("isPlaying",games[game].current);
+                }else{
+                    for(var i=0 ; i<games[game].nbPlayers ; ++i){
+                        if(i != games[game].current){
+                            games[game].joueurs[i].socket.emit("ballShotFinalPos","abort");
+                        }
+                    }
+                    games[game].joueurs[games[game].current].shot = false;
+                    games[game].joueurs[games[game].current].socket.emit("notYourTurn");
+                    do{
+                        games[game].current = (games[game].current + 1) % games[game].nbPlayers;
+                    }while(games[game].joueurs[games[game].current].inHole);
+                    games[game].joueurs[games[game].current].socket.emit("yourTurn",games[game].current);
+                    games[game].joueurs[games[game].current].turn++;
+                    for(var i=0 ; i<games[game].nbPlayers ; ++i){
+                        games[game].joueurs[i].socket.emit("isPlaying",games[game].current);
+                    }
+                }
             }else{
-                games[game].joueurs[games[game].current].socket.emit("notYourTurn");
-            
-                do{
-                    games[game].current = (games[game].current + 1) % games[game].nbPlayers;
-                }while(games[game].joueurs[games[game].current].inHole);
-                games[game].joueurs[games[game].current].socket.emit("yourTurn",games[game].current);
-                games[game].joueurs[games[game].current].turn++;
+                games[game].joueurs[joiningPlayer].socket.emit("isPlaying",games[game].current);
             }
             return;
         }
