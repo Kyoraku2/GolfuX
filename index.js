@@ -468,6 +468,18 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
+    //Leaderboard
+    document.getElementById("btn-leaderboard").addEventListener('click', function(e){
+        document.getElementById("game-interface").style.display = "none";
+        document.getElementById("leaderboard").style.display = "block";
+    });
+
+    //Close leaderboard
+    document.getElementById("close-leaderboard").addEventListener('click', function(e){
+        document.getElementById("game-interface").style.display = "block";
+        document.getElementById("leaderboard").style.display = "none";
+    });
+
     //Multi Local
     document.getElementById("btn-multi-local").addEventListener('click', function(e){
         playType = 1;

@@ -39,10 +39,9 @@ class Golfux{
         }
         msg_display = false;
         
-        document.getElementById("restart-game").style.display = "block";
-        document.getElementById("quit-game").style.display = "block";
+        document.getElementById("game-interface").style.display = "block";
         if (playType == 0) {
-            document.getElementById("leaderboard").style.display = "none";
+            document.getElementById("btn-leaderboard").style.display = "none";
         }
     }
 
@@ -574,8 +573,7 @@ Golfux.prototype.step = function(){
     if(endLevel && this.balls.length !=0){
         console.log("FINI");
         document.getElementById("end-menu").style.display = "block";
-        document.getElementById("restart-game").style.display = "none";
-        document.getElementById("quit-game").style.display = "none";
+        document.getElementById("game-interface").style.display = "none";
         if (msg_display == false) {
             var rigolo_msg = [
                 "Bien joué <em>Little Player</em> ! Un jour tu deviendras plus grand... &#128170;",
