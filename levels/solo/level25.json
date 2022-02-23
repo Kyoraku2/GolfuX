@@ -2,7 +2,7 @@
     "obstacles":{
         "spawn":[
             {
-                "middle_pos":{"x":3, "y":2.5},
+                "middle_pos":{"x":3, "y":5},
                 "heightWidth" : {"width": 1.5, "height":1}
             }
         ],
@@ -81,6 +81,71 @@
                 "shape": "box",
                 "heightWidth" : {"width": 3, "height":2.5},
                 "angle":0
+            }
+        ],
+        "bumper":[
+            {
+                "middle_pos":{"x":8, "y":18},
+                "shape": "circle",
+                "isstatic":true,
+                "heightWidth" : {"width": 2.5, "height":1.5},
+                "radius": 0.75
+            },
+            {
+                "middle_pos":{"x":3, "y":18},
+                "shape": "circle",
+                "isstatic":true,
+                "heightWidth" : {"width": 2.5, "height":1.5},
+                "radius": 0.75
+            },
+            {
+                "middle_pos":{"x":8, "y":12},
+                "shape": "circle",
+                "isstatic":true,
+                "heightWidth" : {"width": 2.5, "height":1.5},
+                "radius": 0.75
+            },
+            {
+                "middle_pos":{"x":3, "y":12},
+                "shape": "circle",
+                "isstatic":true,
+                "heightWidth" : {"width": 2.5, "height":1.5},
+                "radius": 0.75
+            },
+            {
+                "middle_pos":{"x":5.5, "y":15},
+                "shape": "circle",
+                "isstatic":true,
+                "heightWidth" : {"width": 2.5, "height":1.5},
+                "radius": 0.75
+            },
+            {
+                "middle_pos":{"x":17, "y":2.5},
+                "shape": "circle",
+                "isstatic":true,
+                "heightWidth" : {"width": 2.5, "height":1.5},
+                "radius": 0.75
+            },
+            {
+                "middle_pos":{"x":17, "y":6.5},
+                "shape": "circle",
+                "isstatic":true,
+                "heightWidth" : {"width": 2.5, "height":1.5},
+                "radius": 0.75
+            },
+            {
+                "middle_pos":{"x":20.5, "y":4.5},
+                "shape": "circle",
+                "isstatic":true,
+                "heightWidth" : {"width": 2.5, "height":1.5},
+                "radius": 0.75
+            },
+            {
+                "middle_pos":{"x":20.5, "y":8.5},
+                "shape": "circle",
+                "isstatic":true,
+                "heightWidth" : {"width": 2.5, "height":1.5},
+                "radius": 0.75
             }
         ],
         "wind":[

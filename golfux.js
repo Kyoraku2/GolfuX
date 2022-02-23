@@ -42,7 +42,11 @@ class Golfux{
         document.getElementById("game-interface").style.display = "block";
         if (playType == 0) {
             document.getElementById("btn-leaderboard").style.display = "none";
+            document.getElementById("level-num").style.display = "block";
         }
+        var world_lvl = Math.floor(level/10) + 1;
+        var num_lvl = level%10;
+        document.getElementById("level-num").innerHTML = "\u26F3 Niveau : " + world_lvl + "-" + num_lvl;
     }
 
     save_progression(last_lvl) {
@@ -574,6 +578,7 @@ Golfux.prototype.step = function(){
         console.log("FINI");
         document.getElementById("end-menu").style.display = "block";
         document.getElementById("game-interface").style.display = "none";
+        document.getElementById("level-num").style.display = "none";
         if (msg_display == false) {
             var rigolo_msg = [
                 "Bien joué <em>Little Player</em> ! Un jour tu deviendras plus grand... &#128170;",
