@@ -318,8 +318,6 @@ let sock;
 let ballIndex = null;
 let currentBall = null;
 let onlineNbPlayer;
-let canLeaveOnlineGame = true;
-let joinMiddleGame;
 let localNbPlayers;
 let localNbManches;
 let localCurrManche = 0;
@@ -377,10 +375,6 @@ document.addEventListener("DOMContentLoaded", function() {
         btns_quit[i].addEventListener('click', function(e){
             if (e.target.id != "quit-game") {
                 golfux.changeLevel(parseInt(golfux.level.num) + 1);
-            }else{
-                if(!canLeaveOnlineGame){
-                    return;
-                }
             }
             window.location.reload();
         });
@@ -403,10 +397,6 @@ document.addEventListener("DOMContentLoaded", function() {
         /***************** Partie serveur  *******************/
         sock = io.connect();
 
-        if(localStorage.getItem("playerToken") == null){
-            sock.emit("askToken");
-        }
-
         let partie = { 
             name:null,
             nbPlayers: null,
@@ -428,28 +418,21 @@ document.addEventListener("DOMContentLoaded", function() {
             partie.nbPlayers = nbPlayers;
             partie.nbManches = nbManches;
             partie.isPrivate = isPrivate;
-            sock.emit("CreateGame", {partie:partie,token:localStorage.getItem("playerToken")});
+            sock.emit("CreateGame", partie);
         });
 
         gameList.addEventListener("click",function(e){
             if(e.target.dataset.id){
-                sock.emit("JoinPublicGame",{id:e.target.dataset.id,token:localStorage.getItem("playerToken")});
+                sock.emit("JoinPublicGame",e.target.dataset.id);
             }
         });
 
         joinPrivateGame.addEventListener("click",function(e){
-            sock.emit("JoinPrivateGame",{code:document.getElementById("code").value,token:localStorage.getItem("playerToken")});
+            sock.emit("JoinPrivateGame",document.getElementById("code").value);
         });
 
         sock.on("error",function(msg){
             alert(msg.message);
-        });
-
-        sock.on("getToken",function(token){
-            var tok = localStorage.getItem("playerToken");
-            tok = (!tok) ? {} : JSON.parse(tok);
-            tok = token;
-            localStorage.setItem("playerToken", JSON.stringify(tok));
         });
 
         sock.on("gameList",function(list){
@@ -462,7 +445,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
         sock.on("playerJoined",function(game){
             alert("update");
-            console.log(game)
             display_waiting_room(game);
         });
 
@@ -476,29 +458,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
         sock.on("gameStart",function(obj){
             console.log(obj.level)
-            //golfux.changeLevel(obj.level);
             golfux.changeLevel(1);
             onlineNbPlayer = obj.players;
             display_game();
-        });
-
-        sock.on("joinBack",function(obj){
-            joinMiddleGame = true;
-            //golfux.changeLevel(obj.level);
-            golfux.changeLevel(1);
-            onlineNbPlayer = obj.players;
-            display_game();
-            ballPlaced = obj.placed;
-            var keys = Object.keys(obj.positions);
-            for(const key of keys){
-                if(obj.positions[key] != null && obj.positions[key].pos != null ){
-                    if(golfux.balls[obj.positions[key].index] === undefined){
-                        golfux.balls[obj.positions[key].index] = new Ball(new b2Vec2(obj.positions[key].pos.x,obj.positions[key].pos.y), obj.positions[key].index);
-                    }else{
-                        golfux.balls[obj.positions[key].index].body.SetTransform(new b2Vec2(obj.positions[key].pos.x, obj.positions[key].pos.y), 0);
-                    }
-                }
-            }
         });
 
         sock.on("endGame",function(obj){
@@ -527,7 +489,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
         sock.on("yourTurn",function(index){
             ballIndex = index;
-            canLeaveOnlineGame = false;
             alert("Your turn");
         });
 
@@ -535,7 +496,6 @@ document.addEventListener("DOMContentLoaded", function() {
             ballIndex = null;
             golfux.click_down=null;
             golfux.click_up=null;
-            canLeaveOnlineGame = true;
         });
 
         sock.on("isPlaying",function(id){
@@ -553,28 +513,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
         sock.on("ballShotFinalPos",function(positions){
             replacementStack.push(positions);
-            if(joinMiddleGame){
-                alert("salut")
-                joinMiddleGame = undefined;
-                if(replacementStack.length===0){
-                    return;
-                }
-                for(obj of replacementStack[replacementStack.length-1]){
-                    if(golfux.balls[obj.index] === undefined){
-                        golfux.balls[obj.index] = new Ball(new b2Vec2(obj.pos.x, obj.pos.y),obj.index);
-                        continue;
-                    }
-                    var localPos = golfux.balls[obj.index].body.GetPosition();
-                    if(localPos.x != obj.pos.x || localPos.y != obj.pos.y){
-                        golfux.balls[obj.index].lastPos = {
-                            x:golfux.balls[obj.index].body.GetPosition().x,
-                            y:golfux.balls[obj.index].body.GetPosition().y
-                        }
-                        golfux.balls[obj.index].body.SetTransform(new b2Vec2(obj.pos.x, obj.pos.y), 0);
-                    }
-                }
-                replacementStack = [];
-            }
         });
 
         sock.on("nextManche",function(level){
