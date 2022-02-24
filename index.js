@@ -132,7 +132,7 @@ function placeBallInSpawn(){
         ballPlaced = true;
     }
     if(playType === 2){
-        sock.emit("placeBall",{index:ballIndex ,pos:{x:mousePosWorld.x,y:mousePosWorld.y}});
+        sock.emit("placeBall",{x:mousePosWorld.x,y:mousePosWorld.y});
     }
 }
 
@@ -324,7 +324,6 @@ let localNbPlayers;
 let localNbManches;
 let localCurrManche = 0;
 let localPlacedBalls = [];
-var waitReplacement = false;
 
 let impulsionStack = [];
 let replacementStack = [];
@@ -484,7 +483,6 @@ document.addEventListener("DOMContentLoaded", function() {
         });
 
         sock.on("joinBack",function(obj){
-            console.log(obj)
             joinMiddleGame = true;
             golfux.changeLevel(obj.level);
             //golfux.changeLevel(1);
@@ -550,7 +548,6 @@ document.addEventListener("DOMContentLoaded", function() {
         });
 
         sock.on("ballPlaced",function(obj){
-            console.log(obj)
             golfux.balls[obj.index] = new Ball(new b2Vec2(obj.pos.x, obj.pos.y), obj.index);
         });
 
