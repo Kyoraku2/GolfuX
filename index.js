@@ -463,6 +463,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         sock.on("playerJoined",function(game){
             alert("update");
+            console.log(game)
             display_waiting_room(game);
         });
 
@@ -475,6 +476,7 @@ document.addEventListener("DOMContentLoaded", function() {
         });
 
         sock.on("gameStart",function(obj){
+            console.log(obj.level)
             golfux.changeLevel(obj.level);
             //golfux.changeLevel(1);
             onlineNbPlayer = obj.players;
@@ -482,6 +484,7 @@ document.addEventListener("DOMContentLoaded", function() {
         });
 
         sock.on("joinBack",function(obj){
+            console.log(obj)
             joinMiddleGame = true;
             golfux.changeLevel(obj.level);
             //golfux.changeLevel(1);
@@ -516,6 +519,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     "+ 1000000 social crédits. &#128200;"
                 ];
                 var rand = Math.floor(Math.random() * rigolo_msg.length);
+                console.log(rand);
                 document.querySelector("#end-menu p").innerHTML = rigolo_msg[rand];
                 //TODO : afficher leaderBoard
                 document.getElementById("btn-continue").style.display = "none";
@@ -525,11 +529,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
         sock.on("yourTurn",function(index){
             ballIndex = index;
-            /*console.log(currentBall)
-            console.log(ballIndex)
-            console.log(replacementStack)
-            console.log(impulsionStack)
-            console.log(waitReplacement)*/
             canLeaveOnlineGame = false;
             alert("Your turn");
         });
@@ -546,27 +545,18 @@ document.addEventListener("DOMContentLoaded", function() {
         });
 
         sock.on("ballShot",function(obj){
+            console.log("shot")
             impulsionStack.push(obj);
         });
 
         sock.on("ballPlaced",function(obj){
+            console.log(obj)
             golfux.balls[obj.index] = new Ball(new b2Vec2(obj.pos.x, obj.pos.y), obj.index);
         });
 
         sock.on("ballShotFinalPos",function(positions){
-            /*console.log("final")
-            console.log(currentBall)
-            console.log(ballIndex)
-            console.log(replacementStack)
-            console.log(impulsionStack)
-            console.log(waitReplacement)*/
-            console.log("Reception end")
-            if(positions !== "abort"){
-                replacementStack.push(positions);
-            }else{
-                waitReplacement = false;
-            }
-            /*if(joinMiddleGame){
+            replacementStack.push(positions);
+            if(joinMiddleGame){
                 alert("salut")
                 joinMiddleGame = undefined;
                 if(replacementStack.length===0){
@@ -587,7 +577,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     }
                 }
                 replacementStack = [];
-            }*/
+            }
         });
 
         sock.on("nextManche",function(level){
@@ -658,6 +648,7 @@ document.addEventListener("DOMContentLoaded", function() {
         for(var i=0 ; i<localNbPlayers ; ++i){
             localPlacedBalls[i] = false;
         }
+        console.log(localPlacedBalls);
     });
 
     //Créer partie
