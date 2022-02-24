@@ -67,6 +67,13 @@ footer > p {
 	margin-top: 10vh;
 }
 
+footer {
+	position: absolute;
+	bottom: 0px;
+	width: 100%;
+	margin: 3vh auto;
+}
+
 h2 {
 	color: white;
 	font-weight: bold;
@@ -87,6 +94,12 @@ h3 {
 	font-size: 3vh;
 	text-shadow: #333333 5px 5px 2px;
 	margin-top: 5vh;
+}
+
+#leaderboard h3 {
+	color: white;
+	margin-bottom: 5vh;
+	font-size: 4vh;
 }
 
 p {
@@ -155,7 +168,7 @@ button.unlock:hover {
 
 button#btn-play-solo:hover, #levels button.unlock:hover, #btn-join-code:hover,
 #wait-room button.btn-start.unlock:hover, #multi-online button.btn-wait:hover,
-#btn-continue:hover {
+#btn-continue:hover, #restart-game:hover {
 	background-color: rgb(255, 208, 0);
 }
 
@@ -164,7 +177,7 @@ button#btn-multi-local:hover {
 }
 
 button#btn-multi-online:hover, button#btn-creer-partie:hover, #creer-partie button.btn-start:hover,
-#creer-partie button.btn-wait:hover {
+#creer-partie button.btn-wait:hover, #btn-leaderboard:hover {
 	background-color: blue;
 }
 
@@ -216,7 +229,7 @@ button#btn-multi-online:hover, button#btn-creer-partie:hover, #creer-partie butt
 
 button.btn-retour, button.btn-start, #btn-creer-partie, button.btn-retour-2,
 button.btn-wait, #btn-room-quit, #btn-world-1, #btn-world-2, #btn-world-3, #btn-world-4,
-#btn-continue, button.btn-quit {
+#btn-continue, button.btn-quit, #restart-game, #btn-leaderboard, #close-leaderboard {
 	border-radius: 3vh;
 	margin: 3vh;
 	padding: 20px;
@@ -235,7 +248,7 @@ button.btn-wait, #btn-room-quit, #btn-world-1, #btn-world-2, #btn-world-3, #btn-
 	width: 15vh;
 	margin: 3vh;
 	border-radius: 3vh;
-	font-size: 4vh;
+	font-size: 3.5vh;
 }
 
 select {
@@ -250,13 +263,14 @@ select {
 	cursor: pointer;
 }
 
-#nom-partie {
+#nom-partie, #pseudo {
 	height: 5vh;
 	width: 30vw;
 	font-size: 3vh;
+	text-align: center;
 }
 
-input[type="text"] {
+input[type="text"]#code {
 	height: 3vh;
 	text-align: center;
 	text-transform: uppercase;
@@ -311,41 +325,62 @@ input[type="text"] {
 	border-right : 3px solid white;
 }
 
-#leaderboard {
-	background-color: rgba(0, 0, 0, 0.5);
-	padding: 1vh;
-	position: absolute;
-	top: 1vh;
-	left: 1vw;
-	font-size: 3vh;
-	border : 2px solid white;
+#btn-leaderboard {
+	float: left;
 }
 
-#leaderboard :nth-child(1) {
-	color: red;
+#level-num {
+	font-size: 3vh;
+	font-weight: bold;
+	display: none;
+	margin: 3vh;
+	position: absolute;
+	bottom: 0px;
+}
+
+#leaderboard {
+	background-color: rgba(0, 0, 0, 0.5);
+	padding: 3vw;
+	position: relative;
+	margin-left: 10vw;
+	margin-right: 10vw;
+	margin-top: 5vh;
+	font-size: 4vh;
+	border : 3px solid white;
+	display: none;
+	border-radius: 3vh;
+}
+
+#leaderboard :nth-child(1):not(h3) {
+	color: #ffb900;
 }
 
 #leaderboard :nth-child(2) {
-	color: #02ccff;;
+	color: #cccccc;;
 }
 
-#leaderboard :nth-child(3) {
-	color: rgb(255, 208, 0);
+#leaderboard :nth-child(3):not(button) {
+	color: #f7894a
 }
 
 #leaderboard :nth-child(4) {
-	color: #02d055;
+	color: #e81224
 }
 
-#quit-game {
+#quit-game, #restart-game, #btn-leaderboard {
 	opacity: 0.5;
 	font-size: 2vh;
 	transition-property: opacity, background-color, box-shadow, bottom;
 	transition-duration: 0.2s;
-	left: 30vw;
+	margin-left: 2vw;
+	margin-right: 2vw;
 }
 
-#quit-game:hover {
+#quit-game, #restart-game {
+	float: right;
+}
+
+#quit-game:hover, #restart-game:hover, #btn-leaderboard:hover {
 	opacity: 1;
 	transition-property: opacity, background-color, box-shadow, bottom;
 	transition-duration: 0.2s;

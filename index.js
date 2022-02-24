@@ -363,6 +363,11 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
+    //Recommencer
+    document.getElementById("restart-game").addEventListener('click', function(e){
+        golfux.changeLevel(parseInt(golfux.level.num));
+    });
+
     //Menu fin continuer
     document.getElementById("btn-continue").addEventListener('click', function(e){
         golfux.changeLevel(parseInt(golfux.level.num) + 1);
@@ -379,6 +384,18 @@ document.addEventListener("DOMContentLoaded", function() {
             window.location.reload();
         });
     }
+
+    //Leaderboard
+    document.getElementById("btn-leaderboard").addEventListener('click', function(e){
+        document.getElementById("game-interface").style.display = "none";
+        document.getElementById("leaderboard").style.display = "block";
+    });
+
+    //Close leaderboard
+    document.getElementById("close-leaderboard").addEventListener('click', function(e){
+        document.getElementById("game-interface").style.display = "block";
+        document.getElementById("leaderboard").style.display = "none";
+    });
 
     //Multi Local
     document.getElementById("btn-multi-local").addEventListener('click', function(e){
@@ -569,6 +586,9 @@ document.addEventListener("DOMContentLoaded", function() {
                         sock.emit("forceStart");
                     }else{
                         display_game();
+                    }
+                    if (playType != 0) {
+                        document.getElementById("restart-game").style.display = "none";
                     }
                 }
             }else{

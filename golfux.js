@@ -39,9 +39,15 @@ class Golfux{
         }
         msg_display = false;
         waitReplacement = false;
+
+        document.getElementById("game-interface").style.display = "block";
         if (playType == 0) {
-            document.getElementById("leaderboard").style.display = "none";
+            document.getElementById("btn-leaderboard").style.display = "none";
+            document.getElementById("level-num").style.display = "block";
         }
+        var world_lvl = Math.floor(level/10) + 1;
+        var num_lvl = level%10;
+        document.getElementById("level-num").innerHTML = "\u26F3 Niveau : " + world_lvl + "-" + num_lvl;
     }
 
     save_progression(last_lvl) {
@@ -54,8 +60,8 @@ class Golfux{
 
 const MAX_INTENSITIE=8;
 const INTENSIFIE = 10;
-const BUBBLEGUM_LINEAR_DAMPLING = 18;
-const SAND_LINEAR_DAMPLING = 8;
+const BUBBLEGUM_LINEAR_DAMPLING = 10;
+const SAND_LINEAR_DAMPLING = 5;
 var allStopped;
 var waitReplacement = false;
 const ICE_LINEAR_DAMPLING = 0.6;
@@ -602,6 +608,8 @@ Golfux.prototype.step = function(){
 
     if(endLevel && this.balls.length !=0 && playType != 2){
         document.getElementById("end-menu").style.display = "block";
+        document.getElementById("game-interface").style.display = "none";
+        document.getElementById("level-num").style.display = "none";
         if (msg_display == false) {
             var rigolo_msg = [
                 "Bien joué <em>Little Player</em> ! Un jour tu deviendras plus grand... &#128170;",
@@ -739,29 +747,6 @@ function updateBackground(level){
 
     contextBack.fillStyle = level.backgroundColor;
     contextBack.fillRect( 0, 0, canvasBack.width, canvasBack.height );
-    /*if (playType == 0) {
-        switch (world_lvl) {
-            case 1 :
-                contextBack.fillStyle = 'rgb(0,153,0)';
-                contextBack.fillRect( 0, 0, canvasBack.width, canvasBack.height );
-                break;
-            case 2 :
-                contextBack.fillStyle = 'rgb(255, 200, 150)';
-                contextBack.fillRect( 0, 0, canvasBack.width, canvasBack.height );
-                break;
-            case 3 :
-                contextBack.fillStyle = 'rgb(200, 200, 255)';
-                contextBack.fillRect( 0, 0, canvasBack.width, canvasBack.height );
-                break;
-            case 4 :
-                contextBack.fillStyle = 'rgb(150, 150, 150)';
-                contextBack.fillRect( 0, 0, canvasBack.width, canvasBack.height );
-                break;
-        }
-    } else {
-        contextBack.fillStyle = 'rgb(0,153,0)';
-        contextBack.fillRect( 0, 0, canvasBack.width, canvasBack.height );
-    }*/
     contextBack.save();
     for(hole of level.holes){
         contextBack.fillStyle = "black";
@@ -795,6 +780,14 @@ function updateBackground(level){
 
     // Spawn area
     renderObjectType("spawn",level,"rgba(0,0,0,0.25)",contextBack);
+
+    contextBack.fillStyle = "black";
+    contextBack.strokeStyle = "black";
+    var pos = getPixelPointFromWorldPoint({x:level.hole.body.GetPosition().x,y:level.hole.body.GetPosition().y});
+    contextBack.beginPath();
+    contextBack.arc(pos.x, pos.y, level.hole.radius*PTM, 0, 2 * Math.PI);
+    contextBack.fill();
+    contextBack.stroke();
 
     // Wind
     if(level.obstacles["wind"].length>0){
