@@ -493,6 +493,7 @@ document.addEventListener("DOMContentLoaded", function() {
             onlineNbPlayer = obj.players;
             updateLeaderNbPlayers(onlineNbPlayer);
             display_game();
+            document.getElementById("restart-game").style.display = "none";
         });
 
         sock.on("endGame",function(obj){
@@ -832,8 +833,6 @@ function updateLeaderScores(scores){
         sorted.push(scores[i]);
     }
     sorted.sort((a, b) => a.score - b.score);
-    console.log(scores);
-    console.log(sorted)
     for(var i = 0, l = sorted.length ; i < l ; ++i){
         switch(i){
             case 0:
