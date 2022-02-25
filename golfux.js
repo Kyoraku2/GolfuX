@@ -462,6 +462,12 @@ Golfux.prototype.onMouseUp = function(canvas, evt) {
         sock.emit("shoot",{x:impulse.x*INTENSIFIE, y:impulse.y*INTENSIFIE});
         ballIndex=undefined;
     }
+    if(playType === 1){
+        localScores[ballIndex].score++;
+        localTurns[ballIndex]++;
+        // TODO : update here learderboard
+        updateLeaderScores(localScores);
+    }
     this.click_up=null;
     this.click_down=null;
 }
@@ -474,10 +480,8 @@ Golfux.prototype.onTouchDown = function(canvas, evt) {
         return;
     }
     if(playType===0 && (this.click_down !== null || !ballPlaced || this.balls[ballIndex].shot)){
-        console.log(this.click_down)
         return;
     }
-    console.log("toucheDown")
     // Récuperation de la position du click
     let rect = canvas.getBoundingClientRect();
     let x = evt.touches[0].clientX - rect.left;
@@ -544,9 +548,10 @@ Golfux.prototype.onTouchUp = function(canvas, evt) {
 }
 
 Golfux.prototype.step = function(){
-    if(this.level.holes.length === 0){
+    if(this.level.holes === undefined || this.level.holes.length === 0){
         return;
     }
+    
     var endLevel = true;
     updateBackground(this.level);
 
@@ -569,7 +574,6 @@ Golfux.prototype.step = function(){
                 ball.isColliding(hole);
             }
             if(playType == 2 && ball.isInHole && !ball.awareServerInHole && ballIndex !== null){
-                console.log("inhole")
                 sock.emit("inHole",this.balls.indexOf(ball));
                 ball.awareServerInHole = true;
                 ball.body.SetLinearVelocity(0);
@@ -606,6 +610,10 @@ Golfux.prototype.step = function(){
         }
     }
 
+    if(playType == 2 && this.balls.length < onlineNbPlayer){
+        endLevel = false;
+    }
+
     if(endLevel && this.balls.length !=0 && playType != 2){
         document.getElementById("end-menu").style.display = "block";
         document.getElementById("game-interface").style.display = "none";
@@ -624,7 +632,6 @@ Golfux.prototype.step = function(){
                 "+ 1000000 social crédits. &#128200;"
             ];
             var rand = Math.floor(Math.random() * rigolo_msg.length);
-            console.log(rand);
             document.querySelector("#end-menu p").innerHTML = rigolo_msg[rand];
             if(playType == 1 && localCurrManche >= localNbManches-1){
                 //TODO : afficher leaderBoard
@@ -648,9 +655,44 @@ Golfux.prototype.step = function(){
 
     if(playType === 1 && allStopped && ballIndex>=0 && this.balls[ballIndex] && this.balls[ballIndex].shot){
         this.balls[ballIndex].shot = false;
+        var oldBallIndex = ballIndex;
         ballIndex = (ballIndex < localNbPlayers-1) ? ballIndex+1 : 0;
-        while(ballIndex>=0 && this.balls[ballIndex] && this.balls[ballIndex].isInHole){
+        while((ballIndex>=0 && this.balls[ballIndex] && this.balls[ballIndex].isInHole) || localTurns[ballIndex] === TURN_LIMIT){
             ballIndex = (ballIndex < localNbPlayers-1) ? ballIndex+1 : 0;
+            if(oldBallIndex == ballIndex){
+                break;
+            }
+        }
+        if(oldBallIndex === ballIndex && localTurns[ballIndex] === TURN_LIMIT){
+            localScores[ballIndex].score+=2;
+            updateLeaderScores(localScores);
+            document.getElementById("end-menu").style.display = "block";
+            document.getElementById("game-interface").style.display = "none";
+            document.getElementById("level-num").style.display = "none";
+            if (msg_display == false) {
+                var rigolo_msg = [
+                    "Bien joué <em>Little Player</em> ! Un jour tu deviendras plus grand... &#128170;",
+                    "Peut mieux faire... Non non je ne juge pas. &#128064;",
+                    "Mouais après le niveau était simple nan ? &#129300;",
+                    "Le <em>TrophuX</em> est à portée de main ! &#129351;",
+                    "Sans doûte un niveau de petit joueur ! &#128526;",
+                    "Trop lent à finir ce niveau : pire que Jube et ses copies... &#128195;",
+                    "C'est une première étape, mais il reste encore beaucoup de chemin à faire... &#128579;",
+                    "Brillant ! Autant de talent, beauté et intelligence que ceux qui ont conçu le jeu. &#129321;",
+                    "Quelle magnifique performance ! Seul un jeu en JavaScript peut nous apporter ça. &#129394;",
+                    "+ 1000000 social crédits. &#128200;"
+                ];
+                var rand = Math.floor(Math.random() * rigolo_msg.length);
+                document.querySelector("#end-menu p").innerHTML = rigolo_msg[rand];
+                if(playType == 1 && localCurrManche >= localNbManches-1){
+                    //TODO : afficher leaderBoard
+                    document.getElementById("btn-continue").style.display = "none";
+                }
+                msg_display = true;
+            }
+            //this.changeLevel(parseInt(this.level.num) + 1);
+            document.getElementById("leaderboard").style.display = "block";
+            return;
         }
     }
 
@@ -666,11 +708,9 @@ Golfux.prototype.step = function(){
             allStopped = false;
         }
         if(replacementStack.length > 0 && waitReplacement && allStopped){
-            console.log(replacementStack[0]);
             for(obj of replacementStack[0]){
                 var localPos = golfux.balls[obj.index].body.GetPosition();
                 if(localPos.x != obj.pos.x || localPos.y != obj.pos.y){
-                    console.log("replacement++")
                     golfux.balls[obj.index].lastPos = {
                         x:golfux.balls[obj.index].body.GetPosition().x,
                         y:golfux.balls[obj.index].body.GetPosition().y
@@ -780,14 +820,6 @@ function updateBackground(level){
 
     // Spawn area
     renderObjectType("spawn",level,"rgba(0,0,0,0.25)",contextBack);
-
-    contextBack.fillStyle = "black";
-    contextBack.strokeStyle = "black";
-    var pos = getPixelPointFromWorldPoint({x:level.hole.body.GetPosition().x,y:level.hole.body.GetPosition().y});
-    contextBack.beginPath();
-    contextBack.arc(pos.x, pos.y, level.hole.radius*PTM, 0, 2 * Math.PI);
-    contextBack.fill();
-    contextBack.stroke();
 
     // Wind
     if(level.obstacles["wind"].length>0){
@@ -1026,7 +1058,6 @@ function playVoidSound(){
 }
 
 function playWaterSound(){
-    console.log("salut")
     waterSound.play();
 }
 

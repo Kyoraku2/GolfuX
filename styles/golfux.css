@@ -121,6 +121,10 @@ u {
 	text-decoration: underline;
 }
 
+.hidden{
+    display: none;
+}
+
 header > img {
 	width: 60vw;
 	margin-top: 7vh;

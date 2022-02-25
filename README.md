@@ -2,7 +2,6 @@
 Projet minigolf, projet de fin de licence
 
 TODO :
-- Update l'affichage des points
 - Ajouter des (vrais) sons
 - Tester beaucoup
 

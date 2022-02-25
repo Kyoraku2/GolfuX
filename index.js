@@ -10,6 +10,7 @@ const NUM_WORLDS = Math.floor(NUM_LEVELS/10);
 var max_lvl = parseInt(localStorage.getItem("level"));
 const MANCHES_MAX = 18;
 
+const TURN_LIMIT = 2;
 var shootSound = new Audio('./sounds/shoot.mp3');
 var bonkSound = new Audio('./sounds/bonk.mp3');
 var bubblegumSound = new Audio('./sounds/sand.mp3');
@@ -322,10 +323,12 @@ let localNbPlayers;
 let localNbManches;
 let localCurrManche = 0;
 let localPlacedBalls = [];
+let localScores = [];
+let localTurns = [];
 
 let impulsionStack = [];
 let replacementStack = [];
-// TODO faire un truc pour que ça affiche la flèche quand c'est un autre joueur qui joue
+
 document.addEventListener("DOMContentLoaded", function() {
     /********* ECOUTEURS INTERFACES *********************/
 
@@ -371,6 +374,11 @@ document.addEventListener("DOMContentLoaded", function() {
     //Menu fin continuer
     document.getElementById("btn-continue").addEventListener('click', function(e){
         golfux.changeLevel(parseInt(golfux.level.num) + 1);
+        if(playType == 1){
+            for(var i=0 ; i<localNbPlayers ; ++i){
+                localTurns[i] = 0;
+            }
+        }
         document.getElementById("end-menu").style.display = "none";
     });
 
@@ -428,6 +436,11 @@ document.addEventListener("DOMContentLoaded", function() {
 
         btnCreateGame.addEventListener("click",function(e){
             var gameName = document.getElementById("nom-partie").value;
+            if(gameName === ""){
+                alert('Merci de renseigner un nom de partie');
+                return
+            }
+            var name = document.getElementById("pseudo").value;
             var isPrivate = document.getElementById("check-private").checked;
             var nbPlayers = document.getElementById("onlineNbPlayer").selectedIndex+2;
             var nbManches = document.getElementById("onlineNbManches").value;
@@ -435,17 +448,19 @@ document.addEventListener("DOMContentLoaded", function() {
             partie.nbPlayers = nbPlayers;
             partie.nbManches = nbManches;
             partie.isPrivate = isPrivate;
-            sock.emit("CreateGame", partie);
+            sock.emit("CreateGame", {partie:partie,name:name});
         });
 
         gameList.addEventListener("click",function(e){
             if(e.target.dataset.id){
-                sock.emit("JoinPublicGame",e.target.dataset.id);
+                var name = document.getElementById("pseudo").value;
+                sock.emit("JoinPublicGame",{id:e.target.dataset.id,name:name});
             }
         });
 
         joinPrivateGame.addEventListener("click",function(e){
-            sock.emit("JoinPrivateGame",document.getElementById("code").value);
+            var name = document.getElementById("pseudo").value;
+            sock.emit("JoinPrivateGame",{code:document.getElementById("code").value,name:name});
         });
 
         sock.on("error",function(msg){
@@ -474,9 +489,9 @@ document.addEventListener("DOMContentLoaded", function() {
         });
 
         sock.on("gameStart",function(obj){
-            console.log(obj.level)
             golfux.changeLevel(1);
             onlineNbPlayer = obj.players;
+            updateLeaderNbPlayers(onlineNbPlayer);
             display_game();
         });
 
@@ -496,11 +511,11 @@ document.addEventListener("DOMContentLoaded", function() {
                     "+ 1000000 social crédits. &#128200;"
                 ];
                 var rand = Math.floor(Math.random() * rigolo_msg.length);
-                console.log(rand);
                 document.querySelector("#end-menu p").innerHTML = rigolo_msg[rand];
                 //TODO : afficher leaderBoard
                 document.getElementById("btn-continue").style.display = "none";
                 msg_display = true;
+                document.getElementById("leaderboard").style.display = "block";
             }
         });
 
@@ -520,7 +535,6 @@ document.addEventListener("DOMContentLoaded", function() {
         });
 
         sock.on("ballShot",function(obj){
-            console.log("shot")
             impulsionStack.push(obj);
         });
 
@@ -540,11 +554,14 @@ document.addEventListener("DOMContentLoaded", function() {
             replacementStack = [];
             setTimeout(function(game,level){
                 game.changeLevel(level);
-                alert("next")
             },1000,golfux,level);
-            
-            
         });
+
+        sock.on("results",function(scores){
+            updateLeaderScores(scores);
+            // TODO : update l'affichage, coté serveur manque les noms et un soucis avec le calcul izou
+        });
+
     });
 
     //Retour
@@ -602,8 +619,10 @@ document.addEventListener("DOMContentLoaded", function() {
         localNbManches = document.getElementById("localNbManches").value;
         for(var i=0 ; i<localNbPlayers ; ++i){
             localPlacedBalls[i] = false;
+            localScores[i] = {name:"Player"+(i+1),score:0};
+            localTurns[i] = 0;
         }
-        console.log(localPlacedBalls);
+        updateLeaderNbPlayers(localNbPlayers);
     });
 
     //Créer partie
@@ -790,6 +809,47 @@ document.addEventListener("DOMContentLoaded", function() {
             document.getElementById("game-list").appendChild(btn);
         }
     }
+
+    function updateLeaderNbPlayers(nbPlayers){
+        if(nbPlayers < 0 || nbPlayers > 4){
+            return false;
+        }
+        var leaderBoard = document.getElementById("leaderboard");
+        for(var i = 0, l = leaderBoard.children[1].children.length ; i < l ; ++i){
+            leaderBoard.children[1].children[i].classList.remove("hidden");
+        }
+        for(var i = nbPlayers, l = leaderBoard.children[1].children.length ; i < l ; ++i){
+            leaderBoard.children[1].children[i].classList.add("hidden");
+        }
+        return true;
+    }
 });
+
+function updateLeaderScores(scores){
+    var leaderBoard = document.getElementById("leaderboard");
+    var sorted = [];
+    for(var i = 0, l = Object.keys(scores).length ; i < l ; ++i){
+        sorted.push(scores[i]);
+    }
+    sorted.sort((a, b) => a.score - b.score);
+    console.log(scores);
+    console.log(sorted)
+    for(var i = 0, l = sorted.length ; i < l ; ++i){
+        switch(i){
+            case 0:
+                leaderBoard.children[1].children[i].innerHTML = "<li>&#129351; "+sorted[i].name+" : "+sorted[i].score+"&nbsp;pts</li>";
+                break;
+            case 1:
+                leaderBoard.children[1].children[i].innerHTML = "<li>&#129352; "+sorted[i].name+" : "+sorted[i].score+"&nbsp;pts</li>";
+                break;
+            case 2:
+                leaderBoard.children[1].children[i].innerHTML = "<li>&#129353; "+sorted[i].name+" : "+sorted[i].score+"&nbsp;pts</li>";
+                break;
+            case 3:
+                leaderBoard.children[1].children[i].innerHTML = "<li>&#127851; "+sorted[i].name+" : "+sorted[i].score+"&nbsp;pts</li>";
+                break;
+        }
+    }
+}
 
 
