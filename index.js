@@ -10,6 +10,17 @@ const NUM_WORLDS = Math.floor(NUM_LEVELS/10);
 var max_lvl = parseInt(localStorage.getItem("level"));
 const MANCHES_MAX = 18;
 
+const TURN_LIMIT = 2;
+var shootSound = new Audio('./sounds/shoot.mp3');
+var bonkSound = new Audio('./sounds/bonk.mp3');
+var bubblegumSound = new Audio('./sounds/sand.mp3');
+var portalSound = new Audio('./sounds/sand.mp3');
+var sandSound = new Audio('./sounds/sand.mp3');
+var voidSound = new Audio('./sounds/lava.mp3');
+var waterSound = new Audio('./sounds/water.mp3');
+var windSound = new Audio('./sounds/sand.mp3');
+var holeSound = new Audio('./sounds/hole.mp3');
+
 var world = null;
 var canvas;
 var context;
@@ -307,142 +318,18 @@ let ballPlaced = false;
 let sock;
 let ballIndex = null;
 let currentBall = null;
+let onlineNbPlayer;
 let localNbPlayers;
 let localNbManches;
 let localCurrManche = 0;
 let localPlacedBalls = [];
+let localScores = [];
+let localTurns = [];
 
 let impulsionStack = [];
 let replacementStack = [];
-// TODO faire un truc pour que ça affiche la flèche quand c'est un autre joueur qui joue
+
 document.addEventListener("DOMContentLoaded", function() {
-    /***************** Partie serveur  *******************/
-    sock = io.connect();
-
-    let partie = { 
-        name:null,
-        nbPlayers: null,
-        nbManches: null,
-        code: null,
-        isPrivate: null
-    };
-
-    var btnCreateGame = document.getElementById("createGame");
-    var joinPrivateGame = document.getElementById("btn-join-code");
-    var gameList = document.getElementById("game-list");
-
-    btnCreateGame.addEventListener("click",function(e){
-        var gameName = document.getElementById("nom-partie").value;
-        var isPrivate = document.getElementById("check-private").checked;
-        var nbPlayers = document.getElementById("onlineNbPlayer").selectedIndex+2;
-        var nbManches = document.getElementById("onlineNbManches").value;
-        partie.name = gameName;
-        partie.nbPlayers = nbPlayers;
-        partie.nbManches = nbManches;
-        partie.isPrivate = isPrivate;
-        sock.emit("CreateGame", partie);
-    });
-
-    gameList.addEventListener("click",function(e){
-        if(e.target.dataset.id){
-            sock.emit("JoinPublicGame",e.target.dataset.id);
-        }
-    });
-
-    joinPrivateGame.addEventListener("click",function(e){
-        sock.emit("JoinPrivateGame",document.getElementById("code").value);
-    });
-
-    sock.on("error",function(msg){
-        alert(msg.message);
-    });
-
-    sock.on("gameList",function(list){
-        create_game_list(list);
-    });
-
-    sock.on("waiting",function(game){
-        display_waiting_room(game);
-    });
-
-    sock.on("playerJoined",function(game){
-        display_waiting_room(game);
-    });
-
-    sock.on("canForceStart",function(){
-        document.getElementById("forceStartOnline").classList.add("unlock");
-    });
-
-    sock.on("gameStart",function(level){
-        console.log(level)
-        golfux.changeLevel(level);
-        display_game();
-    });
-
-    sock.on("endGame",function(obj){
-        document.getElementById("end-menu").style.display = "block";
-        if (msg_display == false) {
-            var rigolo_msg = [
-                "Bien joué <em>Little Player</em> ! Un jour tu deviendras plus grand... &#128170;",
-                "Peut mieux faire... Non non je ne juge pas. &#128064;",
-                "Mouais après le niveau était simple nan ? &#129300;",
-                "Le <em>TrophuX</em> est à portée de main ! &#129351;",
-                "Sans doûte un niveau de petit joueur ! &#128526;",
-                "Trop lent à finir ce niveau : pire que Jube et ses copies... &#128195;",
-                "C'est une première étape, mais il reste encore beaucoup de chemin à faire... &#128579;",
-                "Brillant ! Autant de talent, beauté et intelligence que ceux qui ont conçu le jeu. &#129321;",
-                "Quelle magnifique performance ! Seul un jeu en JavaScript peut nous apporter ça. &#129394;",
-                "+ 1000000 social crédits. &#128200;"
-            ];
-            var rand = Math.floor(Math.random() * rigolo_msg.length);
-            console.log(rand);
-            document.querySelector("#end-menu p").innerHTML = rigolo_msg[rand];
-            //TODO : afficher leaderBoard
-            document.getElementById("btn-continue").style.display = "none";
-            msg_display = true;
-        }
-    });
-
-    sock.on("yourTurn",function(index){
-        ballIndex = index;
-        alert("Your turn");
-    });
-
-    sock.on("notYourTurn",function(){
-        ballIndex = null;
-    });
-
-    sock.on("isPlaying",function(id){
-        currentBall = id;
-    });
-
-    sock.on("ballShot",function(obj){
-        console.log("shot")
-        impulsionStack.push(obj);
-    });
-
-    sock.on("ballPlaced",function(obj){
-        golfux.balls[obj.index] = new Ball(new b2Vec2(obj.pos.x, obj.pos.y), obj.index);
-    });
-
-    sock.on("ballShotFinalPos",function(positions){
-        replacementStack.push(positions);
-    });
-
-    sock.on("nextManche",function(level){
-        ballPlaced = false;
-        ballIndex = null;
-        currentBall = null;
-        impulsionStack = [];
-        replacementStack = [];
-        setTimeout(function(game,level){
-            game.changeLevel(level);
-            alert("next")
-        },1000,golfux,level);
-        
-        
-    });
-    
     /********* ECOUTEURS INTERFACES *********************/
 
     //Création levels dynamiques
@@ -479,9 +366,19 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
+    //Recommencer
+    document.getElementById("restart-game").addEventListener('click', function(e){
+        golfux.changeLevel(parseInt(golfux.level.num));
+    });
+
     //Menu fin continuer
     document.getElementById("btn-continue").addEventListener('click', function(e){
         golfux.changeLevel(parseInt(golfux.level.num) + 1);
+        if(playType == 1){
+            for(var i=0 ; i<localNbPlayers ; ++i){
+                localTurns[i] = 0;
+            }
+        }
         document.getElementById("end-menu").style.display = "none";
     });
 
@@ -495,6 +392,18 @@ document.addEventListener("DOMContentLoaded", function() {
             window.location.reload();
         });
     }
+
+    //Leaderboard
+    document.getElementById("btn-leaderboard").addEventListener('click', function(e){
+        document.getElementById("game-interface").style.display = "none";
+        document.getElementById("leaderboard").style.display = "block";
+    });
+
+    //Close leaderboard
+    document.getElementById("close-leaderboard").addEventListener('click', function(e){
+        document.getElementById("game-interface").style.display = "block";
+        document.getElementById("leaderboard").style.display = "none";
+    });
 
     //Multi Local
     document.getElementById("btn-multi-local").addEventListener('click', function(e){
@@ -510,6 +419,149 @@ document.addEventListener("DOMContentLoaded", function() {
         display_title(false);
         document.getElementById("multi-online").style.display = "block";
         playType = 2;
+        /***************** Partie serveur  *******************/
+        sock = io.connect();
+
+        let partie = { 
+            name:null,
+            nbPlayers: null,
+            nbManches: null,
+            code: null,
+            isPrivate: null
+        };
+
+        var btnCreateGame = document.getElementById("createGame");
+        var joinPrivateGame = document.getElementById("btn-join-code");
+        var gameList = document.getElementById("game-list");
+
+        btnCreateGame.addEventListener("click",function(e){
+            var gameName = document.getElementById("nom-partie").value;
+            if(gameName === ""){
+                alert('Merci de renseigner un nom de partie');
+                return
+            }
+            var name = document.getElementById("pseudo").value;
+            var isPrivate = document.getElementById("check-private").checked;
+            var nbPlayers = document.getElementById("onlineNbPlayer").selectedIndex+2;
+            var nbManches = document.getElementById("onlineNbManches").value;
+            partie.name = gameName;
+            partie.nbPlayers = nbPlayers;
+            partie.nbManches = nbManches;
+            partie.isPrivate = isPrivate;
+            sock.emit("CreateGame", {partie:partie,name:name});
+        });
+
+        gameList.addEventListener("click",function(e){
+            if(e.target.dataset.id){
+                var name = document.getElementById("pseudo").value;
+                sock.emit("JoinPublicGame",{id:e.target.dataset.id,name:name});
+            }
+        });
+
+        joinPrivateGame.addEventListener("click",function(e){
+            var name = document.getElementById("pseudo").value;
+            sock.emit("JoinPrivateGame",{code:document.getElementById("code").value,name:name});
+        });
+
+        sock.on("error",function(msg){
+            alert(msg.message);
+        });
+
+        sock.on("gameList",function(list){
+            create_game_list(list);
+        });
+
+        sock.on("waiting",function(game){
+            display_waiting_room(game);
+        });
+
+        sock.on("playerJoined",function(game){
+            alert("update");
+            display_waiting_room(game);
+        });
+
+        sock.on("canForceStart",function(){
+            document.getElementById("forceStartOnline").classList.add("unlock");
+        });
+        
+        sock.on("unableForceStart",function(){
+            document.getElementById("forceStartOnline").classList.remove("unlock");
+        });
+
+        sock.on("gameStart",function(obj){
+            golfux.changeLevel(1);
+            onlineNbPlayer = obj.players;
+            updateLeaderNbPlayers(onlineNbPlayer);
+            display_game();
+        });
+
+        sock.on("endGame",function(obj){
+            document.getElementById("end-menu").style.display = "block";
+            if (msg_display == false) {
+                var rigolo_msg = [
+                    "Bien joué <em>Little Player</em> ! Un jour tu deviendras plus grand... &#128170;",
+                    "Peut mieux faire... Non non je ne juge pas. &#128064;",
+                    "Mouais après le niveau était simple nan ? &#129300;",
+                    "Le <em>TrophuX</em> est à portée de main ! &#129351;",
+                    "Sans doûte un niveau de petit joueur ! &#128526;",
+                    "Trop lent à finir ce niveau : pire que Jube et ses copies... &#128195;",
+                    "C'est une première étape, mais il reste encore beaucoup de chemin à faire... &#128579;",
+                    "Brillant ! Autant de talent, beauté et intelligence que ceux qui ont conçu le jeu. &#129321;",
+                    "Quelle magnifique performance ! Seul un jeu en JavaScript peut nous apporter ça. &#129394;",
+                    "+ 1000000 social crédits. &#128200;"
+                ];
+                var rand = Math.floor(Math.random() * rigolo_msg.length);
+                document.querySelector("#end-menu p").innerHTML = rigolo_msg[rand];
+                //TODO : afficher leaderBoard
+                document.getElementById("btn-continue").style.display = "none";
+                msg_display = true;
+                document.getElementById("leaderboard").style.display = "block";
+            }
+        });
+
+        sock.on("yourTurn",function(index){
+            ballIndex = index;
+            alert("Your turn");
+        });
+
+        sock.on("notYourTurn",function(){
+            ballIndex = null;
+            golfux.click_down=null;
+            golfux.click_up=null;
+        });
+
+        sock.on("isPlaying",function(id){
+            currentBall = id;
+        });
+
+        sock.on("ballShot",function(obj){
+            impulsionStack.push(obj);
+        });
+
+        sock.on("ballPlaced",function(obj){
+            golfux.balls[obj.index] = new Ball(new b2Vec2(obj.pos.x, obj.pos.y), obj.index);
+        });
+
+        sock.on("ballShotFinalPos",function(positions){
+            replacementStack.push(positions);
+        });
+
+        sock.on("nextManche",function(level){
+            ballPlaced = false;
+            ballIndex = null;
+            currentBall = null;
+            impulsionStack = [];
+            replacementStack = [];
+            setTimeout(function(game,level){
+                game.changeLevel(level);
+            },1000,golfux,level);
+        });
+
+        sock.on("results",function(scores){
+            updateLeaderScores(scores);
+            // TODO : update l'affichage, coté serveur manque les noms et un soucis avec le calcul izou
+        });
+
     });
 
     //Retour
@@ -536,6 +588,8 @@ document.addEventListener("DOMContentLoaded", function() {
     document.getElementById("btn-room-quit").addEventListener('click', function(e){
         if (confirm("Voulez-vous quitter cette partie en cours ?")) {
             display_retour_online();
+            sock.emit("leaveRoom");
+            document.querySelector("time").innerHTML = 0;
         }
     });
 
@@ -550,6 +604,9 @@ document.addEventListener("DOMContentLoaded", function() {
                     }else{
                         display_game();
                     }
+                    if (playType != 0) {
+                        document.getElementById("restart-game").style.display = "none";
+                    }
                 }
             }else{
                 alert("Vous ne pouvez pas commencer la partie pour le moment.");
@@ -562,8 +619,10 @@ document.addEventListener("DOMContentLoaded", function() {
         localNbManches = document.getElementById("localNbManches").value;
         for(var i=0 ; i<localNbPlayers ; ++i){
             localPlacedBalls[i] = false;
+            localScores[i] = {name:"Player"+(i+1),score:0};
+            localTurns[i] = 0;
         }
-        console.log(localPlacedBalls);
+        updateLeaderNbPlayers(localNbPlayers);
     });
 
     //Créer partie
@@ -750,6 +809,47 @@ document.addEventListener("DOMContentLoaded", function() {
             document.getElementById("game-list").appendChild(btn);
         }
     }
+
+    function updateLeaderNbPlayers(nbPlayers){
+        if(nbPlayers < 0 || nbPlayers > 4){
+            return false;
+        }
+        var leaderBoard = document.getElementById("leaderboard");
+        for(var i = 0, l = leaderBoard.children[1].children.length ; i < l ; ++i){
+            leaderBoard.children[1].children[i].classList.remove("hidden");
+        }
+        for(var i = nbPlayers, l = leaderBoard.children[1].children.length ; i < l ; ++i){
+            leaderBoard.children[1].children[i].classList.add("hidden");
+        }
+        return true;
+    }
 });
+
+function updateLeaderScores(scores){
+    var leaderBoard = document.getElementById("leaderboard");
+    var sorted = [];
+    for(var i = 0, l = Object.keys(scores).length ; i < l ; ++i){
+        sorted.push(scores[i]);
+    }
+    sorted.sort((a, b) => a.score - b.score);
+    console.log(scores);
+    console.log(sorted)
+    for(var i = 0, l = sorted.length ; i < l ; ++i){
+        switch(i){
+            case 0:
+                leaderBoard.children[1].children[i].innerHTML = "<li>&#129351; "+sorted[i].name+" : "+sorted[i].score+"&nbsp;pts</li>";
+                break;
+            case 1:
+                leaderBoard.children[1].children[i].innerHTML = "<li>&#129352; "+sorted[i].name+" : "+sorted[i].score+"&nbsp;pts</li>";
+                break;
+            case 2:
+                leaderBoard.children[1].children[i].innerHTML = "<li>&#129353; "+sorted[i].name+" : "+sorted[i].score+"&nbsp;pts</li>";
+                break;
+            case 3:
+                leaderBoard.children[1].children[i].innerHTML = "<li>&#127851; "+sorted[i].name+" : "+sorted[i].score+"&nbsp;pts</li>";
+                break;
+        }
+    }
+}
 
 

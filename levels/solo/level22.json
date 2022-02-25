@@ -1,10 +1,9 @@
 {
-    "backgroundColor":"rgb(0,153,0)",
     "obstacles":{
         "spawn":[
             {
-                "middle_pos":{"x":7.5, "y":3},
-                "heightWidth" : {"width": 5, "height":1}
+                "middle_pos":{"x":11.5, "y":2.5},
+                "heightWidth" : {"width": 10, "height":1}
             }
         ],
         "wall":[
@@ -31,87 +30,81 @@
                 "shape": "box",
                 "heightWidth" : {"width": 0.25, "height":15.75},
                 "angle":0
-            },
+            }
+        ],
+        "ice":[
             {
-                "middle_pos":{"x":8, "y":24.5},
+                "middle_pos":{"x":11.5, "y":20},
                 "shape": "box",
-                "heightWidth" : {"width": 0.25, "height":4.5},
+                "heightWidth" : {"width": 11.5, "height":15},
                 "angle":0
             }
         ],
         "water":[
             {
-                "middle_pos":{"x":20.5, "y":3.5},
+                "middle_pos":{"x":11.5, "y":30},
                 "shape": "box",
-                "heightWidth" : {"width": 2.5, "height":3.5},
+                "heightWidth" : {"width": 11.5, "height":2},
                 "angle":0
             },
             {
-                "middle_pos":{"x":21.5, "y":29},
-                "shape": "box",
-                "heightWidth" : {"width": 1.5, "height":6},
-                "angle":0
-            },
-            {
-                "middle_pos":{"x":6.5, "y":15},
-                "shape": "circle",
-                "heightWidth" : {"width": 2.5, "height":1.5},
-                "radius": 5.5
-            },
-            {
-                "middle_pos":{"x":20, "y":25},
-                "shape": "circle",
-                "heightWidth" : {"width": 2.5, "height":1.5},
-                "radius": 3
-            },
-            {
-                "middle_pos":{"x":19, "y":4},
+                "middle_pos":{"x":8, "y":15},
                 "shape": "circle",
                 "heightWidth" : {"width": 2.5, "height":1.5},
                 "radius": 4
             },
             {
-                "middle_pos":{"x":12, "y":19},
-                "shape": "circle",
-                "heightWidth" : {"width": 2.5, "height":1.5},
-                "radius": 4
-            },
-            {
-                "middle_pos":{"x":14, "y":14},
+                "middle_pos":{"x":20, "y":10},
                 "shape": "circle",
                 "heightWidth" : {"width": 2.5, "height":1.5},
                 "radius": 3
-            },
-            {
-                "middle_pos":{"x":21, "y":29},
-                "shape": "circle",
-                "heightWidth" : {"width": 2.5, "height":1.5},
-                "radius": 2
-            },
-            {
-                "middle_pos":{"x":21, "y":22},
-                "shape": "circle",
-                "heightWidth" : {"width": 2.5, "height":1.5},
-                "radius": 2
-            },
-            {
-                "middle_pos":{"x":11, "y":11},
-                "shape": "circle",
-                "heightWidth" : {"width": 2.5, "height":1.5},
-                "radius": 2
             },
             {
                 "middle_pos":{"x":21, "y":8},
                 "shape": "circle",
                 "heightWidth" : {"width": 2.5, "height":1.5},
                 "radius": 2
+            },
+            {
+                "middle_pos":{"x":21, "y":13},
+                "shape": "circle",
+                "heightWidth" : {"width": 2.5, "height":1.5},
+                "radius": 2
+            },
+            {
+                "middle_pos":{"x":18, "y":23},
+                "shape": "circle",
+                "heightWidth" : {"width": 2.5, "height":1.5},
+                "radius": 3
+            },
+            {
+                "middle_pos":{"x":21, "y":23},
+                "shape": "circle",
+                "heightWidth" : {"width": 2.5, "height":1.5},
+                "radius": 2
+            },
+            {
+                "middle_pos":{"x":8, "y":11},
+                "shape": "circle",
+                "heightWidth" : {"width": 2.5, "height":1.5},
+                "radius": 2
+            },
+            {
+                "middle_pos":{"x":11, "y":18},
+                "shape": "circle",
+                "heightWidth" : {"width": 2.5, "height":1.5},
+                "radius": 2
+            },
+            {
+                "middle_pos":{"x":7, "y":20},
+                "shape": "circle",
+                "heightWidth" : {"width": 2.5, "height":1.5},
+                "radius": 3
             }
         ]
     },
-    "holes":[
-        {
-            "pos":{"x":11.5, "y":28},
-            "radius":0.5
-        }
-    ]
+    "hole":{
+        "pos":{"x":11.5, "y":26},
+        "radius":0.5
+    }
 }

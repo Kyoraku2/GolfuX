@@ -1,0 +1,260 @@
+{
+    "backgroundColor":"rgb(0,153,0)",
+    "obstacles":{
+        "wall":[
+            {
+                "middle_pos":{"x":11.5, "y":-0.5},
+                "shape": "box",
+                "heightWidth" : {"width": 11.75, "height":0.25},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":11.5, "y":31},
+                "shape": "box",
+                "heightWidth" : {"width": 11.5, "height":0.25},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":-0.25, "y":15.5},
+                "shape": "box",
+                "heightWidth" : {"width": 0.25, "height":16.25},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":23, "y":15.5},
+                "shape": "box",
+                "heightWidth" : {"width": 0.25, "height":15.75},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":18, "y":15},
+                "shape": "box",
+                "heightWidth" : {"width": 0.5, "height":10.5},
+                "angle":0
+            }
+        ],
+        "sand":[
+            {
+                "middle_pos":{"x":8.5, "y":14.5},
+                "shape": "box",
+                "heightWidth" : {"width": 9, "height":9.5},
+                "angle":0
+            }
+        ],
+        "bubblegum":[
+            {
+                "middle_pos":{"x":20.25, "y":15},
+                "shape": "box",
+                "heightWidth" : {"width": 2.5, "height":10},
+                "angle":0
+            }
+        ],
+        "void":[
+            {
+                "middle_pos":{"x":1, "y":29},
+                "shape": "circle",
+                "isstatic":true,
+                "radius": 2.5
+            },
+            {
+                "middle_pos":{"x":4, "y":31},
+                "shape": "circle",
+                "isstatic":true,
+                "radius": 2.5
+            },
+            {
+                "middle_pos":{"x":6, "y":31},
+                "shape": "circle",
+                "isstatic":true,
+                "radius": 2.5
+            },
+            {
+                "middle_pos":{"x":8, "y":30},
+                "shape": "circle",
+                "isstatic":true,
+                "radius": 2.5
+            },
+            {
+                "middle_pos":{"x":10, "y":29},
+                "shape": "circle",
+                "isstatic":true,
+                "radius": 2.5
+            },
+            {
+                "middle_pos":{"x":13, "y":31},
+                "shape": "circle",
+                "isstatic":true,
+                "radius": 2.5
+            },
+            {
+                "middle_pos":{"x":0.5, "y":26},
+                "shape": "circle",
+                "isstatic":true,
+                "radius": 2.5
+            },
+            {
+                "middle_pos":{"x":2.25, "y":23},
+                "shape": "circle",
+                "isstatic":true,
+                "radius": 2.5
+            },
+            {
+                "middle_pos":{"x":2.25, "y":13},
+                "shape": "box",
+                "heightWidth" : {"width": 2.5, "height":10},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":2.25, "y":3},
+                "shape": "circle",
+                "isstatic":true,
+                "radius": 2.5
+            },
+            {
+                "middle_pos":{"x":15, "y":8},
+                "shape": "circle",
+                "isstatic":true,
+                "radius": 2.5
+            },
+            {
+                "middle_pos":{"x":15, "y":9},
+                "shape": "circle",
+                "isstatic":true,
+                "radius": 2.5
+            },
+            {
+                "middle_pos":{"x":15, "y":10},
+                "shape": "circle",
+                "isstatic":true,
+                "radius": 2.5
+            },
+            {
+                "middle_pos":{"x":15, "y":11},
+                "shape": "circle",
+                "isstatic":true,
+                "radius": 2.5
+            },
+            {
+                "middle_pos":{"x":15, "y":12},
+                "shape": "circle",
+                "isstatic":true,
+                "radius": 2.5
+            },
+            {
+                "middle_pos":{"x":15, "y":13},
+                "shape": "circle",
+                "isstatic":true,
+                "radius": 2.5
+            },
+            {
+                "middle_pos":{"x":15, "y":14},
+                "shape": "circle",
+                "isstatic":true,
+                "radius": 2.5
+            },
+            {
+                "middle_pos":{"x":15, "y":15},
+                "shape": "circle",
+                "isstatic":true,
+                "radius": 2.5
+            },
+            {
+                "middle_pos":{"x":15, "y":16},
+                "shape": "circle",
+                "isstatic":true,
+                "radius": 2.5
+            },
+            {
+                "middle_pos":{"x":15, "y":17},
+                "shape": "circle",
+                "isstatic":true,
+                "radius": 2.5
+            },
+            {
+                "middle_pos":{"x":15, "y":18},
+                "shape": "circle",
+                "isstatic":true,
+                "radius": 2.5
+            },
+            {
+                "middle_pos":{"x":15, "y":19},
+                "shape": "circle",
+                "isstatic":true,
+                "radius": 2.5
+            },
+            {
+                "middle_pos":{"x":15, "y":20},
+                "shape": "circle",
+                "isstatic":true,
+                "radius": 2.5
+            },
+            {
+                "middle_pos":{"x":15, "y":21},
+                "shape": "circle",
+                "isstatic":true,
+                "radius": 2.5
+            },
+            {
+                "middle_pos":{"x":15, "y":22},
+                "shape": "circle",
+                "isstatic":true,
+                "radius": 2.5
+            },
+            {
+                "middle_pos":{"x":17, "y":23.5},
+                "shape": "circle",
+                "isstatic":true,
+                "radius": 1
+            },
+            {
+                "middle_pos":{"x":14, "y":11},
+                "shape": "circle",
+                "isstatic":true,
+                "radius": 2.5
+            },
+            {
+                "middle_pos":{"x":13, "y":13},
+                "shape": "circle",
+                "isstatic":true,
+                "radius": 2.5
+            },
+            {
+                "middle_pos":{"x":14, "y":15},
+                "shape": "circle",
+                "isstatic":true,
+                "radius": 2.5
+            },
+            {
+                "middle_pos":{"x":14, "y":16},
+                "shape": "circle",
+                "isstatic":true,
+                "radius": 2.5
+            },
+            {
+                "middle_pos":{"x":13, "y":18},
+                "shape": "circle",
+                "isstatic":true,
+                "radius": 2.5
+            },
+            {
+                "middle_pos":{"x":14, "y":20},
+                "shape": "circle",
+                "isstatic":true,
+                "radius": 2.5
+            }
+
+        ],
+        "spawn":[
+            {
+                "middle_pos":{"x":11.5, "y":1},
+                "heightWidth" : {"width": 6, "height":1}
+            }
+        ]
+    },
+    "holes":[
+        {
+            "pos":{"x":4, "y":27},
+            "radius":0.5
+        }
+    ]
+}

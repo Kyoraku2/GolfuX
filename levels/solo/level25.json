@@ -1,9 +1,8 @@
 {
-    "backgroundColor":"rgb(0,153,0)",
     "obstacles":{
         "spawn":[
             {
-                "middle_pos":{"x":3, "y":2.5},
+                "middle_pos":{"x":3, "y":5},
                 "heightWidth" : {"width": 1.5, "height":1}
             }
         ],
@@ -33,136 +32,145 @@
                 "angle":0
             },
             {
-                "middle_pos":{"x":8, "y":5},
+                "middle_pos":{"x":0, "y":0},
+                "shape": "polygon",
+                "vectrices":[
+                    {"x":8.5, "y":5},
+                    {"x":14.5, "y":5},
+                    {"x":11.5, "y":8}
+                ]
+            },
+            {
+                "middle_pos":{"x":11.5, "y":16},
                 "shape": "box",
-                "heightWidth" : {"width": 8, "height":0.25},
+                "heightWidth" : {"width": 0.25, "height":11},
                 "angle":0
             },
             {
-                "middle_pos":{"x":21, "y":5},
+                "middle_pos":{"x":16, "y":17},
                 "shape": "box",
-                "heightWidth" : {"width": 2, "height":0.25},
+                "heightWidth" : {"width": 4.5, "height":0.25},
                 "angle":0
             },
             {
-                "middle_pos":{"x":15.75, "y":12},
+                "middle_pos":{"x":16, "y":13},
                 "shape": "box",
-                "heightWidth" : {"width": 0.25, "height":7},
-                "angle":0
-            },
-            {
-                "middle_pos":{"x":19.25, "y":15},
-                "shape": "box",
-                "heightWidth" : {"width": 0.25, "height":10},
-                "angle":0
-            },
-            {
-                "middle_pos":{"x":14, "y":25},
-                "shape": "box",
-                "heightWidth" : {"width": 9, "height":0.25},
-                "angle":0
-            },
-            {
-                "middle_pos":{"x":5, "y":18.25},
-                "shape": "box",
-                "heightWidth" : {"width": 0.25, "height":7},
-                "angle":0
-            },
-            {
-                "middle_pos":{"x":5, "y":29.5},
-                "shape": "box",
-                "heightWidth" : {"width": 0.25, "height":1.5},
+                "heightWidth" : {"width": 4.5, "height":0.25},
                 "angle":0
             }
         ],
         "water":[
             {
-                "middle_pos":{"x":21.5, "y":2.5},
+                "middle_pos":{"x":11.5, "y":30},
                 "shape": "box",
-                "heightWidth" : {"width": 1.5, "height":2.5},
+                "heightWidth" : {"width": 11.5, "height":1},
                 "angle":0
-            },
+            }
+        ],
+        "ice":[
             {
-                "middle_pos":{"x":21, "y":28},
+                "middle_pos":{"x":11.5, "y":27},
                 "shape": "box",
-                "heightWidth" : {"width": 2, "height":3},
+                "heightWidth" : {"width": 11.5, "height":3},
                 "angle":0
-            },
+            }
+        ],
+        "bubblegum":[
             {
-                "middle_pos":{"x":12, "y":23.5},
+                "middle_pos":{"x":11.5, "y":2.5},
                 "shape": "box",
-                "heightWidth" : {"width": 7, "height":1.5},
-                "angle":0
-            },
-            {
-                "middle_pos":{"x":8, "y":6.5},
-                "shape": "box",
-                "heightWidth" : {"width": 8, "height":1.5},
-                "angle":0
-            },
-            {
-                "middle_pos":{"x":2.5, "y":30},
-                "shape": "box",
-                "heightWidth" : {"width": 2.5, "height":1.5},
+                "heightWidth" : {"width": 3, "height":2.5},
                 "angle":0
             }
         ],
         "bumper":[
             {
-                "middle_pos":{"x":10.5, "y":17},
+                "middle_pos":{"x":8, "y":18},
                 "shape": "circle",
                 "isstatic":true,
                 "heightWidth" : {"width": 2.5, "height":1.5},
                 "radius": 0.75
             },
             {
-                "middle_pos":{"x":8, "y":13},
+                "middle_pos":{"x":3, "y":18},
                 "shape": "circle",
                 "isstatic":true,
                 "heightWidth" : {"width": 2.5, "height":1.5},
                 "radius": 0.75
             },
             {
-                "middle_pos":{"x":13, "y":13},
+                "middle_pos":{"x":8, "y":12},
                 "shape": "circle",
                 "isstatic":true,
                 "heightWidth" : {"width": 2.5, "height":1.5},
                 "radius": 0.75
             },
             {
-                "middle_pos":{"x":3.5, "y":15},
+                "middle_pos":{"x":3, "y":12},
                 "shape": "circle",
                 "isstatic":true,
                 "heightWidth" : {"width": 2.5, "height":1.5},
                 "radius": 0.75
             },
             {
-                "middle_pos":{"x":1.5, "y":19},
+                "middle_pos":{"x":5.5, "y":15},
                 "shape": "circle",
                 "isstatic":true,
                 "heightWidth" : {"width": 2.5, "height":1.5},
                 "radius": 0.75
             },
             {
-                "middle_pos":{"x":3.5, "y":23},
+                "middle_pos":{"x":17, "y":2.5},
                 "shape": "circle",
                 "isstatic":true,
                 "heightWidth" : {"width": 2.5, "height":1.5},
                 "radius": 0.75
             },
             {
-                "middle_pos":{"x":13, "y":28},
+                "middle_pos":{"x":17, "y":6.5},
+                "shape": "circle",
+                "isstatic":true,
+                "heightWidth" : {"width": 2.5, "height":1.5},
+                "radius": 0.75
+            },
+            {
+                "middle_pos":{"x":20.5, "y":4.5},
+                "shape": "circle",
+                "isstatic":true,
+                "heightWidth" : {"width": 2.5, "height":1.5},
+                "radius": 0.75
+            },
+            {
+                "middle_pos":{"x":20.5, "y":8.5},
                 "shape": "circle",
                 "isstatic":true,
                 "heightWidth" : {"width": 2.5, "height":1.5},
                 "radius": 0.75
             }
+        ],
+        "wind":[
+            {
+                "middle_pos":{"x":11.5, "y":28},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":1, "y":0}
+            },
+            {
+                "middle_pos":{"x":10, "y":28},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":1, "y":0}
+            },
+            {
+                "middle_pos":{"x":13, "y":28},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":1, "y":0}
+            }
         ]
     },
-    "holes":[
-        {
-            "pos":{"x":16, "y":28},
-            "radius":0.5
-        }
-    ]
+    "hole":{
+        "pos":{"x":14, "y":15},
+        "radius":0.5
+    }
 }
