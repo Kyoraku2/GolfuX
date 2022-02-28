@@ -36,7 +36,7 @@ let games = {};
 let counter = 0;
 let bMinLevels = 1; // TODO : à changer quand on ajoute/supprime des niveaux
 let bMaxLevels = 10;
-const TURN_LIMIT = 2;
+const TURN_LIMIT = 12;
 
 function createPassword(){
     var alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");

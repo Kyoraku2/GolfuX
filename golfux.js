@@ -392,6 +392,9 @@ Golfux.prototype.onTouchMove = function(canvas, evt) {
 }
 
 Golfux.prototype.onMouseDown = function(canvas, evt) {
+    if(stopMovements){
+        return;
+    }
     if(playType===2 && (this.balls.length == 0 || !ballPlaced || ballIndex === null || impulsionStack.length>0 || !allStopped || waitReplacement || (currentBall>=0 && this.balls[currentBall] && this.balls[currentBall].shot))){
         return;
     }
@@ -465,7 +468,6 @@ Golfux.prototype.onMouseUp = function(canvas, evt) {
     if(playType === 1){
         localScores[ballIndex].score++;
         localTurns[ballIndex]++;
-        // TODO : update here learderboard
         updateLeaderScores(localScores);
     }
     this.click_up=null;
@@ -473,6 +475,9 @@ Golfux.prototype.onMouseUp = function(canvas, evt) {
 }
 
 Golfux.prototype.onTouchDown = function(canvas, evt) {
+    if(stopMovements){
+        return;
+    }
     if(playType===2 && (this.click_down !== null || this.balls.length == 0 || !ballPlaced || ballIndex === null || impulsionStack.length>0 || !allStopped || waitReplacement || (currentBall>=0 && this.balls[currentBall] && this.balls[currentBall].shot))){
         return;
     }
@@ -543,6 +548,11 @@ Golfux.prototype.onTouchUp = function(canvas, evt) {
         sock.emit("shoot",{x:impulse.x*INTENSIFIE, y:impulse.y*INTENSIFIE});
         ballIndex=undefined;
     }
+    if(playType === 1){
+        localScores[ballIndex].score++;
+        localTurns[ballIndex]++;
+        updateLeaderScores(localScores);
+    }
     this.click_up=null;
     this.click_down=null;
 }
@@ -551,7 +561,7 @@ Golfux.prototype.step = function(){
     if(this.level.holes === undefined || this.level.holes.length === 0){
         return;
     }
-    
+
     var endLevel = true;
     updateBackground(this.level);
 
@@ -692,6 +702,7 @@ Golfux.prototype.step = function(){
             }
             //this.changeLevel(parseInt(this.level.num) + 1);
             document.getElementById("leaderboard").style.display = "block";
+            stopMovements = true;
             return;
         }
     }

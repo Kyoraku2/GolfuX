@@ -10,7 +10,8 @@ const NUM_WORLDS = Math.floor(NUM_LEVELS/10);
 var max_lvl = parseInt(localStorage.getItem("level"));
 const MANCHES_MAX = 18;
 
-const TURN_LIMIT = 2;
+var stopMovements = false;
+const TURN_LIMIT = 12;
 var shootSound = new Audio('./sounds/shoot.mp3');
 var bonkSound = new Audio('./sounds/bonk.mp3');
 var bubblegumSound = new Audio('./sounds/sand.mp3');
@@ -378,6 +379,7 @@ document.addEventListener("DOMContentLoaded", function() {
             for(var i=0 ; i<localNbPlayers ; ++i){
                 localTurns[i] = 0;
             }
+            stopMovements = false;
         }
         document.getElementById("end-menu").style.display = "none";
     });
@@ -497,6 +499,7 @@ document.addEventListener("DOMContentLoaded", function() {
         });
 
         sock.on("endGame",function(obj){
+            stopMovements = true;
             document.getElementById("end-menu").style.display = "block";
             if (msg_display == false) {
                 var rigolo_msg = [
@@ -836,16 +839,16 @@ function updateLeaderScores(scores){
     for(var i = 0, l = sorted.length ; i < l ; ++i){
         switch(i){
             case 0:
-                leaderBoard.children[1].children[i].innerHTML = "<li>&#129351; "+sorted[i].name+" : "+sorted[i].score+"&nbsp;pts</li>";
+                leaderBoard.children[1].children[i].innerHTML = "&#129351; "+sorted[i].name+" : "+sorted[i].score+"&nbsp;pts";
                 break;
             case 1:
-                leaderBoard.children[1].children[i].innerHTML = "<li>&#129352; "+sorted[i].name+" : "+sorted[i].score+"&nbsp;pts</li>";
+                leaderBoard.children[1].children[i].innerHTML = "&#129352; "+sorted[i].name+" : "+sorted[i].score+"&nbsp;pts";
                 break;
             case 2:
-                leaderBoard.children[1].children[i].innerHTML = "<li>&#129353; "+sorted[i].name+" : "+sorted[i].score+"&nbsp;pts</li>";
+                leaderBoard.children[1].children[i].innerHTML = "&#129353; "+sorted[i].name+" : "+sorted[i].score+"&nbsp;pts";
                 break;
             case 3:
-                leaderBoard.children[1].children[i].innerHTML = "<li>&#127851; "+sorted[i].name+" : "+sorted[i].score+"&nbsp;pts</li>";
+                leaderBoard.children[1].children[i].innerHTML = "&#127851; "+sorted[i].name+" : "+sorted[i].score+"&nbsp;pts";
                 break;
         }
     }
