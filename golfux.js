@@ -799,18 +799,8 @@ function updateBackground(level){
     contextBack.fillStyle = level.backgroundColor;
     contextBack.fillRect( 0, 0, canvasBack.width, canvasBack.height );
     contextBack.save();
-    for(hole of level.holes){
-        contextBack.fillStyle = "black";
-        contextBack.strokeStyle = "black";
-        var pos = getPixelPointFromWorldPoint({x:hole.body.GetPosition().x,y:hole.body.GetPosition().y});
-        contextBack.beginPath();
-        contextBack.arc(pos.x, pos.y, hole.radius*PTM, 0, 2 * Math.PI);
-        contextBack.fill();
-        contextBack.stroke();
-    }
 
-    contextBack.fillStyle = '#FF0000';
-    
+    contextBack.fillStyle = '#FF0000';    
     // Sand
     renderObjectType("sand",level,"white",contextBack);
 
@@ -868,6 +858,15 @@ function updateBackground(level){
     }
     // Walls
     renderObjectType("walls",level,"red",contextBack);
+    for(hole of level.holes){
+        contextBack.fillStyle = "black";
+        contextBack.strokeStyle = "black";
+        var pos = getPixelPointFromWorldPoint({x:hole.body.GetPosition().x,y:hole.body.GetPosition().y});
+        contextBack.beginPath();
+        contextBack.arc(pos.x, pos.y, hole.radius*PTM, 0, 2 * Math.PI);
+        contextBack.fill();
+        contextBack.stroke();
+    }
 }
 
 function renderObjectType(type,level,debugColor,ctx){
@@ -1065,6 +1064,10 @@ function playSandSound(){
 }
 
 function playVoidSound(){
+    voidSound.play();
+}
+
+function playIceSound(){
     voidSound.play();
 }
 

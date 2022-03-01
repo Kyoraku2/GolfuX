@@ -1,5 +1,5 @@
 class Level{
-    constructor(num,color){
+    constructor(num){
         this.obstacles={
             walls:[],
             sand:[],
@@ -15,7 +15,7 @@ class Level{
         this.rendered = false;
         this.holes = [];
         this.num = num;
-        this.backgroundColor = color;
+        this.backgroundColor = null;
     }
 
     createHole(radius, middle_pos){

@@ -42,7 +42,7 @@ class Ball{
     }
 
     isColliding(hole){
-        const FORCE = 25;
+        const FORCE = 20;
         const BALL_FALLING_SPEED = 7.5
         if(this.collide != false){
             var addedCoef = 1;
