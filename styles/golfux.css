@@ -74,6 +74,11 @@ footer {
 	margin: 3vh auto;
 }
 
+#version {
+	font-weight: initial;
+	font-size: 1.75vh;
+}
+
 h2 {
 	color: white;
 	font-weight: bold;

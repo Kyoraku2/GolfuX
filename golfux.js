@@ -47,7 +47,11 @@ class Golfux{
         }
         var world_lvl = Math.floor(level/10) + 1;
         var num_lvl = level%10;
-        document.getElementById("level-num").innerHTML = "\u26F3 Niveau : " + world_lvl + "-" + num_lvl;
+        if (num_lvl == 0) {
+            num_lvl = 10;
+            world_lvl--;
+        }
+        document.getElementById("level-num").innerHTML = "\u26F3 " + world_lvl + "-" + num_lvl;
     }
 
     save_progression(last_lvl) {
@@ -856,8 +860,6 @@ function updateBackground(level){
             }
         }
     }
-    // Walls
-    renderObjectType("walls",level,"red",contextBack);
     for(hole of level.holes){
         contextBack.fillStyle = "black";
         contextBack.strokeStyle = "black";
@@ -867,6 +869,9 @@ function updateBackground(level){
         contextBack.fill();
         contextBack.stroke();
     }
+
+    // Walls
+    renderObjectType("walls",level,"red",contextBack);
 }
 
 function renderObjectType(type,level,debugColor,ctx){

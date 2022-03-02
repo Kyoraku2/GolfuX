@@ -1,5 +1,5 @@
 {
-    "backgroundColor":"rgb(0,153,0)",
+    "backgroundColor":"rgb(150, 150, 150)",
     "obstacles":{
         "spawn":[
             {
@@ -11,23 +11,23 @@
             {
                 "middle_pos":{"x":11.5, "y":0},
                 "shape": "box",
-                "heightWidth" : {"width": 6.5, "height":0.25},
+                "heightWidth" : {"width": 11.5, "height":0.25},
                 "angle":0
             },
             {
                 "middle_pos":{"x":11.5, "y":31},
                 "shape": "box",
-                "heightWidth" : {"width": 6.5, "height":0.25},
+                "heightWidth" : {"width": 11.5, "height":0.25},
                 "angle":0
             },
             {
-                "middle_pos":{"x":5, "y":15.5},
+                "middle_pos":{"x":0, "y":15.5},
                 "shape": "box",
                 "heightWidth" : {"width": 0.25, "height":15.75},
                 "angle":0
             },
             {
-                "middle_pos":{"x":18, "y":15.5},
+                "middle_pos":{"x":23, "y":15.5},
                 "shape": "box",
                 "heightWidth" : {"width": 0.25, "height":15.75},
                 "angle":0
@@ -36,9 +36,8 @@
     },
     "holes":[
         {
-            "pos":{"x":11.5, "y":25},
+            "pos":{"x":11.5, "y":28},
             "radius":0.5
         }
     ]
-
 }
