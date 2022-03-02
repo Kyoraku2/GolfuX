@@ -128,6 +128,41 @@ io.on('connection', function (socket) {
     
     socket.emit("gameList",generateGameList());
 
+    socket.on("joinGameByLink",function(id){
+        if(game !== null){
+            socket.emit("error", {message: "Erreur, une partie est déjà en cours."});
+            return;
+        }
+        var joinGame = findGameByCode(id);
+        if(joinGame == null){
+            socket.emit("error", {message: "Erreur, partie innexistante."});
+            return;
+        }
+
+        if(games[joinGame] && games[joinGame].joueurs.length < games[joinGame].nbPlayers){
+            games[joinGame].joueurs[games[joinGame].joueurs.length] = {socket: socket, points: 0, inHole:false, pos:null, turn:0, name:"player"};
+            game = joinGame;
+            console.log("Joueur connecté à l'indice "+(games[game].joueurs.length-1));
+            socket.emit("waiting",{
+                name: games[game].name,
+                nbPlayers: games[game].joueurs.length,
+                maxPlayers: games[game].nbPlayers,
+                nbManches: games[game].nbManches,
+                code: games[game].code
+            });
+            if(games[game].joueurs.length >= 2){
+                games[game].joueurs[0].socket.emit("canForceStart");
+            }
+            if(games[game].joueurs.length == games[game].nbPlayers){
+                startGame();
+            }else{
+                updateWaitingRoom();
+            }
+        }else{
+            socket.emit("error", {message: "Erreur, impossible de rejoindre la partie, mot de passe ou id invalide"});
+        }
+    });
+
     socket.on("CreateGame", function(obj){
         if(game !== null){
             socket.emit("error", {message: "Erreur, une partie est déjà en cours."});
@@ -211,7 +246,7 @@ io.on('connection', function (socket) {
         if(games[gameId] && games[gameId].joueurs.length < games[gameId].nbPlayers){
             games[gameId].joueurs[games[gameId].joueurs.length] = {socket: socket, points: 0, inHole:false, pos:null, turn:0, name:obj.name};
             game = gameId;
-            console.log("Joueur connecté à l'indice "+games[game].joueurs.length-1);
+            console.log("Joueur connecté à l'indice "+(games[game].joueurs.length-1));
             socket.emit("waiting",{
                 name: games[game].name,
                 nbPlayers: games[game].joueurs.length,

@@ -331,6 +331,14 @@ let impulsionStack = [];
 let replacementStack = [];
 
 document.addEventListener("DOMContentLoaded", function() {
+    /* Join by link */
+    var gameId = (window.location.href.split("?").length == 2 && window.location.href.split("?")[1].match("gameId\=.*")) ? window.location.href.split("?")[1].split('=')[1] : "";
+    if(gameId){
+        setUpSocket();
+        history.replaceState({}, '', '/');
+        sock.emit("joinGameByLink",gameId);
+    }
+
     /********* ECOUTEURS INTERFACES *********************/
 
     //Création levels dynamiques
@@ -418,154 +426,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     //Multi Online
     document.getElementById("btn-multi-online").addEventListener('click', function(e){
-        display_title(false);
-        document.getElementById("multi-online").style.display = "block";
-        playType = 2;
-        /***************** Partie serveur  *******************/
-        sock = io.connect();
-
-        let partie = { 
-            name:null,
-            nbPlayers: null,
-            nbManches: null,
-            code: null,
-            isPrivate: null
-        };
-
-        var btnCreateGame = document.getElementById("createGame");
-        var joinPrivateGame = document.getElementById("btn-join-code");
-        var gameList = document.getElementById("game-list");
-
-        btnCreateGame.addEventListener("click",function(e){
-            var gameName = document.getElementById("nom-partie").value;
-            if(gameName === ""){
-                alert('Merci de renseigner un nom de partie');
-                return
-            }
-            var name = document.getElementById("pseudo").value;
-            var isPrivate = document.getElementById("check-private").checked;
-            var nbPlayers = document.getElementById("onlineNbPlayer").selectedIndex+2;
-            var nbManches = document.getElementById("onlineNbManches").value;
-            partie.name = gameName;
-            partie.nbPlayers = nbPlayers;
-            partie.nbManches = nbManches;
-            partie.isPrivate = isPrivate;
-            sock.emit("CreateGame", {partie:partie,name:name});
-        });
-
-        gameList.addEventListener("click",function(e){
-            if(e.target.dataset.id){
-                var name = document.getElementById("pseudo").value;
-                sock.emit("JoinPublicGame",{id:e.target.dataset.id,name:name});
-            }
-        });
-
-        joinPrivateGame.addEventListener("click",function(e){
-            var name = document.getElementById("pseudo").value;
-            sock.emit("JoinPrivateGame",{code:document.getElementById("code").value,name:name});
-        });
-
-        sock.on("error",function(msg){
-            alert(msg.message);
-        });
-
-        sock.on("gameList",function(list){
-            create_game_list(list);
-        });
-
-        sock.on("waiting",function(game){
-            display_waiting_room(game);
-        });
-
-        sock.on("playerJoined",function(game){
-            alert("update");
-            display_waiting_room(game);
-        });
-
-        sock.on("canForceStart",function(){
-            document.getElementById("forceStartOnline").classList.add("unlock");
-        });
-        
-        sock.on("unableForceStart",function(){
-            document.getElementById("forceStartOnline").classList.remove("unlock");
-        });
-
-        sock.on("gameStart",function(obj){
-            golfux.changeLevel(1);
-            onlineNbPlayer = obj.players;
-            updateLeaderNbPlayers(onlineNbPlayer);
-            display_game();
-            document.getElementById("restart-game").style.display = "none";
-        });
-
-        sock.on("endGame",function(obj){
-            stopMovements = true;
-            document.getElementById("end-menu").style.display = "block";
-            if (msg_display == false) {
-                var rigolo_msg = [
-                    "Bien joué <em>Little Player</em> ! Un jour tu deviendras plus grand... &#128170;",
-                    "Peut mieux faire... Non non je ne juge pas. &#128064;",
-                    "Mouais après le niveau était simple nan ? &#129300;",
-                    "Le <em>TrophuX</em> est à portée de main ! &#129351;",
-                    "Sans doûte un niveau de petit joueur ! &#128526;",
-                    "Trop lent à finir ce niveau : pire que Jube et ses copies... &#128195;",
-                    "C'est une première étape, mais il reste encore beaucoup de chemin à faire... &#128579;",
-                    "Brillant ! Autant de talent, beauté et intelligence que ceux qui ont conçu le jeu. &#129321;",
-                    "Quelle magnifique performance ! Seul un jeu en JavaScript peut nous apporter ça. &#129394;",
-                    "+ 1000000 social crédits. &#128200;"
-                ];
-                var rand = Math.floor(Math.random() * rigolo_msg.length);
-                document.querySelector("#end-menu p").innerHTML = rigolo_msg[rand];
-                //TODO : afficher leaderBoard
-                document.getElementById("btn-continue").style.display = "none";
-                msg_display = true;
-                document.getElementById("leaderboard").style.display = "block";
-            }
-        });
-
-        sock.on("yourTurn",function(index){
-            ballIndex = index;
-            alert("Your turn");
-        });
-
-        sock.on("notYourTurn",function(){
-            ballIndex = null;
-            golfux.click_down=null;
-            golfux.click_up=null;
-        });
-
-        sock.on("isPlaying",function(id){
-            currentBall = id;
-        });
-
-        sock.on("ballShot",function(obj){
-            impulsionStack.push(obj);
-        });
-
-        sock.on("ballPlaced",function(obj){
-            golfux.balls[obj.index] = new Ball(new b2Vec2(obj.pos.x, obj.pos.y), obj.index);
-        });
-
-        sock.on("ballShotFinalPos",function(positions){
-            replacementStack.push(positions);
-        });
-
-        sock.on("nextManche",function(level){
-            ballPlaced = false;
-            ballIndex = null;
-            currentBall = null;
-            impulsionStack = [];
-            replacementStack = [];
-            setTimeout(function(game,level){
-                game.changeLevel(level);
-            },1000,golfux,level);
-        });
-
-        sock.on("results",function(scores){
-            updateLeaderScores(scores);
-            // TODO : update l'affichage, coté serveur manque les noms et un soucis avec le calcul izou
-        });
-
+        setUpSocket();
     });
 
     //Retour
@@ -689,10 +550,12 @@ document.addEventListener("DOMContentLoaded", function() {
         if (isNaN(sec)) {
             sec = 0;
         }
-        document.getElementById("wait-room").children[1].innerHTML= '<h3><span class="emoji">&#127757;</span> '+game.name+' :</h3><br>&#128104;&#8205;&#128105;&#8205;&#128103;&#8205;&#128102; Nombre de joueurs : '+game.nbPlayers+'/'+game.maxPlayers+'<br>&#9971;  Nombre de manches : '+game.nbManches+'<br>&#128290; Code : '+game.code+'<br><br>&#8987; Temps d\'attente : <time>'+sec+'</time> seconde(s)';
+        //document.getElementById("wait-room").children[1].innerHTML= '<h3><span class="emoji">&#127757;</span> '+game.name+' :</h3><br>&#128104;&#8205;&#128105;&#8205;&#128103;&#8205;&#128102; Nombre de joueurs : '+game.nbPlayers+'/'+game.maxPlayers+'<br>&#9971;  Nombre de manches : '+game.nbManches+'<br>&#128290; Code : '+game.code+'<br><br>&#8987; Temps d\'attente : <time>'+sec+'</time> seconde(s)<br>&#128206; Partager la partie : <span id="link">X</span>';
+        document.getElementById("wait-room").children[1].innerHTML= '<h3><span class="emoji">&#127757;</span> '+game.name+' :</h3><br>&#128104;&#8205;&#128105;&#8205;&#128103;&#8205;&#128102; Nombre de joueurs : '+game.nbPlayers+'/'+game.maxPlayers+'<br>&#9971;  Nombre de manches : '+game.nbManches+'<br>&#128290; Code : '+game.code+'<br><br>&#8987; Temps d\'attente : <time>'+sec+'</time> seconde(s)<br>&#128206; Partager la partie : <input id=\'gameId\' type=\'text\' value=\''+window.location.href+"?gameId="+game.code+"'></input><button id='copyBtn'>&#128203</button>";
         document.getElementById("multi-online").style.display = "none";
         document.getElementById("creer-partie").style.display = "none";
         document.getElementById("wait-room").style.display = "block";
+        document.getElementById("copyBtn").addEventListener("click",function(e){copyClipboard();});
         timer(sec);
     }
 
@@ -826,6 +689,168 @@ document.addEventListener("DOMContentLoaded", function() {
             leaderBoard.children[1].children[i].classList.add("hidden");
         }
         return true;
+    }
+
+    function copyClipboard(){
+        /* Get the text field */
+        var copyText = document.getElementById("gameId");
+
+        /* Select the text field */
+        copyText.select();
+        copyText.setSelectionRange(0, 99999); /* For mobile devices */
+
+        /* Copy the text inside the text field */
+        navigator.clipboard.writeText(copyText.value);
+    }
+
+    function setUpSocket(){
+        display_title(false);
+        document.getElementById("multi-online").style.display = "block";
+        playType = 2;
+        /***************** Partie serveur  *******************/
+        sock = io.connect();
+
+        let partie = { 
+            name:null,
+            nbPlayers: null,
+            nbManches: null,
+            code: null,
+            isPrivate: null
+        };
+
+        var btnCreateGame = document.getElementById("createGame");
+        var joinPrivateGame = document.getElementById("btn-join-code");
+        var gameList = document.getElementById("game-list");
+
+        btnCreateGame.addEventListener("click",function(e){
+            var gameName = document.getElementById("nom-partie").value;
+            if(gameName === ""){
+                alert('Merci de renseigner un nom de partie');
+                return
+            }
+            var name = document.getElementById("pseudo").value;
+            var isPrivate = document.getElementById("check-private").checked;
+            var nbPlayers = document.getElementById("onlineNbPlayer").selectedIndex+2;
+            var nbManches = document.getElementById("onlineNbManches").value;
+            partie.name = gameName;
+            partie.nbPlayers = nbPlayers;
+            partie.nbManches = nbManches;
+            partie.isPrivate = isPrivate;
+            sock.emit("CreateGame", {partie:partie,name:name});
+        });
+
+        gameList.addEventListener("click",function(e){
+            if(e.target.dataset.id){
+                var name = document.getElementById("pseudo").value;
+                sock.emit("JoinPublicGame",{id:e.target.dataset.id,name:name});
+            }
+        });
+
+        joinPrivateGame.addEventListener("click",function(e){
+            var name = document.getElementById("pseudo").value;
+            sock.emit("JoinPrivateGame",{code:document.getElementById("code").value,name:name});
+        });
+
+        sock.on("error",function(msg){
+            alert(msg.message);
+        });
+
+        sock.on("gameList",function(list){
+            create_game_list(list);
+        });
+
+        sock.on("waiting",function(game){
+            display_waiting_room(game);
+        });
+
+        sock.on("playerJoined",function(game){
+            alert("update");
+            display_waiting_room(game);
+        });
+
+        sock.on("canForceStart",function(){
+            document.getElementById("forceStartOnline").classList.add("unlock");
+        });
+        
+        sock.on("unableForceStart",function(){
+            document.getElementById("forceStartOnline").classList.remove("unlock");
+        });
+
+        sock.on("gameStart",function(obj){
+            golfux.changeLevel(obj.level);
+            onlineNbPlayer = obj.players;
+            updateLeaderNbPlayers(onlineNbPlayer);
+            display_game();
+            document.getElementById("restart-game").style.display = "none";
+        });
+
+        sock.on("endGame",function(obj){
+            stopMovements = true;
+            document.getElementById("end-menu").style.display = "block";
+            if (msg_display == false) {
+                var rigolo_msg = [
+                    "Bien joué <em>Little Player</em> ! Un jour tu deviendras plus grand... &#128170;",
+                    "Peut mieux faire... Non non je ne juge pas. &#128064;",
+                    "Mouais après le niveau était simple nan ? &#129300;",
+                    "Le <em>TrophuX</em> est à portée de main ! &#129351;",
+                    "Sans doûte un niveau de petit joueur ! &#128526;",
+                    "Trop lent à finir ce niveau : pire que Jube et ses copies... &#128195;",
+                    "C'est une première étape, mais il reste encore beaucoup de chemin à faire... &#128579;",
+                    "Brillant ! Autant de talent, beauté et intelligence que ceux qui ont conçu le jeu. &#129321;",
+                    "Quelle magnifique performance ! Seul un jeu en JavaScript peut nous apporter ça. &#129394;",
+                    "+ 1000000 social crédits. &#128200;"
+                ];
+                var rand = Math.floor(Math.random() * rigolo_msg.length);
+                document.querySelector("#end-menu p").innerHTML = rigolo_msg[rand];
+                //TODO : afficher leaderBoard
+                document.getElementById("btn-continue").style.display = "none";
+                msg_display = true;
+                document.getElementById("leaderboard").style.display = "block";
+            }
+        });
+
+        sock.on("yourTurn",function(index){
+            ballIndex = index;
+            alert("Your turn");
+        });
+
+        sock.on("notYourTurn",function(){
+            ballIndex = null;
+            golfux.click_down=null;
+            golfux.click_up=null;
+        });
+
+        sock.on("isPlaying",function(id){
+            currentBall = id;
+        });
+
+        sock.on("ballShot",function(obj){
+            impulsionStack.push(obj);
+        });
+
+        sock.on("ballPlaced",function(obj){
+            golfux.balls[obj.index] = new Ball(new b2Vec2(obj.pos.x, obj.pos.y), obj.index);
+        });
+
+        sock.on("ballShotFinalPos",function(positions){
+            replacementStack.push(positions);
+        });
+
+        sock.on("nextManche",function(level){
+            ballPlaced = false;
+            ballIndex = null;
+            currentBall = null;
+            impulsionStack = [];
+            replacementStack = [];
+            setTimeout(function(game,level){
+                game.changeLevel(level);
+            },1000,golfux,level);
+        });
+
+        sock.on("results",function(scores){
+            updateLeaderScores(scores);
+            // TODO : update l'affichage, coté serveur manque les noms et un soucis avec le calcul izou
+        });
     }
 });
 
