@@ -238,7 +238,7 @@ button#btn-multi-online:hover, button#btn-creer-partie:hover, #creer-partie butt
 
 button.btn-retour, button.btn-start, #btn-creer-partie, button.btn-retour-2,
 button.btn-wait, #btn-room-quit, #btn-world-1, #btn-world-2, #btn-world-3, #btn-world-4,
-#btn-continue, button.btn-quit, #restart-game, #btn-leaderboard, #close-leaderboard {
+#btn-continue, button.btn-quit, #restart-game, #btn-leaderboard, #close-leaderboard, #btn-reload {
 	border-radius: 3vh;
 	margin: 3vh;
 	padding: 20px;
@@ -250,6 +250,18 @@ button.btn-wait, #btn-room-quit, #btn-world-1, #btn-world-2, #btn-world-3, #btn-
 	margin-top: 5vh;
 	padding-left: 3vh;
 	padding-right: 3vh;
+}
+
+#game-list {
+	overflow: scroll;
+	height: 40vh;
+	scrollbar-color: white rgba(0, 0, 0, 0.3);
+}
+
+#game-list button {
+	display: list-item;
+	width: 100%;
+	margin: 3vh auto;
 }
 
 #levels button {
@@ -332,6 +344,25 @@ input[type="text"]#code {
     transform: translate(-50%, -50%);
 	border-left : 3px solid white;
 	border-right : 3px solid white;
+}
+
+#game h2 {
+	color: red;
+	border: none;
+	position: absolute;
+	width: 100%;
+	margin: 3vh auto;
+	top: 30vh;
+	font-size: 4vh;
+	opacity: 0;
+	transition-property: opacity;
+	transition-duration: 1s;
+}
+
+#game h2.display-turn {
+	opacity: 1;
+	transition-property: opacity;
+	transition-duration: 1s;
 }
 
 #btn-leaderboard {

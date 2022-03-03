@@ -525,8 +525,25 @@ document.addEventListener("DOMContentLoaded", function() {
 
         sock.on("yourTurn",function(index){
             ballIndex = index;
-            alert("Your turn");
+            //alert("Your turn");
+            displayYouTurn();
         });
+
+        function displayYouTurn() {
+            document.getElementById("your-turn").style.display = "block";
+            setTimeout(displayTurn, 500);
+            setTimeout(stopDisplay1, 3000);
+            setTimeout(stopDisplay2, 4000);
+            function displayTurn() {
+                document.getElementById("your-turn").classList.add("display-turn");
+            }
+            function stopDisplay1() {
+                document.getElementById("your-turn").classList.remove("display-turn");
+            }
+            function stopDisplay2() {
+                document.getElementById("your-turn").style.display = "none";
+            }
+        }
 
         sock.on("notYourTurn",function(){
             ballIndex = null;
@@ -809,7 +826,7 @@ document.addEventListener("DOMContentLoaded", function() {
             btn.className = "btn-wait unlock";
             btn.dataset.id = list[i].id
             btn.title = "Rejoindre la partie publique";
-            btn.innerHTML = '<strong>"'+list[i].name+'" :</strong> ('+list[i].nbPlayers+'/'+list[i].maxPlayers+')<br>Manches :'+list[i].nbManches+'</button>'
+            btn.innerHTML = '<strong>"'+list[i].name+'" :</strong> ('+list[i].nbPlayers+'/'+list[i].maxPlayers+')<br>Manches : '+list[i].nbManches;
             document.getElementById("game-list").appendChild(btn);
         }
     }
