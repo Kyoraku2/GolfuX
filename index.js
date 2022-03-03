@@ -336,9 +336,10 @@ let impulsionStack = [];
 let replacementStack = [];
 
 if('serviceWorker' in navigator){
+    
     navigator.serviceWorker
         .register('./worker.js')
-        .then('Worker here !');
+        .then(console.log('Worker here !'));
 };
 
 document.addEventListener("DOMContentLoaded", function() {
