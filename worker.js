@@ -4,7 +4,7 @@ const ASSETS = [
     '/textures/bubblegum.png',
     '/textures/ice.jpg',
     '/textures/lava.png',
-    '/textures/logo.png',
+    '/textures/logo.PNG',
     '/textures/sand.png',
     '/textures/void.jpg',
     '/textures/wall.jpg',
