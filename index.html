@@ -7,6 +7,7 @@
 
         <link type="text/css" rel="stylesheet" href="./styles/golfux.css">
         <link rel="icon" type="image/x-icon" href="./favicon.svg">
+        <link rel="manifest" href="manifest.json">
 
         <script src="./build/Box2D_v2.2.1_min.js"></script>
         <script src="./helpers/embox2d-helpers.js"></script>
@@ -146,6 +147,9 @@
                 <button id="btn-creer-partie" class="unlock" title="Créer une partie en ligne">&#128295; CRÉER UNE PARTIE</button>
                 <button class="btn-retour unlock" title="Retourner au menu principal">&#8617; RETOUR</button>
                 <div class="block">
+                    <span class="emoji">&#128221;</span>SURNOM : <input type="text" value="Moi" placeholder="Bobbybob" maxlength="15" id="pseudo">
+                </div>
+                <div class="block">
                     <h3><span class="emoji">&#128270;</span> REJOINDRE UNE PARTIE PRIVÉE AVEC UN CODE :</h3><br>
                     Entrer le code de la partie : <input type="text" placeholder="XXXX" maxlength="4" id="code"><br>
                     <button id="btn-join-code" class="unlock" title="Rejoindre la partie par code">&#10145; REJOINDRE</button>
@@ -172,7 +176,7 @@
                     <span class="animated bounce bounce-5">&#128681;</span>
                 </h2>
                 <div class="block">
-                    <span class="emoji">&#128221;</span>NOM DE LA PARTIE : <input type="text" placeholder="Un nom trop drôle !" maxlength="30" id="nom-partie">
+                    <span class="emoji">&#128221;</span>NOM DE LA PARTIE : <input type="text" placeholder="Fun party" maxlength="30" id="nom-partie">
                 </div>
                 <div class="block">
                     <span class="emoji">&#128104;&#8205;&#128105;&#8205;&#128103;&#8205;&#128102;</span> NOMBRE DE JOUEURS MAXIMUM :
@@ -234,15 +238,24 @@
             <div id="game">           
                 <canvas id="canvas" width="640" height="800" tabindex='1'></canvas>
                 <canvas id="stage" width="640" height="800" tabindex='1'></canvas>
+                <div id="level-num">
+                    <!-- VIA JS -->
+                </div>
                 <div id="game-interface">
-                    <!-- A INSERER AVEC JAVASCRIPT -->
-                    <ul id="leaderboard">
-                        <li>Joueur 1 : X</li>
-                        <li>Joueur 2 : X</li>
-                        <li>Joueur 3 : X</li>
-                        <li>Joueur 4 : X</li>
-                    </ul>
+                    <button class="unlock" id="btn-leaderboard" title="Voir le classement">&#128202; LEADERBOARD</button>
                     <button class="unlock btn-quit" id="quit-game" title="Retourner au menu principal">&#10060; QUITTER</button>
+                    <button class="unlock" id="restart-game" title="Recommencer le niveau">&#8618; RECOMMENCER</button>
+                </div>
+                <!-- A INSERER AVEC JAVASCRIPT -->
+                <div id="leaderboard">
+                    <h3>&#127942; LEADERBOARD &#127942;</h3>
+                        <ul>
+                            <li>&#129351; Joueur 1 : 0&nbsp;pts</li>
+                            <li>&#129352; Joueur 2 : 0&nbsp;pts</li>
+                            <li>&#129353; Joueur 3 : 0&nbsp;pts</li>
+                            <li>&#127851; Joueur 4 : 0&nbsp;pts</li>
+                        </ul>
+                    <button class="unlock" id="close-leaderboard" title="Fermer le classement">&#10060; FERMER</button>
                 </div>
             </div>
 

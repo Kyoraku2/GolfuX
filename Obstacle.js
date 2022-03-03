@@ -108,7 +108,7 @@ class Sand extends FloorObstacle{
     constructor(middle_pos,shape,hx,hy,radius,vectrices,angle){
         super(middle_pos,shape,200,hx,hy,radius,vectrices,angle);
         this.sprite=new Image();
-        this.sprite.src = './textures/sand.jpg';
+        this.sprite.src = './textures/sand.png';
     }
 }
 
@@ -131,7 +131,7 @@ class Void extends FloorObstacle{
     constructor(middle_pos,shape,hx,hy,radius,vectrices,angle){
         super(middle_pos,shape,202,hx,hy,radius,vectrices,angle);
         this.sprite=new Image();
-        this.sprite.src = './textures/void.jpg';
+        this.sprite.src = './textures/lava.png';
     }
 }
 
@@ -147,7 +147,7 @@ class Bubblegum extends FloorObstacle{
     constructor(middle_pos,shape,hx,hy,radius,vectrices,angle){
         super(middle_pos,shape,201,hx,hy,radius,vectrices,angle);
         this.sprite=new Image();
-        this.sprite.src = './textures/bubblegum.jpg';
+        this.sprite.src = './textures/bubblegum.png';
     }
 }
 

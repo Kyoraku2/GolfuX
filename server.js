@@ -18,17 +18,6 @@ app.get('/', function(req, res) {
     res.sendFile(__dirname + '/index.html');
 });
 
-
-/*app.get('/level*', function(req, res) {
-    //console.log("Reçu : GET "+req.url);
-    res.setHeader('Content-type', 'application/json');
-    //couleur = JSON.stringify(couleur);
-    //res.json({ TODO: "à compléter "});
-
-    var level = readLevel(req.url.split('/')[1]);
-    res.json(level);
-});*/
-
 function readLevel(level){
     const fs = require('fs');
     let rawdata = fs.readFileSync(level+'.json');
@@ -47,6 +36,7 @@ let games = {};
 let counter = 0;
 let bMinLevels = 1; // TODO : à changer quand on ajoute/supprime des niveaux
 let bMaxLevels = 10;
+const TURN_LIMIT = 12;
 
 function createPassword(){
     var alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
@@ -65,7 +55,6 @@ function createPassword(){
 }
 
 function generateGameList(){
-    console.log(games)
     var game_list=[];
     for(var i=0, keys=Object.keys(games) ,l=keys.length; i<l; ++i){
         if(games[keys[i]].nbPlayers > games[keys[i]].joueurs.length && !games[keys[i]].isPrivate){
@@ -104,73 +93,56 @@ function getRandomLevels(n){
     return levels;
 }
 
-/*function collideCircles(obj1, obj2){
-    var dx = obj1.x - obj1.x;
-    var dy = obj1.y - obj1.y;
-    var distance = Math.sqrt(dx * dx + dy * dy);
-    return distance < obj1.radius + obj2.radius;
-}*/
+function getPlayerFromSock(game,sock){
+    for(var i=0 ; i<game.joueurs.length ; ++i){
+        if(game.joueurs[i].socket === sock){
+            return i;
+        }
+    }
+    return undefined;
+}
+
+function computePlayersPos(game){
+    var pos = {};
+    for(var i=0 ; i<game.joueurs.length ; ++i){
+        pos[i] = game.joueurs[i].pos;
+    }
+    return pos;
+}
+
+function computeScores(game){
+    var pos = {};
+    for(var i=0 ; i<game.joueurs.length ; ++i){
+        pos[i] = {
+            name:game.joueurs[i].name,
+            score:game.joueurs[i].points
+        }
+    }
+    return pos;
+}
 
 
 io.on('connection', function (socket) {
     console.log("Un client s'est connecté");
-    let index = -1;
     let game = null;
-
-
+    
     socket.emit("gameList",generateGameList());
 
-    socket.on("CreateGame", function(partie){
-        if(game !== null || index >= 0){
+    socket.on("joinGameByLink",function(id){
+        if(game !== null){
             socket.emit("error", {message: "Erreur, une partie est déjà en cours."});
             return;
         }
-        if(partie.nbPlayers < 2 || partie.nbPlayers > 4 || partie.nbManches < 1 || partie.nbManches > 18 || games[game]){
-            socket.emit("error", {message: "Erreur, mauvaises options de partie."});
+        var joinGame = findGameByCode(id);
+        if(joinGame == null){
+            socket.emit("error", {message: "Erreur, partie innexistante."});
             return;
         }
-        index = 0;
-        counter++;
-        game = counter;
-        var code = createPassword();
-        while(findGameByCode(code) !== -1){
-            code = createPassword();
-        }
-        games[game] = partie;
-        games[game].code = code;
-        games[game].levels = getRandomLevels(games[game].nbManches);
-        games[game]["current"] = -1;
-        games[game].joueurs = [];
-        games[game].turnTimer = null;
-        games[game].joueurs[index] = {socket: socket, points: 0, inHole:false};
-        console.log("Partie créée à l'indice "+game);
-        console.log("Joueur connecté à l'indice "+index);
-        socket.emit("waiting",{
-            name: games[game].name,
-            nbPlayers: games[game].joueurs.length,
-            maxPlayers: games[game].nbPlayers,
-            nbManches: games[game].nbManches,
-            code: games[game].code,
-            id: game
-        });
-    });
 
-    // TODO : retirer l'attribue index et travailler directement avec la position dans le tableau joueurs (ça simplifiera tout ce qui est gestion de "quitter la waiting room")
-
-    socket.on("JoinPublicGame", function(id){
-        if(game !== null || index >= 0 || !games[id]){
-            socket.emit("error", {message: "Erreur, une partie est déjà en cours."});
-            return;
-        }
-        if(id < 0 || games[id].isPrivate){
-            socket.emit("error", {message: "Erreur, la partie sélectionnée est privée."});
-            return;
-        }
-        if(games[id] && games[id].joueurs.length < games[id].nbPlayers){
-            index = games[id].joueurs.length;
-            games[id].joueurs[index] = {socket: socket, points: 0, inHole:false};
-            game = id;
-            console.log("Joueur connecté à l'indice "+index);
+        if(games[joinGame] && games[joinGame].joueurs.length < games[joinGame].nbPlayers){
+            games[joinGame].joueurs[games[joinGame].joueurs.length] = {socket: socket, points: 0, inHole:false, pos:null, turn:0, name:"player"};
+            game = joinGame;
+            console.log("Joueur connecté à l'indice "+(games[game].joueurs.length-1));
             socket.emit("waiting",{
                 name: games[game].name,
                 nbPlayers: games[game].joueurs.length,
@@ -181,7 +153,74 @@ io.on('connection', function (socket) {
             if(games[game].joueurs.length >= 2){
                 games[game].joueurs[0].socket.emit("canForceStart");
             }
-            if(games[id].joueurs.length == games[id].nbPlayers){
+            if(games[game].joueurs.length == games[game].nbPlayers){
+                startGame();
+            }else{
+                updateWaitingRoom();
+            }
+        }else{
+            socket.emit("error", {message: "Erreur, impossible de rejoindre la partie, mot de passe ou id invalide"});
+        }
+    });
+
+    socket.on("CreateGame", function(obj){
+        if(game !== null){
+            socket.emit("error", {message: "Erreur, une partie est déjà en cours."});
+            return;
+        }
+        if(obj.partie.nbPlayers < 2 || obj.partie.nbPlayers > 4 || obj.partie.nbManches < 1 || obj.partie.nbManches > 18 || games[game]){
+            socket.emit("error", {message: "Erreur, mauvaises options de partie."});
+            return;
+        }
+        counter++;
+        game = counter;
+        var code = createPassword();
+        while(findGameByCode(code) !== -1){
+            code = createPassword();
+        }
+        games[game] = obj.partie;
+        games[game].code = code;
+        games[game].levels = getRandomLevels(games[game].nbManches);
+        games[game]["current"] = -1;
+        games[game].joueurs = [];
+        games[game].turnTimer = null;
+        games[game].joueurs[0] = {socket: socket, points: 0, inHole:false, pos:null, turn:0, name:obj.name};
+        console.log("Partie créée à l'indice "+game);
+        console.log("Joueur connecté à l'indice 0");
+        socket.emit("waiting",{
+            name: games[game].name,
+            nbPlayers: games[game].joueurs.length,
+            maxPlayers: games[game].nbPlayers,
+            nbManches: games[game].nbManches,
+            code: games[game].code
+        });
+    });
+
+    socket.on("JoinPublicGame", function(obj){
+        if(game !== null || !games[obj.id] || getPlayerFromSock(games[obj.id],socket) !== undefined){
+            socket.emit("error", {message: "Erreur, une partie est déjà en cours."});
+            return;
+        }
+        if(obj.id < 0 || games[obj.id].isPrivate){
+            socket.emit("error", {message: "Erreur, la partie sélectionnée est privée."});
+            return;
+        }
+
+        if(games[obj.id] && games[obj.id].joueurs.length < games[obj.id].nbPlayers){
+            games[obj.id].joueurs[games[obj.id].joueurs.length] = {socket: socket, points: 0, inHole:false, pos:null, turn:0, name:obj.name};
+            game = obj.id;
+            console.log("Joueur connecté à l'indice "+(games[game].joueurs.length-1));
+            socket.emit("waiting",{
+                name: games[game].name,
+                nbPlayers: games[game].joueurs.length,
+                maxPlayers: games[game].nbPlayers,
+                nbManches: games[game].nbManches,
+                code: games[game].code
+            });
+            if(games[game].joueurs.length >= 2){
+                games[game].joueurs[0].socket.emit("canForceStart");
+            }
+            if(games[obj.id].joueurs.length == games[obj.id].nbPlayers){
                 startGame();
             }else{
                 updateWaitingRoom();
@@ -191,22 +230,23 @@ io.on('connection', function (socket) {
         }
     });
 
-    socket.on("JoinPrivateGame", function(code){
-        if(game !== null || index >= 0){
+    socket.on("JoinPrivateGame", function(obj){
+        if(game !== null){
             socket.emit("error", {message: "Erreur, une partie est déjà en cours."});
             return;
         }
 
-        var gameId = findGameByCode(code);
-        if(gameId < 0 || !games[gameId].isPrivate){
-            socket.emit("error", {message: "Erreur, la partie n'existe pas ou n'est pas privée."});
+        var gameId = findGameByCode(obj.code);
+        if(gameId < 0){
+            socket.emit("error", {message: "Erreur, la partie n'existe pas."});
             return;
         }
+
+
         if(games[gameId] && games[gameId].joueurs.length < games[gameId].nbPlayers){
-            index = games[gameId].joueurs.length;
-            games[gameId].joueurs[index] = {socket: socket, points: 0, inHole:false};
+            games[gameId].joueurs[games[gameId].joueurs.length] = {socket: socket, points: 0, inHole:false, pos:null, turn:0, name:obj.name};
             game = gameId;
-            console.log("Joueur connecté à l'indice "+index);
+            console.log("Joueur connecté à l'indice "+(games[game].joueurs.length-1));
             socket.emit("waiting",{
                 name: games[game].name,
                 nbPlayers: games[game].joueurs.length,
@@ -228,16 +268,30 @@ io.on('connection', function (socket) {
 
     });
 
-    /*socket.on("leaveWaitingRoom",function(){
-        if(game === null || index < 0 || !games[game]){
+    socket.on("leaveRoom",function(){
+        var playerId = getPlayerFromSock(games[game],socket);
+        if(game === null  || playerId === undefined || !games[game]){
             socket.emit("error", {message: "Erreur, vous n'êtes pas dans la partie"});
             return;
         }
-
-        if(){
-
+        if(playerId == 0){
+            games[game].joueurs[playerId].socket.emit('unableForceStart');
         }
-    });*/
+        games[game].joueurs.splice(playerId,1);
+        for(var i=0, l=games[game].joueurs.length ; i<l ; ++i){
+            games[game].joueurs[i].socket.emit("playerJoined",{
+                name: games[game].name,
+                nbPlayers: games[game].joueurs.length,
+                maxPlayers: games[game].nbPlayers,
+                nbManches: games[game].nbManches,
+                code: games[game].code
+            });
+        }
+        if(games[game].joueurs.length >= 2){
+            games[game].joueurs[0].socket.emit('canForceStart');
+        }
+        game = null;
+    });
 
     socket.on("forceStart",function(){
         games[game].nbPlayers = games[game].joueurs.length;
@@ -245,14 +299,16 @@ io.on('connection', function (socket) {
     });
 
     socket.on("placeBall",function(pos){
-        if(game === null || index < 0 || !games[game]){
+        var playerId = getPlayerFromSock(games[game],socket);
+        if(game === null  || playerId === undefined || !games[game]){
             socket.emit("error", {message: "Erreur, vous n'êtes pas dans la partie"});
             return;
         }
-        if(games[game].current != index){
+        if(games[game].current != playerId){
             socket.emit("error", {message: "Erreur, ce n'est pas ton tour."});
             return;
         }
+        games[game].joueurs[games[game].current].pos = pos;
         for(var i=0 ; i<games[game].nbPlayers ; ++i){
             if(i != games[game].current){
                 games[game].joueurs[i].socket.emit("ballPlaced",{index:games[game].current,pos:pos});
@@ -261,13 +317,18 @@ io.on('connection', function (socket) {
     });
 
     socket.on("shoot",function(impulse){
-        if(game === null || index < 0 || !games[game]){
+        var playerId = getPlayerFromSock(games[game],socket);
+        if(game === null || playerId === undefined || !games[game]){
             socket.emit("error", {message: "Erreur, vous n'êtes pas dans la partie"});
             return;
         }
-        if(games[game].current != index){
+        if(games[game].current != playerId){
             socket.emit("error", {message: "Erreur, ce n'est pas ton tour."});
             return;
+        }
+        games[game].joueurs[games[game].current].points++;
+        for(var i=0 ; i<games[game].nbPlayers ; ++i){
+            games[game].joueurs[i].socket.emit("results",computeScores(games[game]));
         }
         for(var i=0 ; i<games[game].nbPlayers ; ++i){
             if(i != games[game].current){
@@ -277,11 +338,12 @@ io.on('connection', function (socket) {
     });
 
     socket.on("endPos",function(allPos){
-        if(game === null || index < 0 || !games[game]){
+        var playerId = getPlayerFromSock(games[game],socket);
+        if(game === null || playerId === undefined || !games[game]){
             socket.emit("error", {message: "Erreur, vous n'êtes pas dans la partie"});
             return;
         }
-        if(games[game].current != index){
+        if(games[game].current != playerId){
             socket.emit("error", {message: "Erreur, ce n'est pas ton tour."});
             return;
         }
@@ -289,24 +351,38 @@ io.on('connection', function (socket) {
             if(i != games[game].current){
                 games[game].joueurs[i].socket.emit("ballShotFinalPos",allPos);
             }
+            games[game].joueurs[i].pos = allPos[i];
         }
 
         var allInHole = true;
-        for(player of  games[game].joueurs){
+        for(const player of  games[game].joueurs){
             if(!player.inHole){
                 allInHole = false; 
             }
         }
         if(!allInHole){
-            console.log(games[game].current);
             games[game].joueurs[games[game].current].socket.emit("notYourTurn");
             
+            var oldCurrent = games[game].current;
             do{
                 games[game].current = (games[game].current + 1) % games[game].nbPlayers;
-            }while(games[game].joueurs[games[game].current].inHole);
+                if(oldCurrent == games[game].current){
+                    break;
+                }
+            }while(games[game].joueurs[games[game].current].inHole 
+                  || games[game].joueurs[games[game].current].turn === TURN_LIMIT);
+
+            if(oldCurrent === games[game].current && games[game].joueurs[games[game].current].turn === TURN_LIMIT){
+                console.log(games[game].joueurs)
+                endGame();
+                return;
+            }
+            
             games[game].joueurs[games[game].current].socket.emit("yourTurn",games[game].current);
+            games[game].joueurs[games[game].current].turn++;
             for(var i=0 ; i<games[game].nbPlayers ; ++i){
                 games[game].joueurs[i].socket.emit("isPlaying",games[game].current);
+                games[game].joueurs[i].socket.emit("results",computeScores(games[game]));
             }
             clearTimeout(games[game].turnTimer);
             setTurnTimer(game);
@@ -314,7 +390,9 @@ io.on('connection', function (socket) {
     });
 
     socket.on("inHole",function(id){
-        if(game === null || index < 0 || !games[game]){
+        var playerId = getPlayerFromSock(games[game],socket);
+        console.log(playerId)
+        if(game === null || playerId===undefined || !games[game]){
             socket.emit("error", {message: "Erreur, vous n'êtes pas dans la partie"});
             return;
         }
@@ -326,26 +404,12 @@ io.on('connection', function (socket) {
             }
         }
         if(allInHole){
-            if(games[game].levels.length > 0){
-                for(player of  games[game].joueurs){
-                    player.inHole = false;
-                    player.socket.emit("nextManche",games[game].levels[0]);
-                }
-                games[game].joueurs[games[game].current].socket.emit("notYourTurn");
-                games[game].joueurs[games[game].current].socket.emit("yourTurn",games[game].current);
-                for(var i=0 ; i<games[game].nbPlayers ; ++i){
-                    games[game].joueurs[i].socket.emit("isPlaying",games[game].current);
-                }
-                clearTimeout(games[game].turnTimer);
-                setTurnTimer(game);
-                games[game].levels.splice(0,1);
-            }else{
-                for(player of  games[game].joueurs){
-                    player.socket.emit("endGame");
-                }  
-                deleteGame(game);
-            }
+            endGame();
         }
+    });
+
+    socket.on("disconnect", function() {
+        console.log("Déconnexion d'un client");
     });
 
     /****************
@@ -354,13 +418,13 @@ io.on('connection', function (socket) {
 
     function startGame(){
         games[game].current = Math.floor(Math.random() * games[game].nbPlayers);
-        console.log(games[game].levels)
         for(var i=0 ; i<games[game].nbPlayers ; ++i){
-            games[game].joueurs[i].socket.emit("gameStart",games[game].levels[0]);
+            games[game].joueurs[i].socket.emit("gameStart",{level:games[game].levels[0],players:games[game].joueurs.length});
             if(i != games[game].current){
                 games[game].joueurs[i].socket.emit("notYourTurn");
             }
             games[game].joueurs[i].socket.emit("isPlaying",games[game].current);
+            games[game].joueurs[i].socket.emit("results",computeScores(games[game]));
         }
         games[game].levels.splice(0,1);
         games[game].joueurs[games[game].current].socket.emit("yourTurn",games[game].current);
@@ -368,9 +432,45 @@ io.on('connection', function (socket) {
         setTurnTimer(game);
     }
 
+    function endGame(){
+        if(games[game].levels.length > 0){
+            for(player of  games[game].joueurs){
+                if(!player.inHole && player.turn == TURN_LIMIT){
+                    player.points+=2;
+                }
+                player.inHole = false;
+                player.turn = 0;
+                player.socket.emit("nextManche",games[game].levels[0]);
+            }
+            games[game].joueurs[games[game].current].socket.emit("notYourTurn");
+            games[game].joueurs[games[game].current].socket.emit("yourTurn",games[game].current);
+            for(var i=0 ; i<games[game].nbPlayers ; ++i){
+                games[game].joueurs[i].socket.emit("isPlaying",games[game].current);
+                games[game].joueurs[i].socket.emit("results",computeScores(games[game]));
+            }
+            clearTimeout(games[game].turnTimer);
+            setTurnTimer(game);
+            games[game].levels.splice(0,1);
+        }else{
+            for(player of  games[game].joueurs){
+                if(!player.inHole && player.turn == TURN_LIMIT){
+                    player.points+=2;
+                }
+            }
+            for(player of  games[game].joueurs){
+                player.socket.emit("endGame",computeScores(games[game]));
+            }
+            clearTimeout(games[game].turnTimer);
+            for(player of  games[game].joueurs){
+                player.socket.emit("results",computeScores(games[game]));
+            }
+            deleteGame(game);
+        }
+    }
+
     function updateWaitingRoom(){
         for(var i=0, l=games[game].joueurs.length ; i<l-1 ; ++i){
-            if(i != index){
+            if(i != getPlayerFromSock(games[game],socket)){
                 games[game].joueurs[i].socket.emit("playerJoined",{
                     name: games[game].name,
                     nbPlayers: games[game].joueurs.length,
@@ -388,24 +488,35 @@ io.on('connection', function (socket) {
     }
 
     function setTurnTimer(game){
-        console.log("salut")
         games[game].turnTimer = setTimeout(function(current,sock){
-            console.log(current)
-            console.log(games[game].current)
             if(games[game].current === current){
                 sock.emit("notYourTurn");
+
+                var oldCurrent = games[game].current;
                 do{
                     games[game].current = (games[game].current + 1) % games[game].nbPlayers;
-                }while(games[game].joueurs[games[game].current].inHole);
+                    if(oldCurrent == games[game].current){
+                        break;
+                    }
+                }while(games[game].joueurs[games[game].current].inHole 
+                      || games[game].joueurs[games[game].current].turn === TURN_LIMIT);
+    
+                if(oldCurrent === games[game].current && games[game].joueurs[games[game].current].turn === TURN_LIMIT){
+                    console.log(games[game].joueurs)
+                    endGame();
+                    return;
+                }
+
                 games[game].joueurs[games[game].current].socket.emit("yourTurn",games[game].current);
+                games[game].joueurs[games[game].current].turn++;
+                games[game].joueurs[games[game].current].points++;
                 for(var i=0 ; i<games[game].nbPlayers ; ++i){
                     games[game].joueurs[i].socket.emit("isPlaying",games[game].current);
+                    games[game].joueurs[i].socket.emit("results",computeScores(games[game]));
                 }
                 clearTimeout(games[game].turnTimer);
                 setTurnTimer(game);
             }
-        },15000,games[game].current,games[game].joueurs[index].socket);
+        },60000,games[game].current,games[game].joueurs[getPlayerFromSock(games[game],socket)].socket);
     }
 });
-
-// TODO : faire quand on place la balle

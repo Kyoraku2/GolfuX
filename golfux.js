@@ -39,9 +39,15 @@ class Golfux{
         }
         msg_display = false;
         waitReplacement = false;
+
+        document.getElementById("game-interface").style.display = "block";
         if (playType == 0) {
-            document.getElementById("leaderboard").style.display = "none";
+            document.getElementById("btn-leaderboard").style.display = "none";
+            document.getElementById("level-num").style.display = "block";
         }
+        var world_lvl = Math.floor(level/10) + 1;
+        var num_lvl = level%10;
+        document.getElementById("level-num").innerHTML = "\u26F3 Niveau : " + world_lvl + "-" + num_lvl;
     }
 
     save_progression(last_lvl) {
@@ -54,8 +60,8 @@ class Golfux{
 
 const MAX_INTENSITIE=8;
 const INTENSIFIE = 10;
-const BUBBLEGUM_LINEAR_DAMPLING = 18;
-const SAND_LINEAR_DAMPLING = 8;
+const BUBBLEGUM_LINEAR_DAMPLING = 10;
+const SAND_LINEAR_DAMPLING = 5;
 var allStopped;
 var waitReplacement = false;
 const ICE_LINEAR_DAMPLING = 0.6;
@@ -76,23 +82,35 @@ function addEventListener(balls, level){
         var idB = bodyB.GetUserData();
         if((idA >= 0 && idA < 99 && idB >= 100 && idB < 199) || (idA < 199 && idA >= 100 && idB < 99 && idB >= 0)){ //EVENEMENT COLLISION TROU (100 à 199)
             if(idA >= 0 && idA<99){
-                balls[idA].collide = true;
+                balls[idA].collide = bodyB;
+                playHoleSound();
             }else{
-                balls[idB].collide = true;
+                balls[idB].collide = bodyA;
+                playHoleSound();
             }
+        }
+
+        if((idA >= 0 && idA < 99 && idB == 9999) || (idA == 9999 && idB < 99 && idB >= 0)){
+            playBonkSound();
+        }
+        if(idA >= 0 && idA < 99 && idB >= 0 && idB < 99){
+            playBonkSound();
         }
 
         if((idA >= 0 && idA < 99 && idB>=200 && idB <=299) || (idA >= 200 && idA <= 299 && idB >= 0 && idB <= 99)){ //EVENEMENT COLLISIONS OBSTACLES SOLS (de 200 à 299)
             if(idA >= 0 && idA<99){
                 switch(idB){
                     case 200:
+                        playSandSound();
                         balls[idA].body.SetLinearDamping(SAND_LINEAR_DAMPLING);
                         break;
                     case 201:
+                        playBubblegumSound();
                         balls[idA].body.SetLinearDamping(BUBBLEGUM_LINEAR_DAMPLING);
                         break;
                     case 202:
-                        setTimeout(function(body,start){ // C'est une douille, paske l'environnement veut pas faire simplemennt l'instruction
+                        playVoidSound();
+                        setTimeout(function(body,start){
                             body.SetTransform(start,0);
                         },0,balls[idA].body,balls[idA].start_pos);
                         balls[idA].body.SetLinearVelocity(0);
@@ -105,6 +123,7 @@ function addEventListener(balls, level){
                             taken.entered = false;
                             return;
                         }
+                        playPortalSound();
                         taken.entered = true;
                         var impulse = {
                             x:balls[idA].body.GetLinearVelocity().x,
@@ -133,6 +152,7 @@ function addEventListener(balls, level){
                         if(taken == undefined){
                             return;
                         }
+                        playPortalSound();
                         var impulse = {
                             x:balls[idA].body.GetLinearVelocity().x,
                             y:balls[idA].body.GetLinearVelocity().y,
@@ -145,6 +165,7 @@ function addEventListener(balls, level){
                         },0,balls[idA].body,taken,impulse);
                         break;
                     case 205:
+                        playWindSound();
                         var wind = level.obstacles['wind'].find(function(e){
                             return bodyB==e.body;
                         },bodyB);
@@ -154,9 +175,11 @@ function addEventListener(balls, level){
                         wind.enter = balls[idA].body;
                         break;
                     case 207:
+                        playIceSound();
                         balls[idA].body.SetLinearDamping(ICE_LINEAR_DAMPLING);
                         break;
                     case 208:
+                        playWaterSound();
                         setTimeout(function(body,lastPos){
                             body.SetTransform(new b2Vec2(lastPos.x,lastPos.y),0);
                             body.SetLinearVelocity(new b2Vec2(0,0));
@@ -168,15 +191,18 @@ function addEventListener(balls, level){
                 switch(idA){
                     case 200:
                         balls[idB].body.SetLinearDamping(SAND_LINEAR_DAMPLING);
+                        playSandSound();
                         break;
                     case 201:
                         balls[idB].body.SetLinearDamping(BUBBLEGUM_LINEAR_DAMPLING);
+                        playBubblegumSound();
                         break;
                     case 202:
                         setTimeout(function(body,start){
                             body.SetTransform(start,0);
                         },0,balls[idB].body,balls[idB].start_pos); 
-                        balls[idB].body.SetLinearVelocity(0);  
+                        balls[idB].body.SetLinearVelocity(0);
+                        playVoidSound();  
                         break;
                     case 203:
                         var taken = level.obstacles['portal'].find(function(e){
@@ -186,6 +212,7 @@ function addEventListener(balls, level){
                             taken.entered = false;
                             return;
                         }
+                        playPortalSound();
                         taken.entered = true;
                         var impulse = {
                             x:balls[idB].body.GetLinearVelocity().x,
@@ -214,6 +241,7 @@ function addEventListener(balls, level){
                         if(taken == undefined){
                             return;
                         }
+                        playPortalSound();
                         var impulse = {
                             x:balls[idB].body.GetLinearVelocity().x,
                             y:balls[idB].body.GetLinearVelocity().y,
@@ -233,11 +261,14 @@ function addEventListener(balls, level){
                             return;
                         }
                         wind.enter = balls[idB].body;
+                        playWindSound();
                         break;
                     case 207:
+                        playIceSound();
                         balls[idB].body.SetLinearDamping(ICE_LINEAR_DAMPLING);
                         break;
                     case 208:
+                        playWaterSound();
                         setTimeout(function(body,lastPos){
                             body.SetTransform(new b2Vec2(lastPos.x,lastPos.y),0);
                             body.SetLinearVelocity(new b2Vec2(0,0));
@@ -316,7 +347,6 @@ function addEventListener(balls, level){
     };
     listener.PostSolve = function(contactPtr) {
     };
-    // TODO : check si y'a mieux ici aussi
     if(!world){
         return;
     }
@@ -362,6 +392,9 @@ Golfux.prototype.onTouchMove = function(canvas, evt) {
 }
 
 Golfux.prototype.onMouseDown = function(canvas, evt) {
+    if(stopMovements){
+        return;
+    }
     if(playType===2 && (this.balls.length == 0 || !ballPlaced || ballIndex === null || impulsionStack.length>0 || !allStopped || waitReplacement || (currentBall>=0 && this.balls[currentBall] && this.balls[currentBall].shot))){
         return;
     }
@@ -425,17 +458,27 @@ Golfux.prototype.onMouseUp = function(canvas, evt) {
         x:this.balls[ballIndex].body.GetPosition().x,
         y:this.balls[ballIndex].body.GetPosition().y
     }
+    playShootSound();
+    playSoundByDamping(this.balls[ballIndex].body.GetLinearDamping());
     this.balls[ballIndex].body.ApplyLinearImpulse(new b2Vec2(impulse.x*INTENSIFIE, impulse.y*INTENSIFIE),true);
     this.balls[ballIndex].shot = true;
     if(playType === 2){
         sock.emit("shoot",{x:impulse.x*INTENSIFIE, y:impulse.y*INTENSIFIE});
         ballIndex=undefined;
     }
+    if(playType === 1){
+        localScores[ballIndex].score++;
+        localTurns[ballIndex]++;
+        updateLeaderScores(localScores);
+    }
     this.click_up=null;
     this.click_down=null;
 }
 
 Golfux.prototype.onTouchDown = function(canvas, evt) {
+    if(stopMovements){
+        return;
+    }
     if(playType===2 && (this.click_down !== null || this.balls.length == 0 || !ballPlaced || ballIndex === null || impulsionStack.length>0 || !allStopped || waitReplacement || (currentBall>=0 && this.balls[currentBall] && this.balls[currentBall].shot))){
         return;
     }
@@ -443,10 +486,8 @@ Golfux.prototype.onTouchDown = function(canvas, evt) {
         return;
     }
     if(playType===0 && (this.click_down !== null || !ballPlaced || this.balls[ballIndex].shot)){
-        console.log(this.click_down)
         return;
     }
-    console.log("toucheDown")
     // Récuperation de la position du click
     let rect = canvas.getBoundingClientRect();
     let x = evt.touches[0].clientX - rect.left;
@@ -501,21 +542,28 @@ Golfux.prototype.onTouchUp = function(canvas, evt) {
         x:this.balls[ballIndex].body.GetPosition().x,
         y:this.balls[ballIndex].body.GetPosition().y
     }
+    playShootSound();
+    playSoundByDamping(this.balls[ballIndex].body.GetLinearDamping());
     this.balls[ballIndex].body.ApplyLinearImpulse(new b2Vec2(impulse.x*INTENSIFIE, impulse.y*INTENSIFIE),true);
     this.balls[ballIndex].shot = true;
     if(playType === 2){
         sock.emit("shoot",{x:impulse.x*INTENSIFIE, y:impulse.y*INTENSIFIE});
         ballIndex=undefined;
     }
+    if(playType === 1){
+        localScores[ballIndex].score++;
+        localTurns[ballIndex]++;
+        updateLeaderScores(localScores);
+    }
     this.click_up=null;
     this.click_down=null;
 }
 
 Golfux.prototype.step = function(){
-    // TODO : voir si on peut pas faire mieux
-    if(!this.level.hole){
+    if(this.level.holes === undefined || this.level.holes.length === 0){
         return;
     }
+
     var endLevel = true;
     updateBackground(this.level);
 
@@ -534,11 +582,13 @@ Golfux.prototype.step = function(){
         if(ball){
             ball.x=ball.body.GetPosition().x;
             ball.y=ball.body.GetPosition().y;
-            ball.isColliding(this.level.hole);
+            for(hole of this.level.holes){
+                ball.isColliding(hole);
+            }
             if(playType == 2 && ball.isInHole && !ball.awareServerInHole && ballIndex !== null){
-                console.log("inhole")
                 sock.emit("inHole",this.balls.indexOf(ball));
                 ball.awareServerInHole = true;
+                ball.body.SetLinearVelocity(0);
             }
     
             if(ball.body.GetLinearVelocity().Length()<1){ // Limite ici
@@ -567,12 +617,19 @@ Golfux.prototype.step = function(){
             }else{
                 ball.body.GetFixtureList().SetSensor(true);
             }
+        }else{
+            endLevel = false;
         }
     }
 
+    if(playType == 2 && this.balls.length < onlineNbPlayer){
+        endLevel = false;
+    }
+
     if(endLevel && this.balls.length !=0 && playType != 2){
-        console.log("FINI");
         document.getElementById("end-menu").style.display = "block";
+        document.getElementById("game-interface").style.display = "none";
+        document.getElementById("level-num").style.display = "none";
         if (msg_display == false) {
             var rigolo_msg = [
                 "Bien joué <em>Little Player</em> ! Un jour tu deviendras plus grand... &#128170;",
@@ -587,7 +644,6 @@ Golfux.prototype.step = function(){
                 "+ 1000000 social crédits. &#128200;"
             ];
             var rand = Math.floor(Math.random() * rigolo_msg.length);
-            console.log(rand);
             document.querySelector("#end-menu p").innerHTML = rigolo_msg[rand];
             if(playType == 1 && localCurrManche >= localNbManches-1){
                 //TODO : afficher leaderBoard
@@ -611,9 +667,45 @@ Golfux.prototype.step = function(){
 
     if(playType === 1 && allStopped && ballIndex>=0 && this.balls[ballIndex] && this.balls[ballIndex].shot){
         this.balls[ballIndex].shot = false;
+        var oldBallIndex = ballIndex;
         ballIndex = (ballIndex < localNbPlayers-1) ? ballIndex+1 : 0;
-        while(ballIndex>=0 && this.balls[ballIndex] && this.balls[ballIndex].isInHole){
+        while((ballIndex>=0 && this.balls[ballIndex] && this.balls[ballIndex].isInHole) || localTurns[ballIndex] === TURN_LIMIT){
             ballIndex = (ballIndex < localNbPlayers-1) ? ballIndex+1 : 0;
+            if(oldBallIndex == ballIndex){
+                break;
+            }
+        }
+        if(oldBallIndex === ballIndex && localTurns[ballIndex] === TURN_LIMIT){
+            localScores[ballIndex].score+=2;
+            updateLeaderScores(localScores);
+            document.getElementById("end-menu").style.display = "block";
+            document.getElementById("game-interface").style.display = "none";
+            document.getElementById("level-num").style.display = "none";
+            if (msg_display == false) {
+                var rigolo_msg = [
+                    "Bien joué <em>Little Player</em> ! Un jour tu deviendras plus grand... &#128170;",
+                    "Peut mieux faire... Non non je ne juge pas. &#128064;",
+                    "Mouais après le niveau était simple nan ? &#129300;",
+                    "Le <em>TrophuX</em> est à portée de main ! &#129351;",
+                    "Sans doûte un niveau de petit joueur ! &#128526;",
+                    "Trop lent à finir ce niveau : pire que Jube et ses copies... &#128195;",
+                    "C'est une première étape, mais il reste encore beaucoup de chemin à faire... &#128579;",
+                    "Brillant ! Autant de talent, beauté et intelligence que ceux qui ont conçu le jeu. &#129321;",
+                    "Quelle magnifique performance ! Seul un jeu en JavaScript peut nous apporter ça. &#129394;",
+                    "+ 1000000 social crédits. &#128200;"
+                ];
+                var rand = Math.floor(Math.random() * rigolo_msg.length);
+                document.querySelector("#end-menu p").innerHTML = rigolo_msg[rand];
+                if(playType == 1 && localCurrManche >= localNbManches-1){
+                    //TODO : afficher leaderBoard
+                    document.getElementById("btn-continue").style.display = "none";
+                }
+                msg_display = true;
+            }
+            //this.changeLevel(parseInt(this.level.num) + 1);
+            document.getElementById("leaderboard").style.display = "block";
+            stopMovements = true;
+            return;
         }
     }
 
@@ -629,11 +721,9 @@ Golfux.prototype.step = function(){
             allStopped = false;
         }
         if(replacementStack.length > 0 && waitReplacement && allStopped){
-            console.log(replacementStack[0]);
             for(obj of replacementStack[0]){
                 var localPos = golfux.balls[obj.index].body.GetPosition();
                 if(localPos.x != obj.pos.x || localPos.y != obj.pos.y){
-                    console.log("replacement++")
                     golfux.balls[obj.index].lastPos = {
                         x:golfux.balls[obj.index].body.GetPosition().x,
                         y:golfux.balls[obj.index].body.GetPosition().y
@@ -707,45 +797,12 @@ function updateBackground(level){
     } else {
         document.querySelector("body").classList.add("background-w1");
     }
-    if (playType == 0) {
-        switch (world_lvl) {
-            case 1 :
-                contextBack.fillStyle = 'rgb(0,153,0)';
-                contextBack.fillRect( 0, 0, canvasBack.width, canvasBack.height );
-                break;
-            case 2 :
-                contextBack.fillStyle = 'rgb(255, 200, 150)';
-                contextBack.fillRect( 0, 0, canvasBack.width, canvasBack.height );
-                break;
-            case 3 :
-                contextBack.fillStyle = 'rgb(200, 200, 255)';
-                contextBack.fillRect( 0, 0, canvasBack.width, canvasBack.height );
-                break;
-            case 4 :
-                contextBack.fillStyle = 'rgb(150, 150, 150)';
-                contextBack.fillRect( 0, 0, canvasBack.width, canvasBack.height );
-                break;
-        }
-    } else {
-        contextBack.fillStyle = 'rgb(0,153,0)';
-        contextBack.fillRect( 0, 0, canvasBack.width, canvasBack.height );
-    }
-    // Add color to level
-    // JSON etc
-    contextBack.save();
-    
-    //contextBack.fillStyle = 'rgb(0,153,0)';
-    //contextBack.fillRect( 0, 0, canvasBack.width, canvasBack.height );
-    contextBack.fillStyle = "black";
-    contextBack.strokeStyle = "black";
-    var pos = getPixelPointFromWorldPoint({x:level.hole.body.GetPosition().x,y:level.hole.body.GetPosition().y});
-    contextBack.beginPath();
-    contextBack.arc(pos.x, pos.y, level.hole.radius*PTM, 0, 2 * Math.PI);
-    contextBack.fill();
-    contextBack.stroke();
 
-    contextBack.fillStyle = '#FF0000';
-    
+    contextBack.fillStyle = level.backgroundColor;
+    contextBack.fillRect( 0, 0, canvasBack.width, canvasBack.height );
+    contextBack.save();
+
+    contextBack.fillStyle = '#FF0000';    
     // Sand
     renderObjectType("sand",level,"white",contextBack);
 
@@ -803,6 +860,15 @@ function updateBackground(level){
     }
     // Walls
     renderObjectType("walls",level,"red",contextBack);
+    for(hole of level.holes){
+        contextBack.fillStyle = "black";
+        contextBack.strokeStyle = "black";
+        var pos = getPixelPointFromWorldPoint({x:hole.body.GetPosition().x,y:hole.body.GetPosition().y});
+        contextBack.beginPath();
+        contextBack.arc(pos.x, pos.y, hole.radius*PTM, 0, 2 * Math.PI);
+        contextBack.fill();
+        contextBack.stroke();
+    }
 }
 
 function renderObjectType(type,level,debugColor,ctx){
@@ -977,4 +1043,65 @@ function portalNormalForce(impulse,dirEnter,dirExit){
             break;
     }
     return impulse;
+}
+
+function playShootSound(){
+    shootSound.play();
+}
+
+function playBonkSound(){
+    bonkSound.play();
+    if(!bonkSound.paused){
+        bonkSound.cloneNode(true).play();
+    }
+}
+
+function playBubblegumSound(){
+    bubblegumSound.play();
+    
+}
+
+function playPortalSound(){
+    portalSound.play();
+}
+
+function playSandSound(){
+    sandSound.play();
+}
+
+function playVoidSound(){
+    voidSound.play();
+}
+
+function playIceSound(){
+    voidSound.play();
+}
+
+function playWaterSound(){
+    waterSound.play();
+}
+
+function playWindSound(){
+    windSound.play();
+}
+
+function playHoleSound(){
+    holeSound.play();
+}
+
+function playSoundByDamping(damp){
+    switch(damp){
+        case SAND_LINEAR_DAMPLING:
+            sandSound.play();
+            if(!sandSound.paused){
+                sandSound.cloneNode(true).play();
+            }
+            break;
+        case BUBBLEGUM_LINEAR_DAMPLING:
+            bubblegumSound.play();
+            if(!bubblegumSound.paused){
+                bubblegumSound.cloneNode(true).play();
+            }
+            break;
+    }
 }

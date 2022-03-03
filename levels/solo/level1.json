@@ -1,4 +1,5 @@
 {
+    "backgroundColor":"rgb(0,153,0)",
     "obstacles":{
         "spawn":[
             {
@@ -33,8 +34,15 @@
             }
         ]
     },
-    "hole":{
-        "pos":{"x":11.5, "y":23},
-        "radius":0.5
-    }
+    "holes":[
+        {
+            "pos":{"x":11.5, "y":23},
+            "radius":0.5
+        },
+        {
+            "pos":{"x":11.5, "y":14},
+            "radius":0.5
+        }
+    ]
+
 }
