@@ -335,6 +335,10 @@ let localTurns = [];
 let impulsionStack = [];
 let replacementStack = [];
 
+if('serviceWorker' in navigator){
+    navigator.serviceWorker.register('./worker.js');
+};
+
 document.addEventListener("DOMContentLoaded", function() {
     /* Join by link */
     var gameId = (window.location.href.split("?").length == 2 && window.location.href.split("?")[1].match("gameId\=.*")) ? window.location.href.split("?")[1].split('=')[1] : "";
