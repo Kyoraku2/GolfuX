@@ -1,6 +1,6 @@
 const cacheName = 'GolfuX';
 const ASSETS = [
-    '/GolfuX.github.io/textures/ball.png',
+    'https://immense-savannah-78341.herokuapp.com/textures/ball.png',
     /*'./textures/bubblegum.png',
     './textures/ice.jpg',
     './textures/lava.png',
