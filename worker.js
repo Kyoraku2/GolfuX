@@ -11,7 +11,7 @@ const ASSETS = [
     '/textures/water.jpg',
     '/textures/wind.png',
     '/styles/golfux.css',
-    '/sounds/bonk.mp3',
+    /*'/sounds/bonk.mp3',
     '/sounds/hole.mp3',
     '/sounds/ice.mp3',
     '/sounds/lava.mp3',
@@ -31,7 +31,7 @@ const ASSETS = [
     '/hole.js',
     '/index.js',
     '/level.js',
-    '/Obstacle.js'
+    '/Obstacle.js'*/
 ];
 
 const levels = []
