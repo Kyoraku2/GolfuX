@@ -56,7 +56,7 @@ self.addEventListener("fetch", event => {
     if (event.request.url === "https://immense-savannah-78341.herokuapp.com/") {
         event.respondWith(
             fetch(event.request).catch(err =>
-                self.cache.open(cacheName).then(cache => cache.match("/offline.html"))
+                self.caches.open(cacheName).then(cache => cache.match("/offline.html"))
             )
         );
     } else {
