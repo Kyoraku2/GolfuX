@@ -1,7 +1,7 @@
 const cacheName = 'GolfuX';
 const ASSETS = [
     '/textures/ball.png',
-    '/textures/bubblegum.png',
+    /*'/textures/bubblegum.png',
     '/textures/ice.jpg',
     '/textures/lava.png',
     '/textures/logo.png',
@@ -31,12 +31,12 @@ const ASSETS = [
     '/hole.js',
     '/index.js',
     '/level.js',
-    '/Obstacle.js',
+    '/Obstacle.js',*/
 ];
 
 const levels = []
 for(var i = 1 ; i<29 ; ++i){
-    levels.push('/levels/solo/level'+i+'.json');
+    //levels.push('/levels/solo/level'+i+'.json');
 }
 
 const contentToCache = ASSETS.concat(levels);
