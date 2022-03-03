@@ -51,19 +51,3 @@ self.addEventListener('install', (e) => {
 });
 
 
-/*self.addEventListener("fetch", event => {
-    console.log("Fetched " + event.url);
-    if (event.request.url === "https://immense-savannah-78341.herokuapp.com/") {
-        event.respondWith(
-            fetch(event.request).catch(err =>
-                self.cache.open(cacheName).then(cache => cache.match("/offline.html"))
-            )
-        );
-    } else {
-        event.respondWith(
-            fetch(event.request).catch(err =>
-                caches.match(event.request).then(response => response)
-            )
-        );
-    }
-});*/
