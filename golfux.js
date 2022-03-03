@@ -459,6 +459,7 @@ Golfux.prototype.onMouseUp = function(canvas, evt) {
         y:this.balls[ballIndex].body.GetPosition().y
     }
     playShootSound();
+    playSoundByDamping(this.balls[ballIndex].body.GetLinearDamping());
     this.balls[ballIndex].body.ApplyLinearImpulse(new b2Vec2(impulse.x*INTENSIFIE, impulse.y*INTENSIFIE),true);
     this.balls[ballIndex].shot = true;
     if(playType === 2){
@@ -542,6 +543,7 @@ Golfux.prototype.onTouchUp = function(canvas, evt) {
         y:this.balls[ballIndex].body.GetPosition().y
     }
     playShootSound();
+    playSoundByDamping(this.balls[ballIndex].body.GetLinearDamping());
     this.balls[ballIndex].body.ApplyLinearImpulse(new b2Vec2(impulse.x*INTENSIFIE, impulse.y*INTENSIFIE),true);
     this.balls[ballIndex].shot = true;
     if(playType === 2){
@@ -1048,11 +1050,15 @@ function playShootSound(){
 }
 
 function playBonkSound(){
-   bonkSound.play();
+    bonkSound.play();
+    if(!bonkSound.paused){
+        bonkSound.cloneNode(true).play();
+    }
 }
 
 function playBubblegumSound(){
     bubblegumSound.play();
+    
 }
 
 function playPortalSound(){
@@ -1081,4 +1087,21 @@ function playWindSound(){
 
 function playHoleSound(){
     holeSound.play();
+}
+
+function playSoundByDamping(damp){
+    switch(damp){
+        case SAND_LINEAR_DAMPLING:
+            sandSound.play();
+            if(!sandSound.paused){
+                sandSound.cloneNode(true).play();
+            }
+            break;
+        case BUBBLEGUM_LINEAR_DAMPLING:
+            bubblegumSound.play();
+            if(!bubblegumSound.paused){
+                bubblegumSound.cloneNode(true).play();
+            }
+            break;
+    }
 }
