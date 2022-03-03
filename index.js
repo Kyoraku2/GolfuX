@@ -336,6 +336,7 @@ let impulsionStack = [];
 let replacementStack = [];
 
 if('serviceWorker' in navigator){
+    console.log("salit")
     navigator.serviceWorker.register('./worker.js');
 };
 
