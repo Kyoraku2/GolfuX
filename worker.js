@@ -49,3 +49,21 @@ self.addEventListener('install', (e) => {
       await cache.addAll(contentToCache);
     })());
 });
+
+
+self.addEventListener("fetch", event => {
+    console.log("Fetched " + event.url);
+    if (event.request.url === "localhost:8080") {
+        event.respondWith(
+            fetch(event.request).catch(err =>
+                self.cache.open(cacheName).then(cache => cache.match("/offline.html"))
+            )
+        );
+    } else {
+        event.respondWith(
+            fetch(event.request).catch(err =>
+                caches.match(event.request).then(response => response)
+            )
+        );
+    }
+});
