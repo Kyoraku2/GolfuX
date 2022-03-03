@@ -338,8 +338,8 @@ let replacementStack = [];
 if('serviceWorker' in navigator){
     
     navigator.serviceWorker
-        .register('./worker.js')
-        .then(console.log('Worker here !'));
+        .register('./worker2.js')
+        .then(console.log('Worker2 here !'));
 };
 
 document.addEventListener("DOMContentLoaded", function() {
