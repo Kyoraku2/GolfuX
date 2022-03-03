@@ -8,7 +8,7 @@
     }
   ],
   "start_url": ".",
-  "display": "standalone",
+  "display": "browser",
   "background_color": "green",
   "description": "Le jeu de minigolf pour jouer entre amis !"
 }
