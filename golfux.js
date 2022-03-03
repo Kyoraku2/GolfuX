@@ -795,7 +795,24 @@ function updateBackground(level){
     if (level.num % 10 == 0) { world_lvl--;};
     if (document.getElementById("game").style.display == "block") {
         document.querySelector("body").classList = [];
-        document.querySelector("body").classList.add("background-w"+world_lvl);
+        var col_num;
+        switch (level.backgroundColor) {
+            case "rgb(0,153,0)" :
+                col_num = 1;
+                break;
+            case "rgb(255, 200, 150)" :
+                col_num = 2;
+                break;
+            case "rgb(200, 200, 255)" :
+                col_num = 3;
+                break;
+            case "rgb(150, 150, 150)" :
+                col_num = 4;
+                break;
+            default :
+                col_num = 1;
+        }
+        document.querySelector("body").classList.add("background-w"+col_num);
     } else {
         document.querySelector("body").classList.add("background-w1");
     }

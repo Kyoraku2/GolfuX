@@ -343,6 +343,7 @@ document.addEventListener("DOMContentLoaded", function() {
     create_choices(MANCHES_MAX);
     //Check partie privée
     display_code("");
+    document.getElementById("your-turn").style.display = "none";
     
     //Mode Solo
     document.getElementById("btn-play-solo").addEventListener('click', function(e){
@@ -419,6 +420,7 @@ document.addEventListener("DOMContentLoaded", function() {
     //Multi Online
     document.getElementById("btn-multi-online").addEventListener('click', function(e){
         display_title(false);
+        document.querySelector("body").classList.add("background-online");
         document.getElementById("multi-online").style.display = "block";
         playType = 2;
         /***************** Partie serveur  *******************/
