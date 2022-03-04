@@ -336,15 +336,17 @@ let impulsionStack = [];
 let replacementStack = [];
 
 if('serviceWorker' in navigator){
+    /*navigator.serviceWorker
+        .register('./worker.js')
+        .then(console.log('Worker here !'));*/
     navigator.serviceWorker
         .register('./worker.js')
-        .then(console.log('Worker here !'));
-    const registration = await navigator.serviceWorker.getRegistration();
-    if (registration) {
-        registration.addEventListener('updatefound', () => {
-            console.log('Service Worker update detected!');
+        .then(function(registration) {
+            console.log('Registration succeeded.');
+            registration.update();
+        }).catch(function(error) {
+            console.log('Registration failed with ' + error);
         });
-    }
 };
 
 document.addEventListener("DOMContentLoaded", function() {
