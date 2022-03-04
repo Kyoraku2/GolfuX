@@ -886,7 +886,7 @@ function updateLeaderScores(scores){
 
 const checkOnlineStatus = async () => {
     try {
-      const online = await fetch("/textures/1pixel.png");
+      const online = await fetch("/textures/1pixel.png", {cache: "no-cache"});
       return online.status >= 200 && online.status < 300; // either true or false
     } catch (err) {
       return false; // definitely offline
