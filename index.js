@@ -710,14 +710,15 @@ function copyClipboard(){
 }  
 
 function setUpSocket(){
+    sock = io.connect();
+    if(!sock.status){
+        alert("Vous n'êtes pas connectés à internet.")
+        return;
+    }
     display_title(false);
     document.getElementById("multi-online").style.display = "block";
     playType = 2;
     /***************** Partie serveur  *******************/
-    sock = io.connect();
-    if(!sock.status){
-        return;
-    }
     let partie = { 
         name:null,
         nbPlayers: null,
