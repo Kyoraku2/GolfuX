@@ -843,7 +843,7 @@ function setUpSocket(){
 
     sock.on("yourTurn",function(index){
         ballIndex = index;
-        alert("Your turn");
+        displayYouTurn();
     });
 
     sock.on("notYourTurn",function(){
@@ -918,3 +918,19 @@ const checkOnlineStatus = async () => {
       return false; // definitely offline
     }
 };
+
+function displayYouTurn() {
+    document.getElementById("your-turn").style.display = "block";
+    setTimeout(displayTurn, 500);
+    setTimeout(stopDisplay1, 3000);
+    setTimeout(stopDisplay2, 4000);
+    function displayTurn() {
+        document.getElementById("your-turn").classList.add("display-turn");
+    }
+    function stopDisplay1() {
+        document.getElementById("your-turn").classList.remove("display-turn");
+    }
+    function stopDisplay2() {
+        document.getElementById("your-turn").style.display = "none";
+    }
+}
