@@ -1,0 +1,18 @@
+{
+  "short_name": "GolfuX",
+  "name": "GolfuX",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any"
+    },
+    {
+      "src": "favicon.ico",
+      "sizes": "any"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "green",
+  "description": "Le jeu de minigolf pour jouer entre amis !"
+}
