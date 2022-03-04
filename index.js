@@ -335,6 +335,20 @@ let localTurns = [];
 let impulsionStack = [];
 let replacementStack = [];
 
+if('serviceWorker' in navigator){
+    navigator.serviceWorker
+        .register('./worker.js')
+        .then(console.log('Worker here !'));
+    /*navigator.serviceWorker
+        .register('./worker.js',{scope: './'})
+        .then(function(registration) {
+            console.log('Registration succeeded.');
+            registration.update();
+        }).catch(function(error) {
+            console.log('Registration failed with ' + error);
+        });*/
+};
+
 document.addEventListener("DOMContentLoaded", function() {
     /* Join by link */
     var gameId = (window.location.href.split("?").length == 2 && window.location.href.split("?")[1].match("gameId\=.*")) ? window.location.href.split("?")[1].split('=')[1] : "";
@@ -430,7 +444,17 @@ document.addEventListener("DOMContentLoaded", function() {
 
     //Multi Online
     document.getElementById("btn-multi-online").addEventListener('click', function(e){
-        setUpSocket();
+        setTimeout(async () => {
+            const result = await checkOnlineStatus();
+            if(result){
+                console.log("salut");
+                setUpSocket();
+            }else{
+                alert("Vous n'êtes pas connectés à internet.");
+            }
+        }, 500);
+    
+        //setUpSocket();
     });
 
     //Retour
@@ -698,12 +722,16 @@ function generateQRCode(link){
 }
 
 function setUpSocket(){
+    sock = io.connect();
+    /*console.log(sock)
+    if(!sock.status){
+        alert("Vous n'êtes pas connectés à internet.")
+        return;
+    }*/
     display_title(false);
     document.getElementById("multi-online").style.display = "block";
     playType = 2;
     /***************** Partie serveur  *******************/
-    sock = io.connect();
-
     let partie = { 
         name:null,
         nbPlayers: null,
@@ -872,4 +900,11 @@ function updateLeaderScores(scores){
     }
 }
 
-
+const checkOnlineStatus = async () => {
+    try {
+      const online = await fetch("/textures/1pixel.png",{cache: "no-store"});
+      return online.status >= 200 && online.status < 300; // either true or false
+    } catch (err) {
+      return false; // definitely offline
+    }
+};
