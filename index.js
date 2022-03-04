@@ -369,6 +369,7 @@ document.addEventListener("DOMContentLoaded", function() {
     create_choices(MANCHES_MAX);
     //Check partie privée
     display_code("");
+    document.getElementById("your-turn").style.display = "none";
     
     //Mode Solo
     document.getElementById("btn-play-solo").addEventListener('click', function(e){
@@ -681,7 +682,6 @@ function create_game_list(list){
         btn.title = "Rejoindre la partie publique";
         btn.innerHTML = '<strong>"'+list[i].name+'" :</strong> ('+list[i].nbPlayers+'/'+list[i].maxPlayers+')<br>Manches :'+list[i].nbManches+'</button>'
         document.getElementById("game-list").appendChild(btn);
-    }
 }
 
 function updateLeaderNbPlayers(nbPlayers){

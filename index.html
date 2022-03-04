@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 
 <html lang="fr">
     <head>
@@ -157,13 +157,14 @@
                 </div>
                 <div class="block">
                     <h3><span class="emoji">&#128161;</span> LISTE DES PARTIES PUBLIQUES DISPONIBLES :</h3>
-                    <ul id="game-list">
+                    <div id="game-list">
                         <!--<li>
                             <button class="btn-wait unlock" title="Rejoindre la partie publique">
                             <strong>"NOM DE LA PARTIE 1" :</strong> (X/X)<br>
                             Manches : X</button>
                         </li>-->
-                    </ul>
+                    </div>
+                    <button id="btn-reload" class="unlock" title="Raffraichir la liste">&#128260; RAFFRAICHIR</button>
                 </div>
             </div>
 
@@ -239,9 +240,18 @@
             <div id="game">           
                 <canvas id="canvas" width="640" height="800" tabindex='1'></canvas>
                 <canvas id="stage" width="640" height="800" tabindex='1'></canvas>
-                <div id="level-num">
+                <h2 class="subtitle" id="your-turn">
+                    <span class="animated bounce bounce-1">&#127937; </span>
+                    <span class="animated bounce bounce-2">À </span>
+                    <span class="animated bounce bounce-3">VOUS </span>
+                    <span class="animated bounce bounce-4">DE </span>
+                    <span class="animated bounce bounce-5">JOUER </span>
+                    <span class="animated bounce bounce-6">! </span>
+                    <span class="animated bounce bounce-7">&#127937;</span>
+                </h2>
+                <aside id="level-num">
                     <!-- VIA JS -->
-                </div>
+                </aside>
                 <div id="game-interface">
                     <button class="unlock" id="btn-leaderboard" title="Voir le classement">&#128202; LEADERBOARD</button>
                     <button class="unlock btn-quit" id="quit-game" title="Retourner au menu principal">&#10060; QUITTER</button>
@@ -271,7 +281,8 @@
         
         <!-- BAS DE PAGE -->
         <footer>
-            <p>&copy; GolfuX Corporation&trade; - 2022<br>Arthur BETARD, Robin GRAPPE, Tayeb HAKKAR<br>CMI Informatique - <em>Université de Franche-Comté</em></p>
+            <p>&copy; GolfuX Corporation&trade; - 2022<br>Arthur BETARD, Robin GRAPPE, Tayeb HAKKAR<br>CMI Informatique - <em>Université de Franche-Comté</em>
+            <br><br><span id="version">[ver. 1.0.0]</span></p>
         </footer>
     </body>
 </html>

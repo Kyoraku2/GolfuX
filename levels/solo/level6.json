@@ -33,9 +33,9 @@
                 "angle":0
             },
             {
-                "middle_pos":{"x":8, "y":24.5},
+                "middle_pos":{"x":8, "y":25.5},
                 "shape": "box",
-                "heightWidth" : {"width": 0.25, "height":4.5},
+                "heightWidth" : {"width": 0.25, "height":5.5},
                 "angle":0
             }
         ],
@@ -111,6 +111,10 @@
     "holes":[
         {
             "pos":{"x":11.5, "y":28},
+            "radius":0.5
+        },
+        {
+            "pos":{"x":4, "y":28},
             "radius":0.5
         }
     ]
