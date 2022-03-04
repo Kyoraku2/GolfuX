@@ -454,7 +454,8 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         }, 500);*/
         
-        setUpSocket();
+        console.log(navigator.onLine)
+        //setUpSocket();
     });
 
     //Retour
@@ -711,10 +712,11 @@ function copyClipboard(){
 
 function setUpSocket(){
     sock = io.connect();
+    /*console.log(sock)
     if(!sock.status){
         alert("Vous n'êtes pas connectés à internet.")
         return;
-    }
+    }*/
     display_title(false);
     document.getElementById("multi-online").style.display = "block";
     playType = 2;
