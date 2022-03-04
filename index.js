@@ -340,7 +340,7 @@ if('serviceWorker' in navigator){
         .register('./worker.js')
         .then(console.log('Worker here !'));*/
     navigator.serviceWorker
-        .register('./worker.js')
+        .register('./worker.js',{scope: './'})
         .then(function(registration) {
             console.log('Registration succeeded.');
             registration.update();
