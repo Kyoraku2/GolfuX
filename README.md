@@ -4,7 +4,6 @@ Projet minigolf, projet de fin de licence
 TODO :
 - Ajouter des (vrais) sons
 - Tester beaucoup
-- webworker (pour le offline)
 
 Bonus :
 - Obstacles qui se détruisent ?
