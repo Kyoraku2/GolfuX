@@ -102,14 +102,6 @@ function getPlayerFromSock(game,sock){
     return undefined;
 }
 
-function computePlayersPos(game){
-    var pos = {};
-    for(var i=0 ; i<game.joueurs.length ; ++i){
-        pos[i] = game.joueurs[i].pos;
-    }
-    return pos;
-}
-
 function computeScores(game){
     var pos = {};
     for(var i=0 ; i<game.joueurs.length ; ++i){
@@ -128,6 +120,10 @@ io.on('connection', function (socket) {
     
     socket.emit("gameList",generateGameList());
 
+    socket.on("askGameList",function(){
+        socket.emit("gameList",generateGameList());
+    });
+
     socket.on("joinGameByLink",function(id){
         if(game !== null){
             socket.emit("error", {message: "Erreur, une partie est déjà en cours."});
@@ -140,7 +136,7 @@ io.on('connection', function (socket) {
         }
 
         if(games[joinGame] && games[joinGame].joueurs.length < games[joinGame].nbPlayers){
-            games[joinGame].joueurs[games[joinGame].joueurs.length] = {socket: socket, points: 0, inHole:false, pos:null, turn:0, name:"player"};
+            games[joinGame].joueurs[games[joinGame].joueurs.length] = {socket: socket, points: 0, inHole:false, pos:null, turn:0, name:"player", disconnected:false};
             game = joinGame;
             console.log("Joueur connecté à l'indice "+(games[game].joueurs.length-1));
             socket.emit("waiting",{
@@ -184,7 +180,7 @@ io.on('connection', function (socket) {
         games[game]["current"] = -1;
         games[game].joueurs = [];
         games[game].turnTimer = null;
-        games[game].joueurs[0] = {socket: socket, points: 0, inHole:false, pos:null, turn:0, name:obj.name};
+        games[game].joueurs[0] = {socket: socket, points: 0, inHole:false, pos:null, turn:0, name:obj.name, disconnected:false};
         console.log("Partie créée à l'indice "+game);
         console.log("Joueur connecté à l'indice 0");
         socket.emit("waiting",{
@@ -207,7 +203,7 @@ io.on('connection', function (socket) {
         }
 
         if(games[obj.id] && games[obj.id].joueurs.length < games[obj.id].nbPlayers){
-            games[obj.id].joueurs[games[obj.id].joueurs.length] = {socket: socket, points: 0, inHole:false, pos:null, turn:0, name:obj.name};
+            games[obj.id].joueurs[games[obj.id].joueurs.length] = {socket: socket, points: 0, inHole:false, pos:null, turn:0, name:obj.name, disconnected:false};
             game = obj.id;
             console.log("Joueur connecté à l'indice "+(games[game].joueurs.length-1));
             socket.emit("waiting",{
@@ -278,6 +274,11 @@ io.on('connection', function (socket) {
             games[game].joueurs[playerId].socket.emit('unableForceStart');
         }
         games[game].joueurs.splice(playerId,1);
+        if(games[game].joueurs.length === 0){
+            deleteGame(game);
+            game = null;
+            return;
+        }
         for(var i=0, l=games[game].joueurs.length ; i<l ; ++i){
             games[game].joueurs[i].socket.emit("playerJoined",{
                 name: games[game].name,
@@ -370,7 +371,8 @@ io.on('connection', function (socket) {
                     break;
                 }
             }while(games[game].joueurs[games[game].current].inHole 
-                  || games[game].joueurs[games[game].current].turn === TURN_LIMIT);
+                  || games[game].joueurs[games[game].current].turn === TURN_LIMIT
+                  || games[game].joueurs[games[game].current].disconnected);
 
             if(oldCurrent === games[game].current && games[game].joueurs[games[game].current].turn === TURN_LIMIT){
                 console.log(games[game].joueurs)
@@ -410,6 +412,13 @@ io.on('connection', function (socket) {
 
     socket.on("disconnect", function() {
         console.log("Déconnexion d'un client");
+        if(game !== null){
+            var playerId = getPlayerFromSock(games[game],socket);
+            if(playerId===undefined || !games[game]){
+                return;
+            }
+            games[game].joueurs[playerId].disconnected = true;
+        }
     });
 
     /****************
@@ -499,7 +508,8 @@ io.on('connection', function (socket) {
                         break;
                     }
                 }while(games[game].joueurs[games[game].current].inHole 
-                      || games[game].joueurs[games[game].current].turn === TURN_LIMIT);
+                      || games[game].joueurs[games[game].current].turn === TURN_LIMIT
+                      || games[game].joueurs[games[game].current].disconnected);
     
                 if(oldCurrent === games[game].current && games[game].joueurs[games[game].current].turn === TURN_LIMIT){
                     console.log(games[game].joueurs)

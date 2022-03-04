@@ -453,15 +453,24 @@ document.addEventListener("DOMContentLoaded", function() {
             }else{
                 alert("Vous n'êtes pas connectés à internet.");
             }
-        }, 500);
-    
+        }, 100);
         //setUpSocket();
+    });
+
+    document.getElementById('btn-reload').addEventListener('click',function(e){
+        if(playType === 2){
+            document.getElementById('game-list').innerHTML="";
+            sock.emit("askGameList");
+        }
     });
 
     //Retour
     var btns_retour = document.getElementsByClassName("btn-retour");
     for (var i = 0; i < btns_retour.length; i++) {
         btns_retour[i].addEventListener('click', function(e){
+            if(playType === 2){
+                sock.disconnect();
+            }
             document.getElementById("solo").style.display = "none";
             document.getElementById("multi-local").style.display = "none";
             document.getElementById("multi-online").style.display = "none";
@@ -682,6 +691,7 @@ function create_game_list(list){
         btn.title = "Rejoindre la partie publique";
         btn.innerHTML = '<strong>"'+list[i].name+'" :</strong> ('+list[i].nbPlayers+'/'+list[i].maxPlayers+')<br>Manches :'+list[i].nbManches+'</button>'
         document.getElementById("game-list").appendChild(btn);
+    }
 }
 
 function updateLeaderNbPlayers(nbPlayers){
