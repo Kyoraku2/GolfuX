@@ -437,7 +437,17 @@ document.addEventListener("DOMContentLoaded", function() {
 
     //Multi Online
     document.getElementById("btn-multi-online").addEventListener('click', function(e){
-        setUpSocket();
+        setTimeout(async () => {
+            const result = await checkOnlineStatus();
+            if(result){
+                setUpSocket();
+                console.log("salut");
+            }else{
+                alert("Vous n'êtes pas connectés à internet.");
+            }
+        }, 500);   
+        
+        //setUpSocket();
     });
 
     //Retour
@@ -867,3 +877,11 @@ function updateLeaderScores(scores){
     }
 }
 
+const checkOnlineStatus = async () => {
+    try {
+      const online = await fetch("/textures/1pixel.png");
+      return online.status >= 200 && online.status < 300; // either true or false
+    } catch (err) {
+      return false; // definitely offline
+    }
+};
