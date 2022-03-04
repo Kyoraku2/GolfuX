@@ -338,10 +338,13 @@ let replacementStack = [];
 if('serviceWorker' in navigator){
     navigator.serviceWorker
         .register('./worker.js')
-        .then(function(registration) {
-            console.log('Worker here !');
-                registration.update();
-            });
+        .then(console.log('Worker here !'));
+    const registration = await navigator.serviceWorker.getRegistration();
+    if (registration) {
+        registration.addEventListener('updatefound', () => {
+            console.log('Service Worker update detected!');
+        });
+    }
 };
 
 document.addEventListener("DOMContentLoaded", function() {

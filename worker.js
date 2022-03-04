@@ -54,7 +54,7 @@ self.addEventListener('install', (e) => {
 self.addEventListener('fetch', (e) => {
     e.respondWith((async () => {
       const r = await caches.match(e.request);
-      console.log(`[Service Worker] Fetching resource: ${e.request.url}`);
+      //console.log(`[Service Worker] Fetching resource: ${e.request.url}`);
       if (r) { return r; }
       //if(!(e.request.url.startsWith('http'))){return;}
       const response = await fetch(e.request);
