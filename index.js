@@ -349,6 +349,17 @@ if('serviceWorker' in navigator){
         });*/
 };
 
+window.addEventListener('load', function(event){
+    console.log("load")
+});
+window.addEventListener('online', function(event){
+    console.log("online")
+});
+window.addEventListener('offline', function(event){
+    console.log("offline")
+});
+
+
 document.addEventListener("DOMContentLoaded", function() {
     /* Join by link */
     var gameId = (window.location.href.split("?").length == 2 && window.location.href.split("?")[1].match("gameId\=.*")) ? window.location.href.split("?")[1].split('=')[1] : "";
