@@ -438,10 +438,10 @@ document.addEventListener("DOMContentLoaded", function() {
     //Multi Online
     document.getElementById("btn-multi-online").addEventListener('click', function(e){
         setTimeout(async () => {
-            console.log("salut");
             const result = await checkOnlineStatus();
             if(result){
                 setUpSocket();
+                console.log("salut");
             }else{
                 alert("Vous n'êtes pas connectés à internet.");
             }
