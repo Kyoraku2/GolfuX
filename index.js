@@ -349,17 +349,6 @@ if('serviceWorker' in navigator){
         });*/
 };
 
-window.addEventListener('load', function(event){
-    console.log("load")
-});
-window.addEventListener('online', function(event){
-    console.log("online")
-});
-window.addEventListener('offline', function(event){
-    console.log("offline")
-});
-
-
 document.addEventListener("DOMContentLoaded", function() {
     /* Join by link */
     var gameId = (window.location.href.split("?").length == 2 && window.location.href.split("?")[1].match("gameId\=.*")) ? window.location.href.split("?")[1].split('=')[1] : "";
@@ -455,17 +444,16 @@ document.addEventListener("DOMContentLoaded", function() {
 
     //Multi Online
     document.getElementById("btn-multi-online").addEventListener('click', function(e){
-        /*setTimeout(async () => {
+        setTimeout(async () => {
             const result = await checkOnlineStatus();
             if(result){
-                setUpSocket();
                 console.log("salut");
+                setUpSocket();
             }else{
                 alert("Vous n'êtes pas connectés à internet.");
             }
-        }, 500);*/
-        
-        console.log(navigator.onLine)
+        }, 500);
+    
         //setUpSocket();
     });
 
@@ -900,15 +888,11 @@ function updateLeaderScores(scores){
     }
 }
 
-/*const checkOnlineStatus = async () => {
+const checkOnlineStatus = async () => {
     try {
-      const online = await fetch("/textures/1pixel.png", {
-        headers: {
-          'Cache-Control': 'no-cache'
-        }
-      }).then(function(response){});
+      const online = await fetch("/textures/1pixel.png",{cache: "no-cache"});
       return online.status >= 200 && online.status < 300; // either true or false
     } catch (err) {
       return false; // definitely offline
     }
-};*/
+};
