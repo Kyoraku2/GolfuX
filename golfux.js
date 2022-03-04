@@ -806,7 +806,7 @@ function updateBackground(level){
             case "rgb(200, 200, 255)" :
                 col_num = 3;
                 break;
-            case "rgb(150, 150, 150)" :
+            case "rgb(100, 100, 100)" :
                 col_num = 4;
                 break;
             default :
