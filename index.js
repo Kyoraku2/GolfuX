@@ -437,16 +437,14 @@ document.addEventListener("DOMContentLoaded", function() {
 
     //Multi Online
     document.getElementById("btn-multi-online").addEventListener('click', function(e){
-        /*setInterval(async () => {
+        setInterval(async () => {
             const result = await checkOnlineStatus();
-            const statusDisplay = document.getElementById("status");
-            statusDisplay.textContent = result ? "Online" : "OFFline";
-          }, 500);*/
-        if(!window.navigator.onLine){
-            alert("Vous n'êtes pas connectés à internet.");
-            return;
-        }
-        setUpSocket();
+            if(result){
+                setUpSocket();
+            }else{
+                alert("Vous n'êtes pas connectés à internet.");
+            }
+        }, 500);        
     });
 
     //Retour
@@ -632,14 +630,14 @@ function change_world(num_world) {
     document.getElementById("btn-world-"+num_world).classList.remove("unlock");
 }
 
-/*const checkOnlineStatus = async () => {
+const checkOnlineStatus = async () => {
     try {
-      const online = await fetch("/1pixel.png");
+      const online = await fetch("/textures/1pixel.png");
       return online.status >= 200 && online.status < 300; // either true or false
     } catch (err) {
       return false; // definitely offline
     }
-};*/
+};
 
 function create_choices(nb_choices) {
     var selects = document.getElementsByClassName("manches");
