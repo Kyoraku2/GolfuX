@@ -185,7 +185,7 @@ button#btn-multi-local:hover {
 	background-color: #02ccff;
 }
 
-button#btn-multi-online:hover, button#btn-creer-partie:hover, #creer-partie button.btn-start:hover,
+button#btn-multi-online:hover, #creer-partie button.btn-start:hover,
 #creer-partie button.btn-wait:hover, #btn-leaderboard:hover, #btn-reload:hover {
 	background-color: blue;
 }
@@ -202,7 +202,7 @@ button#btn-multi-online:hover, button#btn-creer-partie:hover, #creer-partie butt
 	background-color: skyblue;
 }
 
-#btn-world-4.unlock:hover, .background-w4 {
+#btn-world-4.unlock:hover, .background-w4, button#btn-creer-partie:hover {
 	background-color: gray;
 }
 

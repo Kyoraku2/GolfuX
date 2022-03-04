@@ -837,9 +837,6 @@ function updateBackground(level){
     // Water
     renderObjectType("water",level,"yellow",contextBack);
 
-    // Bumper
-    renderObjectType("bumper",level,"blue",contextBack);
-
     // Spawn area
     renderObjectType("spawn",level,"rgba(0,0,0,0.25)",contextBack);
 
@@ -864,6 +861,9 @@ function updateBackground(level){
             contextBack.restore();
         }
     }
+
+    // Bumper
+    renderObjectType("bumper",level,"blue",contextBack);
 
     // Portal
     if(level.obstacles["portal"].length>0){
