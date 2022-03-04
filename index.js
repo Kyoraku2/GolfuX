@@ -444,7 +444,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     //Multi Online
     document.getElementById("btn-multi-online").addEventListener('click', function(e){
-        setTimeout(async () => {
+        /*setTimeout(async () => {
             const result = await checkOnlineStatus();
             if(result){
                 setUpSocket();
@@ -452,9 +452,9 @@ document.addEventListener("DOMContentLoaded", function() {
             }else{
                 alert("Vous n'êtes pas connectés à internet.");
             }
-        }, 500);   
+        }, 500);*/
         
-        //setUpSocket();
+        setUpSocket();
     });
 
     //Retour
@@ -715,7 +715,9 @@ function setUpSocket(){
     playType = 2;
     /***************** Partie serveur  *******************/
     sock = io.connect();
-
+    if(!sock.status){
+        return;
+    }
     let partie = { 
         name:null,
         nbPlayers: null,
@@ -884,7 +886,7 @@ function updateLeaderScores(scores){
     }
 }
 
-const checkOnlineStatus = async () => {
+/*const checkOnlineStatus = async () => {
     try {
       const online = await fetch("/textures/1pixel.png", {
         headers: {
@@ -895,4 +897,4 @@ const checkOnlineStatus = async () => {
     } catch (err) {
       return false; // definitely offline
     }
-};
+};*/
