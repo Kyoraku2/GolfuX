@@ -438,6 +438,7 @@ document.addEventListener("DOMContentLoaded", function() {
     //Multi Online
     document.getElementById("btn-multi-online").addEventListener('click', function(e){
         setInterval(async () => {
+            console.log("salut");
             const result = await checkOnlineStatus();
             if(result){
                 setUpSocket();
