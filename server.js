@@ -102,6 +102,14 @@ function getPlayerFromSock(game,sock){
     return undefined;
 }
 
+function computePlayersPos(game){
+    var pos = {};
+    for(var i=0 ; i<game.joueurs.length ; ++i){
+        pos[i] = game.joueurs[i].pos;
+    }
+    return pos;
+}
+
 function computeScores(game){
     var pos = {};
     for(var i=0 ; i<game.joueurs.length ; ++i){
@@ -119,45 +127,6 @@ io.on('connection', function (socket) {
     let game = null;
     
     socket.emit("gameList",generateGameList());
-
-    socket.on("askGameList",function(){
-        socket.emit("gameList",generateGameList());
-    });
-
-    socket.on("joinGameByLink",function(id){
-        if(game !== null){
-            socket.emit("error", {message: "Erreur, une partie est déjà en cours."});
-            return;
-        }
-        var joinGame = findGameByCode(id);
-        if(joinGame == null){
-            socket.emit("error", {message: "Erreur, partie innexistante."});
-            return;
-        }
-
-        if(games[joinGame] && games[joinGame].joueurs.length < games[joinGame].nbPlayers){
-            games[joinGame].joueurs[games[joinGame].joueurs.length] = {socket: socket, points: 0, inHole:false, pos:null, turn:0, name:"player", disconnected:false};
-            game = joinGame;
-            console.log("Joueur connecté à l'indice "+(games[game].joueurs.length-1));
-            socket.emit("waiting",{
-                name: games[game].name,
-                nbPlayers: games[game].joueurs.length,
-                maxPlayers: games[game].nbPlayers,
-                nbManches: games[game].nbManches,
-                code: games[game].code
-            });
-            if(games[game].joueurs.length >= 2){
-                games[game].joueurs[0].socket.emit("canForceStart");
-            }
-            if(games[game].joueurs.length == games[game].nbPlayers){
-                startGame();
-            }else{
-                updateWaitingRoom();
-            }
-        }else{
-            socket.emit("error", {message: "Erreur, impossible de rejoindre la partie, mot de passe ou id invalide"});
-        }
-    });
 
     socket.on("CreateGame", function(obj){
         if(game !== null){
@@ -180,7 +149,7 @@ io.on('connection', function (socket) {
         games[game]["current"] = -1;
         games[game].joueurs = [];
         games[game].turnTimer = null;
-        games[game].joueurs[0] = {socket: socket, points: 0, inHole:false, pos:null, turn:0, name:obj.name, disconnected:false};
+        games[game].joueurs[0] = {socket: socket, points: 0, inHole:false, pos:null, turn:0, name:obj.name};
         console.log("Partie créée à l'indice "+game);
         console.log("Joueur connecté à l'indice 0");
         socket.emit("waiting",{
@@ -203,7 +172,7 @@ io.on('connection', function (socket) {
         }
 
         if(games[obj.id] && games[obj.id].joueurs.length < games[obj.id].nbPlayers){
-            games[obj.id].joueurs[games[obj.id].joueurs.length] = {socket: socket, points: 0, inHole:false, pos:null, turn:0, name:obj.name, disconnected:false};
+            games[obj.id].joueurs[games[obj.id].joueurs.length] = {socket: socket, points: 0, inHole:false, pos:null, turn:0, name:obj.name};
             game = obj.id;
             console.log("Joueur connecté à l'indice "+(games[game].joueurs.length-1));
             socket.emit("waiting",{
@@ -242,7 +211,7 @@ io.on('connection', function (socket) {
         if(games[gameId] && games[gameId].joueurs.length < games[gameId].nbPlayers){
             games[gameId].joueurs[games[gameId].joueurs.length] = {socket: socket, points: 0, inHole:false, pos:null, turn:0, name:obj.name};
             game = gameId;
-            console.log("Joueur connecté à l'indice "+(games[game].joueurs.length-1));
+            console.log("Joueur connecté à l'indice "+games[game].joueurs.length-1);
             socket.emit("waiting",{
                 name: games[game].name,
                 nbPlayers: games[game].joueurs.length,
@@ -274,11 +243,6 @@ io.on('connection', function (socket) {
             games[game].joueurs[playerId].socket.emit('unableForceStart');
         }
         games[game].joueurs.splice(playerId,1);
-        if(games[game].joueurs.length === 0){
-            deleteGame(game);
-            game = null;
-            return;
-        }
         for(var i=0, l=games[game].joueurs.length ; i<l ; ++i){
             games[game].joueurs[i].socket.emit("playerJoined",{
                 name: games[game].name,
@@ -371,8 +335,7 @@ io.on('connection', function (socket) {
                     break;
                 }
             }while(games[game].joueurs[games[game].current].inHole 
-                  || games[game].joueurs[games[game].current].turn === TURN_LIMIT
-                  || games[game].joueurs[games[game].current].disconnected);
+                  || games[game].joueurs[games[game].current].turn === TURN_LIMIT);
 
             if(oldCurrent === games[game].current && games[game].joueurs[games[game].current].turn === TURN_LIMIT){
                 console.log(games[game].joueurs)
@@ -412,13 +375,6 @@ io.on('connection', function (socket) {
 
     socket.on("disconnect", function() {
         console.log("Déconnexion d'un client");
-        if(game !== null){
-            var playerId = getPlayerFromSock(games[game],socket);
-            if(playerId===undefined || !games[game]){
-                return;
-            }
-            games[game].joueurs[playerId].disconnected = true;
-        }
     });
 
     /****************
@@ -508,8 +464,7 @@ io.on('connection', function (socket) {
                         break;
                     }
                 }while(games[game].joueurs[games[game].current].inHole 
-                      || games[game].joueurs[games[game].current].turn === TURN_LIMIT
-                      || games[game].joueurs[games[game].current].disconnected);
+                      || games[game].joueurs[games[game].current].turn === TURN_LIMIT);
     
                 if(oldCurrent === games[game].current && games[game].joueurs[games[game].current].turn === TURN_LIMIT){
                     console.log(games[game].joueurs)

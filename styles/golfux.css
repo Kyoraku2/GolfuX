@@ -301,10 +301,6 @@ input[type="text"]#code {
 	text-transform: uppercase;
 }
 
-#gameId{
-	text-transform: none;
-}
-
 .block {
 	background-color: #683801;
 	border: 3px solid white;
