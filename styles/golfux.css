@@ -163,7 +163,7 @@ li button {
 }
 
 button.unlock {
-	transition-property: background-color, box-shadow, bottom;
+	transition-property: background-color, box-shadow, bottom, color, border;
 	transition-duration: 0.2s;
 	cursor: pointer;
 	background-color: #b15f01;
@@ -186,7 +186,8 @@ button#btn-multi-local:hover {
 }
 
 button#btn-multi-online:hover, #creer-partie button.btn-start:hover,
-#creer-partie button.btn-wait:hover, #btn-leaderboard:hover, #btn-reload:hover {
+#creer-partie button.btn-wait:hover, #btn-leaderboard:hover, #btn-reload:hover,
+#copyBtn:hover {
 	background-color: blue;
 }
 
@@ -242,7 +243,8 @@ button#btn-multi-online:hover, #creer-partie button.btn-start:hover,
 
 button.btn-retour, button.btn-start, #btn-creer-partie, button.btn-retour-2,
 button.btn-wait, #btn-room-quit, #btn-world-1, #btn-world-2, #btn-world-3, #btn-world-4,
-#btn-continue, button.btn-quit, #restart-game, #btn-leaderboard, #close-leaderboard, #btn-reload {
+#btn-continue, button.btn-quit, #restart-game, #btn-leaderboard, #close-leaderboard,
+#btn-reload, #generateQr {
 	border-radius: 3vh;
 	margin: 3vh;
 	padding: 20px;
@@ -296,13 +298,40 @@ select {
 }
 
 input[type="text"]#code {
-	height: 3vh;
+	height: 5vh;
+	width: 10vh;
+	font-size: 3vh;
 	text-align: center;
 	text-transform: uppercase;
 }
 
 #gameId{
 	text-transform: none;
+	height: 3vh;
+	width: 35vh;
+	font-size: 2vh;
+}
+
+#copyBtn {
+	border-radius: 2vh;
+	margin: 1vh;
+	padding: 5px;
+}
+
+#generateQr:hover.unlock {
+	background-color: white;
+	color: black;
+	border-color: black;
+	transition-property: background-color, box-shadow, bottom, color, border;
+	transition-duration: 0.2s;
+}
+
+#qrCode {
+	display: inline-block;
+}
+
+#qrCode img {
+	height: 20vh;
 }
 
 .block {
@@ -310,7 +339,7 @@ input[type="text"]#code {
 	border: 3px solid white;
 	color: white;
 	font-weight: bold;
-	padding: 3vw;
+	padding: 2vw;
 	border-radius: 4vh;
 	font-size: 3vh;
 	margin-left: 8vw;
@@ -475,6 +504,8 @@ input[type="text"]#code {
     background-color: white;
     border-radius: 50px;
     position: absolute;
+	transition-property: background-color;
+	transition-duration: 0.5s;
 }
 
 #btn-private label::after {
@@ -494,7 +525,9 @@ input[type="text"]#code {
 }
 
 #btn-private input:checked + label::before {
-    background-color: white;
+    background-color: #ffc83d;
+	transition-property: background-color;
+	transition-duration: 0.5s;
 }
 
 #btn-private input:checked + label::after {

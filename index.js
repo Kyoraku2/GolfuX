@@ -11,6 +11,7 @@ var max_lvl = parseInt(localStorage.getItem("level"));
 const MANCHES_MAX = 18;
 
 var stopMovements = false;
+var QRgenerate = false;
 const TURN_LIMIT = 12;
 var shootSound = new Audio('./sounds/shoot.mp3');
 var bonkSound = new Audio('./sounds/bonk.mp3');
@@ -361,14 +362,13 @@ document.addEventListener("DOMContentLoaded", function() {
 
     //Création levels dynamiques
     create_levels_btn(NUM_LEVELS);
-
     //Monde par défaut
     change_world(1);
-
     //Création choix
     create_choices(MANCHES_MAX);
     //Check partie privée
     display_code("");
+    //Message "your turn"
     document.getElementById("your-turn").style.display = "none";
     
     //Mode Solo
@@ -457,10 +457,14 @@ document.addEventListener("DOMContentLoaded", function() {
         //setUpSocket();
     });
 
+    //Raffraichir
     document.getElementById('btn-reload').addEventListener('click',function(e){
         if(playType === 2){
             document.getElementById('game-list').innerHTML="";
             sock.emit("askGameList");
+            //Titre parties
+            console.log(document.getElementById("game-list").childElementCount);
+            setTimeout(wait_reload, 100);
         }
     });
 
@@ -493,6 +497,7 @@ document.addEventListener("DOMContentLoaded", function() {
             display_retour_online();
             sock.emit("leaveRoom");
             document.querySelector("time").innerHTML = 0;
+            QRgenerate = false;
         }
     });
 
@@ -530,8 +535,13 @@ document.addEventListener("DOMContentLoaded", function() {
 
     //Créer partie
     document.getElementById("btn-creer-partie").addEventListener('click', function(e){
-        document.getElementById("multi-online").style.display = "none";
-        document.getElementById("creer-partie").style.display = "block";
+        var pseudo = document.getElementById("pseudo").value;
+        if (pseudo.trim() != "") {
+            document.getElementById("multi-online").style.display = "none";
+            document.getElementById("creer-partie").style.display = "block";
+        } else {
+            alert("Vous ne pouvez pas créer une partie sans surnom. Veuillez renseigner ce dernier s'il vous plaît.");
+        }
     });
 
     //Check private
@@ -562,17 +572,32 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 function display_waiting_room(game) {
-    var sec = document.querySelector("time").innerHTML; 
+    var sec = document.querySelector("time").innerHTML;
+    document.getElementById("generateQr").classList.add("unlock");
     if (isNaN(sec)) {
         sec = 0;
     }
     //document.getElementById("wait-room").children[1].innerHTML= '<h3><span class="emoji">&#127757;</span> '+game.name+' :</h3><br>&#128104;&#8205;&#128105;&#8205;&#128103;&#8205;&#128102; Nombre de joueurs : '+game.nbPlayers+'/'+game.maxPlayers+'<br>&#9971;  Nombre de manches : '+game.nbManches+'<br>&#128290; Code : '+game.code+'<br><br>&#8987; Temps d\'attente : <time>'+sec+'</time> seconde(s)<br>&#128206; Partager la partie : <span id="link">X</span>';
-    document.getElementById("wait-room").children[1].innerHTML= '<h3><span class="emoji">&#127757;</span> '+game.name+' :</h3><br>&#128104;&#8205;&#128105;&#8205;&#128103;&#8205;&#128102; Nombre de joueurs : '+game.nbPlayers+'/'+game.maxPlayers+'<br>&#9971;  Nombre de manches : '+game.nbManches+'<br>&#128290; Code : '+game.code+'<br><br>&#8987; Temps d\'attente : <time>'+sec+'</time> seconde(s)<br>&#128206; Partager la partie : <input id=\'gameId\' type=\'text\' value=\''+window.location.href+"?gameId="+game.code+"'></input><button id='copyBtn'>&#128203</button><button id='generateQr'>Générer QR Code</button><div id='qrCode'></div>";
+    document.getElementById("wait-room").children[1].innerHTML=
+    '<h3><span class="emoji">&#127757;</span> '+game.name+' :</h3>'+
+    '<br>&#128104;&#8205;&#128105;&#8205;&#128103;&#8205;&#128102; Nombre de joueurs : '+game.nbPlayers+'/'+game.maxPlayers+'<br>'+
+    '&#9971;  Nombre de manches : '+game.nbManches+'<br>'+
+    '&#128290; Code : '+game.code+'<br>'+
+    '&#128206; Partager la partie : <input id=\'gameId\' type=\'text\' value=\''+window.location.href+"?gameId="+game.code+"'></input><button id='copyBtn' class='unlock' title='Copier le lien'>&#128203</button><br>"+
+    /*"<button id='generateQr' class='unlock' title='Générer un QR code'>GÉNÉRER QR CODE</button>*/"<div id='qrCode'></div><br><br>"+
+    '&#8987; Temps d\'attente : <time>'+sec+'</time> seconde(s)';
+    
     document.getElementById("multi-online").style.display = "none";
     document.getElementById("creer-partie").style.display = "none";
     document.getElementById("wait-room").style.display = "block";
     document.getElementById("copyBtn").addEventListener("click",function(e){copyClipboard();});
-    document.getElementById("generateQr").addEventListener("click", function(e){ generateQRCode(document.getElementById("gameId").value);})
+    document.getElementById("generateQr").addEventListener("click", function(e){
+        if (QRgenerate == false) {
+            generateQRCode(document.getElementById("gameId").value);
+        }
+        QRgenerate = true;
+        document.getElementById("generateQr").classList.remove("unlock");
+    });
     timer(sec);
 }
 
@@ -731,6 +756,10 @@ function generateQRCode(link){
     });
 }
 
+function wait_reload() {
+    document.getElementById("nb-game").innerHTML = document.getElementById("game-list").childElementCount;
+}
+
 function setUpSocket(){
     sock = io.connect();
     /*console.log(sock)
@@ -740,6 +769,9 @@ function setUpSocket(){
     }*/
     display_title(false);
     document.getElementById("multi-online").style.display = "block";
+    document.querySelector("body").classList.add("background-online");
+    //Titre parties
+    setTimeout(wait_reload, 100);
     playType = 2;
     /***************** Partie serveur  *******************/
     let partie = { 
@@ -756,9 +788,9 @@ function setUpSocket(){
 
     btnCreateGame.addEventListener("click",function(e){
         var gameName = document.getElementById("nom-partie").value;
-        if(gameName === ""){
-            alert('Merci de renseigner un nom de partie');
-            return
+        if(gameName.trim() === ""){
+            alert('Merci de renseigner un nom de partie non vide.');
+            return;
         }
         var name = document.getElementById("pseudo").value;
         var isPrivate = document.getElementById("check-private").checked;
@@ -774,13 +806,21 @@ function setUpSocket(){
     gameList.addEventListener("click",function(e){
         if(e.target.dataset.id){
             var name = document.getElementById("pseudo").value;
-            sock.emit("JoinPublicGame",{id:e.target.dataset.id,name:name});
+            if (name.trim() != "") {
+                sock.emit("JoinPublicGame",{id:e.target.dataset.id,name:name});
+            } else {
+                alert("Vous ne pouvez pas rejoindre une partie sans surnom. Veuillez renseigner ce dernier s'il vous plaît.");
+            }
         }
     });
 
     joinPrivateGame.addEventListener("click",function(e){
         var name = document.getElementById("pseudo").value;
-        sock.emit("JoinPrivateGame",{code:document.getElementById("code").value,name:name});
+        if (name.trim() != "") {
+            sock.emit("JoinPrivateGame",{code:document.getElementById("code").value,name:name});
+        } else {
+            alert("Vous ne pouvez pas rejoindre une partie sans surnom. Veuillez renseigner ce dernier s'il vous plaît.");
+        }
     });
 
     sock.on("error",function(msg){
