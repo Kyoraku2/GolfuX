@@ -578,12 +578,13 @@ function display_waiting_room(game) {
         sec = 0;
     }
     //document.getElementById("wait-room").children[1].innerHTML= '<h3><span class="emoji">&#127757;</span> '+game.name+' :</h3><br>&#128104;&#8205;&#128105;&#8205;&#128103;&#8205;&#128102; Nombre de joueurs : '+game.nbPlayers+'/'+game.maxPlayers+'<br>&#9971;  Nombre de manches : '+game.nbManches+'<br>&#128290; Code : '+game.code+'<br><br>&#8987; Temps d\'attente : <time>'+sec+'</time> seconde(s)<br>&#128206; Partager la partie : <span id="link">X</span>';
+    var game_link = window.location.href+"?gameId="+game.code;
     document.getElementById("wait-room").children[1].innerHTML=
     '<h3><span class="emoji">&#127757;</span> '+game.name+' :</h3>'+
     '<br>&#128104;&#8205;&#128105;&#8205;&#128103;&#8205;&#128102; Nombre de joueurs : '+game.nbPlayers+'/'+game.maxPlayers+'<br>'+
     '&#9971;  Nombre de manches : '+game.nbManches+'<br>'+
     '&#128290; Code : '+game.code+'<br>'+
-    '&#128206; Partager la partie : <input id=\'gameId\' type=\'text\' value=\''+window.location.href+"?gameId="+game.code+"'></input><button id='copyBtn' class='unlock' title='Copier le lien'>&#128203</button><br>"+
+    '&#128206; Partager la partie : <input id=\'gameId\' type=\'text\' value=\''+game_link+"' placeholder=\'"+game_link+"' title=\'"+game_link+"'></input><button id='copyBtn' class='unlock' title='Copier le lien'>&#128203</button><br>"+
     /*"<button id='generateQr' class='unlock' title='Générer un QR code'>GÉNÉRER QR CODE</button>*/"<div id='qrCode'></div><br><br>"+
     '&#8987; Temps d\'attente : <time>'+sec+'</time> seconde(s)';
     
@@ -593,7 +594,7 @@ function display_waiting_room(game) {
     document.getElementById("copyBtn").addEventListener("click",function(e){copyClipboard();});
     document.getElementById("generateQr").addEventListener("click", function(e){
         if (QRgenerate == false) {
-            generateQRCode(document.getElementById("gameId").value);
+            generateQRCode(game_link);
         }
         QRgenerate = true;
         document.getElementById("generateQr").classList.remove("unlock");
