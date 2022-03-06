@@ -1,6 +1,9 @@
 const cacheName = 'GolfuX';
 const ASSETS = [
     '/textures/ball.png',
+    '/textures/ball_pink.png',
+    '/textures/ball_red.png',
+    '/textures/ball_blue.png',
     '/textures/bubblegum.png',
     '/textures/ice.jpg',
     '/textures/lava.png',

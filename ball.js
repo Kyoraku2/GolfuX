@@ -5,7 +5,20 @@ class Ball{
         this.start_pos=start_pos;
         this.sprite=new Image();
         this.collide = false;
-        this.sprite.src = './textures/ball.png';
+        switch(index){
+            case 0:
+                this.sprite.src = './textures/ball.png';
+                break;
+            case 1:
+                this.sprite.src = './textures/ball_red.png';
+                break;
+            case 2:
+                this.sprite.src = './textures/ball_pink.png';
+                break;
+            case 3:
+                this.sprite.src = './textures/ball_blue.png';
+                break;
+        }
         this.isInHole = false;
         this.isMoving = false;
         this.shot = false;
