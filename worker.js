@@ -22,6 +22,7 @@ const ASSETS = [
     '/sounds/shoot.mp3',
     '/sounds/water.mp3',
     '/sounds/ice.mp3',
+    '/sounds/bubblegum.mp3',
     '/sounds/wind.mp3',
     '/sounds/portal7.mp3',
     '/helpers/embox2d-helpers.js',
