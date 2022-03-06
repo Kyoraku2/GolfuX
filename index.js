@@ -12,6 +12,8 @@ const MANCHES_MAX = 18;
 
 var stopMovements = false;
 var QRgenerate = false;
+var Xgenerate = false;
+var nb_x = 0;
 const TURN_LIMIT = 12;
 var shootSound = new Audio('./sounds/shoot.mp3');
 var bonkSound = new Audio('./sounds/bonk.mp3');
@@ -378,6 +380,7 @@ document.addEventListener("DOMContentLoaded", function() {
         currentBall = 0;
         display_title(false);
         document.getElementById("solo").style.display = "block";
+        document.getElementById("x").style.display = "none";
     });
 
     //Liste niveaux 
@@ -436,6 +439,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     //Multi Local
     document.getElementById("btn-multi-local").addEventListener('click', function(e){
+        document.getElementById("x").style.display = "none";
         playType = 1;
         ballIndex = 0;
         currentBall = 0;
@@ -445,6 +449,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     //Multi Online
     document.getElementById("btn-multi-online").addEventListener('click', function(e){
+        document.getElementById("x").style.display = "none";
         setTimeout(async () => {
             const result = await checkOnlineStatus();
             if(result){
@@ -558,6 +563,84 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         });
     }
+
+    //X ???
+    document.getElementById("x").addEventListener('click', function(e){
+        nb_x++;
+        //if (nb_x % 3 == 0 && nb_x != 0) {
+            display_X();
+        //}
+    });
+
+    function display_X() {
+        document.getElementById("x").style.opacity = "1";
+        document.getElementById("x").classList.add("sizeX");
+        if (Xgenerate == false) {
+            setTimeout(x_later0, 1000);
+        } else {
+            setTimeout(x_later1, 1000);
+        }
+        setTimeout(x_later2, 1500);
+        Xgenerate = ! Xgenerate;
+        function x_later0() {
+            document.getElementById("x").classList.remove("sizeX");
+            document.querySelector("header img").src = "./textures/grux.PNG";
+            document.querySelector("header img").style.height = '22vw';
+            document.querySelector("header img").style.width = '50vw';
+            document.getElementById("x").style.left = "60%";
+
+            document.getElementById("btn-play-solo").innerHTML = "\uD83C\uDFC6 GRUX SOLO";
+            document.getElementById("btn-multi-local").innerHTML = "\uD83D\uDC68\u200D\uD83D\uDC69\u200D\uD83D\uDC67\u200D\uD83D\uDC66 GRUX LOCAL";
+            document.getElementById("btn-multi-online").innerHTML = "\uD83C\uDF0D GRUX EN LIGNE";
+            document.querySelector("h1").innerHTML = 
+                '<span class="animated bounce bounce-1">LE&nbsp;</span>'+
+                '<span class="animated bounce bounce-2">JEU&nbsp;</span>'+
+                '<span class="animated bounce bounce-3">DE&nbsp;</span>'+
+                '<span class="animated bounce bounce-4">GOLF&nbsp;</span>'+
+                '<span class="animated bounce bounce-5">À&nbsp;</span>'+
+                '<span class="animated bounce bounce-6">JOUER&nbsp;</span>'+
+                '<span class="animated bounce bounce-7">EN&nbsp;</span>'+
+                '<span class="animated bounce bounce-8">COURS&nbsp;</span>'+
+                '<span class="animated bounce bounce-9">MAGISTRAL&nbsp;</span>'+
+                '<span class="animated bounce bounce-10">DE&nbsp;</span>'+
+                '<span class="animated bounce bounce-11">JUBE&nbsp;</span>'+
+                '<span class="animated bounce bounce-12">!</span>';
+            document.querySelector("footer p").innerHTML =
+                '<p>&copy; GruX Corporation&trade; - 2022<br>Éric GruX<br>CMI GruX - <em>Université de Franche-Comté</em>'+
+                '<br><br><span id="version">[ver. G.R.U.X]</span></p>';
+        }
+        function x_later1() {
+            document.getElementById("x").classList.remove("sizeX");
+            document.querySelector("header img").src = "./textures/logo.PNG";
+            document.querySelector("header img").style.height = '22vw';
+            document.querySelector("header img").style.width = '60vw';
+            document.getElementById("x").style.left = "68%";
+
+            document.getElementById("btn-play-solo").innerHTML = "\uD83C\uDFC6 MODE SOLO";
+            document.getElementById("btn-multi-local").innerHTML = "\uD83D\uDC68\u200D\uD83D\uDC69\u200D\uD83D\uDC67\u200D\uD83D\uDC66 MULTIJOUEUR LOCAL";
+            document.getElementById("btn-multi-online").innerHTML = "\uD83C\uDF0D MULTIJOUEUR EN LIGNE";
+            document.querySelector("h1").innerHTML = 
+                '<span class="animated bounce bounce-1">LE&nbsp;</span>'+
+                '<span class="animated bounce bounce-2">JEU&nbsp;</span>'+
+                '<span class="animated bounce bounce-3">DE&nbsp;</span>'+
+                '<span class="animated bounce bounce-4">GOLF&nbsp;</span>'+
+                '<span class="animated bounce bounce-5">PC&nbsp;</span>'+
+                '<span class="animated bounce bounce-6">ET&nbsp;</span>'+
+                '<span class="animated bounce bounce-7">MOBILE&nbsp;</span>'+
+                '<span class="animated bounce bounce-8">À&nbsp;</span>'+
+                '<span class="animated bounce bounce-9">JOUER&nbsp;</span>'+
+                '<span class="animated bounce bounce-10">ENTRE&nbsp;</span>'+
+                '<span class="animated bounce bounce-11">AMIS&nbsp;</span>'+
+                '<span class="animated bounce bounce-12">!</span>';
+            document.querySelector("footer p").innerHTML =
+                '<p>&copy; GolfuX Corporation&trade; - 2022<br>Arthur BETARD, Robin GRAPPE, Tayeb HAKKAR<br>CMI Informatique - <em>Université de Franche-Comté</em>'+
+                '<br><br><span id="version">[ver. 1.0.0]</span></p>';
+        }
+        function x_later2() {
+            document.getElementById("x").style.opacity = "0";
+        }
+    }
+
     /***************
     Fonctions
     ***************/
@@ -629,6 +712,7 @@ function display_title(display=true) {
         document.getElementById("menu").style.display = "block";
         document.querySelector("header").style.display = "block";
         document.querySelector("footer").style.display = "block";
+        document.getElementById("x").style.display = "block";
         change_world(1);
     }
 }
