@@ -21,11 +21,14 @@ var sandSound = new Audio('./sounds/sand.mp3');
 var voidSound = new Audio('./sounds/lava.mp3');
 var waterSound = new Audio('./sounds/water.mp3');
 var holeSound = new Audio('./sounds/hole.mp3');
+var windSound = new Audio('./sounds/wind.mp3');
+var iceSound = new Audio('./sounds/ice.mp3');
+var portalSound = new Audio('./sounds/portal7.mp3');
 
 var bubblegumSound = new Audio('./sounds/sand.mp3');
-var portalSound = new Audio('./sounds/sand.mp3');
-var windSound = new Audio('./sounds/sand.mp3');
-var iceSound = new Audio('./sounds/sand.mp3');
+
+
+
 
 
 var world = null;
