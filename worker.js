@@ -17,7 +17,6 @@ const ASSETS = [
     '/styles/golfux.css',
     '/sounds/bonk.mp3',
     '/sounds/hole.mp3',
-    '/sounds/ice.mp3',
     '/sounds/lava.mp3',
     '/sounds/sand.mp3',
     '/sounds/shoot.mp3',
