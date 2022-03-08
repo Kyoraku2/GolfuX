@@ -589,7 +589,7 @@ document.addEventListener("DOMContentLoaded", function() {
         Xgenerate = ! Xgenerate;
         function x_later0() {
             document.getElementById("x").classList.remove("sizeX");
-            document.querySelector("header img").src = "./textures/grux.PNG";
+            document.querySelector("header img").src = "./textures/grux.png";
             document.querySelector("header img").style.height = '22vw';
             document.querySelector("header img").style.width = '50vw';
             document.getElementById("x").style.left = "60%";
