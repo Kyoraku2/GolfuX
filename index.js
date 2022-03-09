@@ -345,16 +345,8 @@ let replacementStack = [];
 
 if('serviceWorker' in navigator){
     navigator.serviceWorker
-        .register('./worker.js')
-        .then(console.log('Worker here !'));
-    /*navigator.serviceWorker
-        .register('./worker.js',{scope: './'})
-        .then(function(registration) {
-            console.log('Registration succeeded.');
-            registration.update();
-        }).catch(function(error) {
-            console.log('Registration failed with ' + error);
-        });*/
+        .register('./worker.js?v=0',{scope: "/"})
+        .then(console.log('Worker v0 here !'));
 };
 
 document.addEventListener("DOMContentLoaded", function() {
