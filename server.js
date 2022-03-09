@@ -412,7 +412,7 @@ io.on('connection', function (socket) {
 
     socket.on("disconnect", function() {
         console.log("Déconnexion d'un client");
-        if(game !== null && game !== undefined){
+        if(game !== null && games[game]){
             var playerId = getPlayerFromSock(games[game],socket);
             if(playerId===undefined || !games[game]){
                 return;
