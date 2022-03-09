@@ -381,6 +381,10 @@ input[type="text"]#code {
     transform: translate(-50%, -50%);
 	border-left : 3px solid white;
 	border-right : 3px solid white;
+	-moz-user-select: none;
+ 	-webkit-user-select: none;
+ 	-ms-user-select: none;
+ 	user-select: none;
 }
 
 #game h2 {
@@ -413,6 +417,10 @@ input[type="text"]#code {
 	margin: 3vh;
 	position: absolute;
 	bottom: 0px;
+	-moz-user-select: none;
+ 	-webkit-user-select: none;
+ 	-ms-user-select: none;
+ 	user-select: none;
 }
 
 #leaderboard {
@@ -602,8 +610,4 @@ input[type="text"]#code {
 
 #x:hover {
 	cursor: help;
-}
-
-body.x-photo {
-	background: url(./textures/photo_grux.PNG) no-repeat;
 }

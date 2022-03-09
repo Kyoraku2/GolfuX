@@ -573,15 +573,17 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     function display_X() {
-        document.getElementById("x").style.opacity = "1";
-        document.getElementById("x").classList.add("sizeX");
         if (Xgenerate == false) {
+            document.getElementById("x").style.opacity = "1";
+            document.getElementById("x").classList.add("sizeX");
             setTimeout(x_later0, 1000);
-        } else {
+            setTimeout(x_later2, 1500);
+            Xgenerate = true;
+        }/* else {
             setTimeout(x_later1, 1000);
-        }
-        setTimeout(x_later2, 1500);
-        Xgenerate = ! Xgenerate;
+        }*/
+        
+        //
         function x_later0() {
             document.getElementById("x").classList.remove("sizeX");
             document.querySelector("header img").src = "./textures/grux.PNG";
@@ -606,38 +608,12 @@ document.addEventListener("DOMContentLoaded", function() {
                 '<span class="animated bounce bounce-11">JUBE&nbsp;</span>'+
                 '<span class="animated bounce bounce-12">!</span>';
             document.querySelector("footer p").innerHTML =
-                '<p>&copy; GruX Corporation&trade; - 2022<br>Éric GruX<br>CMI GruX - <em>Université de Franche-Comté</em>'+
-                '<br><br><span id="version">[ver. G.R.U.X]</span></p>';
-        }
-        function x_later1() {
-            document.getElementById("x").classList.remove("sizeX");
-            document.querySelector("header img").src = "./textures/logo.PNG";
-            document.querySelector("header img").style.height = '22vw';
-            document.querySelector("header img").style.width = '60vw';
-            document.getElementById("x").style.left = "68%";
-
-            document.getElementById("btn-play-solo").innerHTML = "\uD83C\uDFC6 MODE SOLO";
-            document.getElementById("btn-multi-local").innerHTML = "\uD83D\uDC68\u200D\uD83D\uDC69\u200D\uD83D\uDC67\u200D\uD83D\uDC66 MULTIJOUEUR LOCAL";
-            document.getElementById("btn-multi-online").innerHTML = "\uD83C\uDF0D MULTIJOUEUR EN LIGNE";
-            document.querySelector("h1").innerHTML = 
-                '<span class="animated bounce bounce-1">LE&nbsp;</span>'+
-                '<span class="animated bounce bounce-2">JEU&nbsp;</span>'+
-                '<span class="animated bounce bounce-3">DE&nbsp;</span>'+
-                '<span class="animated bounce bounce-4">GOLF&nbsp;</span>'+
-                '<span class="animated bounce bounce-5">PC&nbsp;</span>'+
-                '<span class="animated bounce bounce-6">ET&nbsp;</span>'+
-                '<span class="animated bounce bounce-7">MOBILE&nbsp;</span>'+
-                '<span class="animated bounce bounce-8">À&nbsp;</span>'+
-                '<span class="animated bounce bounce-9">JOUER&nbsp;</span>'+
-                '<span class="animated bounce bounce-10">ENTRE&nbsp;</span>'+
-                '<span class="animated bounce bounce-11">AMIS&nbsp;</span>'+
-                '<span class="animated bounce bounce-12">!</span>';
-            document.querySelector("footer p").innerHTML =
-                '<p>&copy; GolfuX Corporation&trade; - 2022<br>Arthur BETARD, Robin GRAPPE, Tayeb HAKKAR<br>CMI Informatique - <em>Université de Franche-Comté</em>'+
-                '<br><br><span id="version">[ver. 1.0.0]</span></p>';
+                '<p>&copy; GruX Corporation&trade; - 2022<br>Éric GruX<br>CMI GruX - <em>Université de Franche-Comté</em>';
+                //'<br><br><span id="version">[ver. G.R.U.X]</span></p>';
         }
         function x_later2() {
             document.getElementById("x").style.opacity = "0";
+            document.getElementById("x").style.cursor = "initial";
         }
     }
 
