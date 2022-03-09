@@ -661,7 +661,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
 function display_waiting_room(game) {
     var sec = document.querySelector("time").innerHTML;
-    document.getElementById("generateQr").classList.add("unlock");
+    if(!document.getElementById("generateQr").classList.contains("unlock")){
+        document.getElementById("generateQr").classList.add("unlock");
+    }
     if (isNaN(sec)) {
         sec = 0;
     }
@@ -926,7 +928,7 @@ function setUpSocket(){
     });
 
     sock.on("playerJoined",function(game){
-        alert("update");
+        alert("update"); // TODO ça casse le QR code
         display_waiting_room(game);
     });
 
