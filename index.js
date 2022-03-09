@@ -345,11 +345,12 @@ let replacementStack = [];
 
 if('serviceWorker' in navigator){
     navigator.serviceWorker
-        .register('./worker.js?v=0',{scope: "/"})
-        .then(console.log('Worker v0 here !'));
+        .register('./worker.js?v=1',{scope: "/"})
+        .then(console.log('Worker v1 here !'));
 };
 
 document.addEventListener("DOMContentLoaded", function() {
+    alert("salut");
     /* Join by link */
     var gameId = (window.location.href.split("?").length == 2 && window.location.href.split("?")[1].match("gameId\=.*")) ? window.location.href.split("?")[1].split('=')[1] : "";
     if(gameId){
