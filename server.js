@@ -412,12 +412,22 @@ io.on('connection', function (socket) {
 
     socket.on("disconnect", function() {
         console.log("Déconnexion d'un client");
-        if(game !== null){
+        if(game !== null && games[game]){
             var playerId = getPlayerFromSock(games[game],socket);
             if(playerId===undefined || !games[game]){
                 return;
             }
             games[game].joueurs[playerId].disconnected = true;
+            var allDisconnected = true;
+            for(player of games[game].joueurs){
+                if(!player.disconnected){
+                    allDisconnected = false
+                }
+            }
+            if(allDisconnected){
+                deleteGame(game);
+            }
+            game = null;
         }
     });
 
@@ -493,6 +503,7 @@ io.on('connection', function (socket) {
 
     function deleteGame(game) {
         console.log("Suppression de la partie " + game);
+        clearTimeout(games[game].turnTimer);
         delete games[game];
     }
 

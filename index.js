@@ -17,13 +17,18 @@ var nb_x = 0;
 const TURN_LIMIT = 12;
 var shootSound = new Audio('./sounds/shoot.mp3');
 var bonkSound = new Audio('./sounds/bonk.mp3');
-var bubblegumSound = new Audio('./sounds/sand.mp3');
-var portalSound = new Audio('./sounds/sand.mp3');
 var sandSound = new Audio('./sounds/sand.mp3');
 var voidSound = new Audio('./sounds/lava.mp3');
 var waterSound = new Audio('./sounds/water.mp3');
-var windSound = new Audio('./sounds/sand.mp3');
 var holeSound = new Audio('./sounds/hole.mp3');
+var windSound = new Audio('./sounds/wind.mp3');
+var iceSound = new Audio('./sounds/ice.mp3');
+var portalSound = new Audio('./sounds/portal7.mp3');
+var bubblegumSound = new Audio('./sounds/bubblegum.mp3');
+
+
+
+
 
 var world = null;
 var canvas;
@@ -340,16 +345,8 @@ let replacementStack = [];
 
 if('serviceWorker' in navigator){
     navigator.serviceWorker
-        .register('./worker.js')
-        .then(console.log('Worker here !'));
-    /*navigator.serviceWorker
-        .register('./worker.js',{scope: './'})
-        .then(function(registration) {
-            console.log('Registration succeeded.');
-            registration.update();
-        }).catch(function(error) {
-            console.log('Registration failed with ' + error);
-        });*/
+        .register('./worker.js?v=1',{scope: "/"})
+        .then(console.log('Worker v1 here !'));
 };
 
 document.addEventListener("DOMContentLoaded", function() {
@@ -586,7 +583,7 @@ document.addEventListener("DOMContentLoaded", function() {
         //
         function x_later0() {
             document.getElementById("x").classList.remove("sizeX");
-            document.querySelector("header img").src = "./textures/grux.PNG";
+            document.querySelector("header img").src = "./textures/grux.png";
             document.querySelector("header img").style.height = '22vw';
             document.querySelector("header img").style.width = '50vw';
             document.getElementById("x").style.left = "60%";
@@ -632,7 +629,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
 function display_waiting_room(game) {
     var sec = document.querySelector("time").innerHTML;
-    document.getElementById("generateQr").classList.add("unlock");
+    if(!document.getElementById("generateQr").classList.contains("unlock")){
+        document.getElementById("generateQr").classList.add("unlock");
+    }
     if (isNaN(sec)) {
         sec = 0;
     }
@@ -897,7 +896,7 @@ function setUpSocket(){
     });
 
     sock.on("playerJoined",function(game){
-        alert("update");
+        alert("update"); // TODO ça casse le QR code
         display_waiting_room(game);
     });
 
