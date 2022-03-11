@@ -1,0 +1,766 @@
+{
+    "backgroundColor":"rgb(110, 0, 0)",
+    "obstacles":{
+        "spawn":[
+            {
+                "middle_pos":{"x":11.5, "y":2},
+                "heightWidth" : {"width": 1.5, "height":1}
+            }
+        ],
+        "wall":[
+            {
+                "middle_pos":{"x":11.5, "y":0},
+                "shape": "box",
+                "heightWidth" : {"width": 11.5, "height":0.25},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":11.5, "y":31},
+                "shape": "box",
+                "heightWidth" : {"width": 11.5, "height":0.25},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":0, "y":15.5},
+                "shape": "box",
+                "heightWidth" : {"width": 0.25, "height":15.75},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":23, "y":15.5},
+                "shape": "box",
+                "heightWidth" : {"width": 0.25, "height":15.75},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":11.5, "y":4},
+                "shape": "box",
+                "heightWidth" : {"width": 4, "height":0.25},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":2, "y":16},
+                "shape": "box",
+                "heightWidth" : {"width": 0.25, "height":6.5},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":21, "y":16},
+                "shape": "box",
+                "heightWidth" : {"width": 0.25, "height":6.5},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":4.75, "y":6.75},
+                "shape": "box",
+                "heightWidth" : {"width": 0.25, "height":4},
+                "angle":0.79
+            },
+            {
+                "middle_pos":{"x":18.25, "y":6.75},
+                "shape": "box",
+                "heightWidth" : {"width": 0.25, "height":4},
+                "angle":-0.79
+            },
+            {
+                "middle_pos":{"x":4.75, "y":25.25},
+                "shape": "box",
+                "heightWidth" : {"width": 0.25, "height":4},
+                "angle":-0.79
+            },
+            {
+                "middle_pos":{"x":18.25, "y":25.25},
+                "shape": "box",
+                "heightWidth" : {"width": 0.25, "height":4},
+                "angle":0.79
+            },
+            {
+                "middle_pos":{"x":0, "y":0},
+                "shape": "polygon",
+                "vectrices":[
+                    {"x":5, "y":26},
+                    {"x":10, "y":23},
+                    {"x":10, "y":28.25},
+                    {"x":7.5, "y":28.25}
+                    
+                ]
+            },
+            {
+                "middle_pos":{"x":0, "y":0},
+                "shape": "polygon",
+                "vectrices":[
+                    {"x":13, "y":28.25},
+                    {"x":13, "y":23},
+                    {"x":18, "y":26},
+                    {"x":15.5, "y":28.25}
+                    
+                ]
+            },
+            {
+                "middle_pos":{"x":3, "y":14},
+                "shape": "box",
+                "heightWidth" : {"width": 1, "height":0.25},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":20, "y":14},
+                "shape": "box",
+                "heightWidth" : {"width": 1, "height":0.25},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":4, "y":14},
+                "shape": "box",
+                "heightWidth" : {"width": 0.25, "height":2},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":19, "y":14},
+                "shape": "box",
+                "heightWidth" : {"width": 0.25, "height":2},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":7, "y":15.75},
+                "shape": "box",
+                "heightWidth" : {"width": 3, "height":0.25},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":7, "y":12.25},
+                "shape": "box",
+                "heightWidth" : {"width": 3, "height":0.25},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":10, "y":14},
+                "shape": "box",
+                "heightWidth" : {"width": 0.25, "height":2},
+                "angle":0
+            },  
+            {
+                "middle_pos":{"x":16, "y":15.75},
+                "shape": "box",
+                "heightWidth" : {"width": 3, "height":0.25},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":16, "y":12.25},
+                "shape": "box",
+                "heightWidth" : {"width": 3, "height":0.25},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":13, "y":14},
+                "shape": "box",
+                "heightWidth" : {"width": 0.25, "height":2},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":11.5, "y":14},
+                "shape": "box",
+                "heightWidth" : {"width": 1.5, "height":0.25},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":9.5, "y":18.25},
+                "shape": "box",
+                "heightWidth" : {"width": 1, "height":0.25},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":9.5, "y":21.75},
+                "shape": "box",
+                "heightWidth" : {"width": 1, "height":0.25},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":13.5, "y":18.25},
+                "shape": "box",
+                "heightWidth" : {"width": 1, "height":0.25},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":13.5, "y":21.75},
+                "shape": "box",
+                "heightWidth" : {"width": 1, "height":0.25},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":14.5, "y":20},
+                "shape": "box",
+                "heightWidth" : {"width": 0.25, "height":2},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":8.5, "y":20},
+                "shape": "box",
+                "heightWidth" : {"width": 0.25, "height":2},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":17.5, "y":20},
+                "shape": "box",
+                "heightWidth" : {"width": 3.25, "height":0.25},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":5, "y":20},
+                "shape": "box",
+                "heightWidth" : {"width": 3.25, "height":0.25},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":14, "y":2},
+                "shape": "box",
+                "heightWidth" : {"width": 0.25, "height":2},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":9, "y":1},
+                "shape": "box",
+                "heightWidth" : {"width": 0.25, "height":1},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":9, "y":3.45},
+                "shape": "box",
+                "heightWidth" : {"width": 0.25, "height":0.80},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":4.5, "y":28},
+                "shape": "box",
+                "heightWidth" : {"width": 0.25, "height":2},
+                "angle":0.79
+            },
+            {
+                "middle_pos":{"x":18.5, "y":28},
+                "shape": "box",
+                "heightWidth" : {"width": 0.25, "height":2},
+                "angle":-0.79
+            }
+        ],
+        "bumper":[
+            {
+                "middle_pos":{"x":3, "y":29.5},
+                "shape": "circle",
+                "isstatic":true,
+                "heightWidth" : {"width": 2.5, "height":1.5},
+                "radius": 0.75
+            },
+            {
+                "middle_pos":{"x":20, "y":29.5},
+                "shape": "circle",
+                "isstatic":true,
+                "heightWidth" : {"width": 2.5, "height":1.5},
+                "radius": 0.75
+            },
+            {
+                "middle_pos":{"x":21, "y":6.5},
+                "shape": "circle",
+                "isstatic":true,
+                "heightWidth" : {"width": 2.5, "height":1.5},
+                "radius": 0.75
+            },
+            {
+                "middle_pos":{"x":21, "y":4},
+                "shape": "circle",
+                "isstatic":true,
+                "heightWidth" : {"width": 2.5, "height":1.5},
+                "radius": 0.75
+            },
+            {
+                "middle_pos":{"x":19, "y":5},
+                "shape": "circle",
+                "isstatic":true,
+                "heightWidth" : {"width": 2.5, "height":1.5},
+                "radius": 0.75
+            },
+            {
+                "middle_pos":{"x":21, "y":1.5},
+                "shape": "circle",
+                "isstatic":true,
+                "heightWidth" : {"width": 2.5, "height":1.5},
+                "radius": 0.75
+            },
+            {
+                "middle_pos":{"x":19, "y":2.5},
+                "shape": "circle",
+                "isstatic":true,
+                "heightWidth" : {"width": 2.5, "height":1.5},
+                "radius": 0.75
+            },
+            {
+                "middle_pos":{"x":17, "y":3.5},
+                "shape": "circle",
+                "isstatic":true,
+                "heightWidth" : {"width": 2.5, "height":1.5},
+                "radius": 0.75
+            },
+            {
+                "middle_pos":{"x":17, "y":1.4},
+                "shape": "circle",
+                "isstatic":true,
+                "heightWidth" : {"width": 2.5, "height":1.5},
+                "radius": 0.75
+            }
+        ],
+        "void":[
+            {
+                "middle_pos":{"x":7, "y":14},
+                "shape": "circle",
+                "heightWidth" : {"width": 2.5, "height":1.5},
+                "radius": 0.5
+            },
+            {
+                "middle_pos":{"x":16, "y":14},
+                "shape": "circle",
+                "heightWidth" : {"width": 2.5, "height":1.5},
+                "radius": 0.5
+            },
+            {
+                "middle_pos":{"x":11.5, "y":20},
+                "shape": "circle",
+                "heightWidth" : {"width": 2.5, "height":1.5},
+                "radius": 0.5
+            },
+            {
+                "middle_pos":{"x":0, "y":0},
+                "shape": "polygon",
+                "vectrices":[
+                    {"x":23, "y":23},
+                    {"x":23, "y":29},
+                    {"x":20, "y":26}
+                    
+                ]
+            },
+            {
+                "middle_pos":{"x":5, "y":7},
+                "shape": "box",
+                "heightWidth" : {"width": 0.15, "height":4},
+                "angle":0.79
+            },
+            {
+                "middle_pos":{"x":18, "y":7},
+                "shape": "box",
+                "heightWidth" : {"width": 0.15, "height":4},
+                "angle":-0.79
+            },
+            {
+                "middle_pos":{"x":11.5, "y":4.4},
+                "shape": "box",
+                "heightWidth" : {"width": 4, "height":0.2},
+                "angle":0
+            }
+        ],
+        "water":[
+            {
+                "middle_pos":{"x":0.4, "y":16},
+                "shape": "box",
+                "heightWidth" : {"width": 0.15, "height":6.5},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":1.6, "y":16},
+                "shape": "box",
+                "heightWidth" : {"width": 0.15, "height":6.5},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":4.5, "y":6.5},
+                "shape": "box",
+                "heightWidth" : {"width": 0.15, "height":4},
+                "angle":0.79
+            },
+            {
+                "middle_pos":{"x":18.5, "y":6.5},
+                "shape": "box",
+                "heightWidth" : {"width": 0.15, "height":4},
+                "angle":-0.79
+            },
+            {
+                "middle_pos":{"x":4, "y":25},
+                "shape": "box",
+                "heightWidth" : {"width": 0.15, "height":2.75},
+                "angle":-0.79
+            },
+            {
+                "middle_pos":{"x":21.35, "y":16},
+                "shape": "box",
+                "heightWidth" : {"width": 0.15, "height":6.5},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":22.65, "y":16},
+                "shape": "box",
+                "heightWidth" : {"width": 0.15, "height":6.5},
+                "angle":0
+            }
+        ],
+        "sand":[
+            {
+                "middle_pos":{"x":7, "y":14},
+                "shape": "box",
+                "heightWidth" : {"width": 3, "height":2},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":16, "y":14},
+                "shape": "box",
+                "heightWidth" : {"width": 3, "height":2},
+                "angle":0
+            }
+        ],
+        "ice":[
+            {
+                "middle_pos":{"x":11.5, "y":20},
+                "shape": "box",
+                "heightWidth" : {"width": 3, "height":2},
+                "angle":0
+            }
+        ],
+        "bubblegum":[
+            {
+                "middle_pos":{"x":0.4, "y":8},
+                "shape": "box",
+                "heightWidth" : {"width": 0.15, "height":1.5},
+                "angle":0
+            }
+        ],
+        "portal":[
+            {
+                "enter_pos":{"x":1.25, "y":30.5},
+                "exit_pos":{"x":21.75, "y":30.5},
+                "userdata":203,
+                "bidirectional":false,
+                "hx1": 1,
+                "hy1": 0.25,
+                "hx2": 1,
+                "hy2": 0.25,
+                "direction1":"N",
+                "direction2":"S"
+            },
+            {
+                "enter_pos":{"x":14.5, "y":2},
+                "exit_pos":{"x":11.5, "y":30.5},
+                "userdata":203,
+                "bidirectional":true,
+                "hx1": 0.25,
+                "hy1": 1.5,
+                "hx2": 1.5,
+                "hy2": 0.25,
+                "direction1":"W",
+                "direction2":"S"
+            },
+            {
+                "enter_pos":{"x":11.5, "y":14.5},
+                "exit_pos":{"x":4.5, "y":14},
+                "userdata":203,
+                "bidirectional":true,
+                "hx1": 1,
+                "hy1": 0.25,
+                "hx2": 0.25,
+                "hy2": 1,
+                "direction1":"S",
+                "direction2":"E"
+            },
+            {
+                "enter_pos":{"x":9.5, "y":14},
+                "exit_pos":{"x":13.5, "y":14},
+                "userdata":203,
+                "bidirectional":true,
+                "hx1": 0.25,
+                "hy1": 1,
+                "hx2": 0.25,
+                "hy2": 1,
+                "direction1":"E",
+                "direction2":"E"
+            },
+            {
+                "enter_pos":{"x":18.5, "y":14},
+                "exit_pos":{"x":11.5, "y":13.5},
+                "userdata":203,
+                "bidirectional":true,
+                "hx1": 0.25,
+                "hy1": 1,
+                "hx2": 1,
+                "hy2": 0.25,
+                "direction1":"E",
+                "direction2":"S"
+            }
+        ],
+        "wind":[
+            {
+                "middle_pos":{"x":10.75, "y":27},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 1,
+                "direction":{"x":0, "y":-1}
+            },
+            {
+                "middle_pos":{"x":12.25, "y":27},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 1,
+                "direction":{"x":0, "y":-1}
+            },
+            {
+                "middle_pos":{"x":10.75, "y":25.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 1,
+                "direction":{"x":0, "y":-1}
+            },
+            {
+                "middle_pos":{"x":12.25, "y":25.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 1,
+                "direction":{"x":0, "y":-1}
+            },
+            {
+                "middle_pos":{"x":10.75, "y":24},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 1,
+                "direction":{"x":0, "y":-1}
+            },
+            {
+                "middle_pos":{"x":12.25, "y":24},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 1,
+                "direction":{"x":0, "y":-1}
+            },
+            {
+                "middle_pos":{"x":11.5, "y":5.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 7.5,
+                "direction":{"x":0, "y":-1}
+            },
+            {
+                "middle_pos":{"x":11.5, "y":10.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 7.5,
+                "direction":{"x":0, "y":1}
+            },
+            {
+                "middle_pos":{"x":9, "y":8},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 7.5,
+                "direction":{"x":-1, "y":0.00001}
+            },
+            {
+                "middle_pos":{"x":14, "y":8},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 7.5,
+                "direction":{"x":1, "y":0.00001}
+            },
+            {
+                "middle_pos":{"x":13.5, "y":10},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 7.5,
+                "direction":{"x":1, "y":1}
+            },
+            {
+                "middle_pos":{"x":9.5, "y":10},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 7.5,
+                "direction":{"x":-1, "y":1}
+            },
+            {
+                "middle_pos":{"x":9.5, "y":6},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 7.5,
+                "direction":{"x":-1, "y":-1}
+            },
+            {
+                "middle_pos":{"x":13.5, "y":6},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 7.5,
+                "direction":{"x":1, "y":-1}
+            },
+            {
+                "middle_pos":{"x":1, "y":1},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":1, "y":1}
+            },
+            {
+                "middle_pos":{"x":2.5, "y":1},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":1, "y":1}
+            },
+            {
+                "middle_pos":{"x":4, "y":1},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":1, "y":1}
+            },
+            {
+                "middle_pos":{"x":5.5, "y":1},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":1, "y":1}
+            },
+            {
+                "middle_pos":{"x":1, "y":2.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":1, "y":1}
+            },
+            {
+                "middle_pos":{"x":2.5, "y":2.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":1, "y":1}
+            },
+            {
+                "middle_pos":{"x":4, "y":2.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":1, "y":1}
+            },
+            {
+                "middle_pos":{"x":5.5, "y":2.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":1, "y":1}
+            },
+            {
+                "middle_pos":{"x":1, "y":4},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":1, "y":1}
+            },
+            {
+                "middle_pos":{"x":2.5, "y":4},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":1, "y":1}
+            },
+            {
+                "middle_pos":{"x":4, "y":4},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":1, "y":1}
+            },
+            {
+                "middle_pos":{"x":5.5, "y":4},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":1, "y":1}
+            },
+            {
+                "middle_pos":{"x":2.5, "y":5.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":1, "y":1}
+            },
+            {
+                "middle_pos":{"x":4, "y":5.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":1, "y":1}
+            },
+            {
+                "middle_pos":{"x":1, "y":5.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":1, "y":1}
+            },
+            {
+                "middle_pos":{"x":1, "y":25},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":1, "y":-1}
+            },
+            {
+                "middle_pos":{"x":2.5, "y":25},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":1, "y":-1}
+            },
+            {
+                "middle_pos":{"x":1, "y":26.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":1, "y":-1}
+            },
+            {
+                "middle_pos":{"x":2.5, "y":26.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":1, "y":-1}
+            },
+            {
+                "middle_pos":{"x":4, "y":26.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":1, "y":-1}
+            },
+            {
+                "middle_pos":{"x":1, "y":28},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":1, "y":-1}
+            },
+            {
+                "middle_pos":{"x":2.5, "y":28},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":1, "y":-1}
+            },
+            {
+                "middle_pos":{"x":22, "y":21},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.45,
+                "direction":{"x":0, "y":1}
+            },
+            {
+                "middle_pos":{"x":22, "y":19.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.45,
+                "direction":{"x":0, "y":1}
+            },
+            {
+                "middle_pos":{"x":22, "y":18},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.45,
+                "direction":{"x":0, "y":1}
+            },
+            {
+                "middle_pos":{"x":22, "y":16.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.45,
+                "direction":{"x":0, "y":1}
+            },
+            {
+                "middle_pos":{"x":22, "y":15},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.45,
+                "direction":{"x":0, "y":1}
+            },
+            {
+                "middle_pos":{"x":22, "y":13.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.45,
+                "direction":{"x":0, "y":1}
+            },
+            {
+                "middle_pos":{"x":22, "y":12},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.45,
+                "direction":{"x":0, "y":1}
+            },
+            {
+                "middle_pos":{"x":22, "y":10.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.45,
+                "direction":{"x":0, "y":1}
+            }
+        ]
+    },
+    "holes":[
+        {
+            "pos":{"x":11.5, "y":8},
+            "radius":1.5
+        }
+    ]
+}

@@ -207,6 +207,10 @@ button#btn-multi-online:hover, #creer-partie button.btn-start:hover,
 	background-color: gray;
 }
 
+#btn-world-5.unlock:hover, .background-w5 {
+	background-color: rgb(150, 0, 0);
+}
+
 .background-online {
 	background-color: rgb(0, 0, 90);
 }
@@ -360,10 +364,6 @@ input[type="text"]#code {
 
 .emoji {
 	font-size: 5vh;
-}
-
-.stars {
-	font-size: 2vh;
 }
 
 #game, #world-2, #world-3, #world-4, #end-menu {

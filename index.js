@@ -26,10 +26,6 @@ var iceSound = new Audio('./sounds/ice.mp3');
 var portalSound = new Audio('./sounds/portal7.mp3');
 var bubblegumSound = new Audio('./sounds/bubblegum.mp3');
 
-
-
-
-
 var world = null;
 var canvas;
 var context;
@@ -271,7 +267,6 @@ function createWorld() {
     if (localStorage.getItem("level") == null) {
         golfux.save_progression(1);
     }
-    //golfux.save_progression(15); //TODO Supprimer après c'est pour le debug
 }
 
 function resetScene() {
@@ -345,7 +340,7 @@ let replacementStack = [];
 
 if('serviceWorker' in navigator){
     navigator.serviceWorker
-        .register('./worker.js?v=1',{scope: "/"})
+        .register('./worker.js?v=2',{scope: "/"})
         .then(console.log('Worker v1 here !'));
 };
 
@@ -401,6 +396,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
     //Menu fin continuer
     document.getElementById("btn-continue").addEventListener('click', function(e){
+        if (playType == 0 && golfux.level.num == NUM_LEVELS) {
+            window.location.reload();
+            //TODO changer pour l'écran de fin
+        }
         golfux.changeLevel(parseInt(golfux.level.num) + 1);
         if(playType == 1){
             for(var i=0 ; i<localNbPlayers ; ++i){
@@ -700,30 +699,20 @@ function create_levels_btn(lvl_number) {
         var button = document.createElement("button");
         button.dataset["index"] = i+1;
         var content;
-        var stars = document.createElement("span");
-        stars.classList.add("stars");
         if (i+1 <= max_lvl || i+1 == 1) {
+            if (num_lvl == "10") { num_lvl = "\u2694\uFE0F"}
             content = world_lvl +"-"+ num_lvl;
             button.classList.add("unlock");
             button.title = "Niveau "+content;
-            //stars.appendChild(document.createTextNode("\n\u2B50\u2B50\u2B50"));
         } else {
             content = "\uD83D\uDD12";
             button.title = "Verrouillé";
         }
         var txt = document.createTextNode(content);
         button.appendChild(txt);
-        button.appendChild(stars);
         levels.appendChild(button);
     }
 }
-
-/*function save_progression(last_lvl) {
-    var progress = localStorage.getItem("level");
-    progress = (!progress) ? {} : JSON.parse(progress);
-    progress = last_lvl;
-    localStorage.setItem("level", JSON.stringify(progress));
-}*/
 
 function change_world(num_world) {
     document.querySelector("body").classList = [];
