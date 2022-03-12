@@ -397,8 +397,10 @@ document.addEventListener("DOMContentLoaded", function() {
     //Menu fin continuer
     document.getElementById("btn-continue").addEventListener('click', function(e){
         if (playType == 0 && golfux.level.num == NUM_LEVELS) {
-            window.location.reload();
-            //TODO changer pour l'écran de fin
+            document.getElementById("win-solo").style.display = "block";
+            document.getElementById("game").style.display = "none";
+            change_world(1);
+            confetti.start(); //Lancer les confetti via le script éponyme
         }
         golfux.changeLevel(parseInt(golfux.level.num) + 1);
         if(playType == 1){
@@ -420,6 +422,18 @@ document.addEventListener("DOMContentLoaded", function() {
             window.location.reload();
         });
     }
+
+    //Win solo - récupérer le prix
+    document.getElementById("get-money").addEventListener('mouseover', function(e){
+        document.getElementById("get-money").innerHTML = "\uD83D\uDCB0 RÉCUPÉRER LE PRIX<br>(0 \u20ac)";
+    });
+    document.getElementById("get-money").addEventListener('mouseout', function(e){
+        document.getElementById("get-money").innerHTML = "\uD83D\uDCB0 RÉCUPÉRER LE PRIX<br>(1 000 000 \u20ac)";
+    });
+    document.getElementById("get-money").addEventListener('click', function(e){
+        //alert("Ah comme c'est dommage ! Il n'y a plus rien à gagner suite à la trésorerie vide de GolfuX Corporation... \uD83D\uDC40 Peut-être faire un don éventuellement ?");
+        window.location.href = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
+    });
 
     //Leaderboard
     document.getElementById("btn-leaderboard").addEventListener('click', function(e){

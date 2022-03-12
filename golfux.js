@@ -55,10 +55,12 @@ class Golfux{
     }
 
     save_progression(last_lvl) {
-        var progress = localStorage.getItem("level");
-        progress = (!progress) ? {} : JSON.parse(progress);
-        progress = last_lvl;
-        localStorage.setItem("level", JSON.stringify(progress));
+        if (last_lvl < NUM_LEVELS) {
+            var progress = localStorage.getItem("level");
+            progress = (!progress) ? {} : JSON.parse(progress);
+            progress = last_lvl;
+            localStorage.setItem("level", JSON.stringify(progress));
+        }
     }
 }
 
@@ -632,6 +634,9 @@ Golfux.prototype.step = function(){
 
     if(endLevel && this.balls.length !=0 && playType != 2){
         document.getElementById("end-menu").style.display = "block";
+        if (this.level.num == NUM_LEVELS && playType == 0) {
+            document.querySelector("#end-menu .btn-quit").style.display = "none";
+        }
         document.getElementById("game-interface").style.display = "none";
         document.getElementById("level-num").style.display = "none";
         if (msg_display == false) {
@@ -683,6 +688,9 @@ Golfux.prototype.step = function(){
             localScores[ballIndex].score+=2;
             updateLeaderScores(localScores);
             document.getElementById("end-menu").style.display = "block";
+            if (this.level.num == NUM_LEVELS && playType == 0) {
+                document.querySelector("#end-menu .btn-quit").style.display = "none";
+            }
             document.getElementById("game-interface").style.display = "none";
             document.getElementById("level-num").style.display = "none";
             if (msg_display == false) {

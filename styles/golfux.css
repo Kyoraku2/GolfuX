@@ -177,7 +177,7 @@ button.unlock:hover {
 
 button#btn-play-solo:hover, #levels button.unlock:hover, #btn-join-code:hover,
 #wait-room button.btn-start.unlock:hover, #multi-online button.btn-wait:hover,
-#btn-continue:hover, #restart-game:hover {
+#btn-continue:hover, #restart-game:hover, #get-money:hover {
 	background-color: rgb(255, 208, 0);
 }
 
@@ -234,6 +234,25 @@ button#btn-multi-online:hover, #creer-partie button.btn-start:hover,
 	margin-right: 5vw;
 }
 
+#win-solo {
+	display: none;
+	text-align: center;
+}
+
+#win-solo h2 {
+	border: none;
+	margin-top: 10vh;
+	margin-bottom: 0vh;
+}
+
+#win-solo p {
+	margin-bottom: 3vh;
+}
+
+#win-solo img {
+	height: 50vh;
+}
+
 #multi-local, #multi-online, #creer-partie, #wait-room {
 	display: none;
 	text-align: center;
@@ -248,7 +267,7 @@ button#btn-multi-online:hover, #creer-partie button.btn-start:hover,
 button.btn-retour, button.btn-start, #btn-creer-partie, button.btn-retour-2,
 button.btn-wait, #btn-room-quit, #btn-world-1, #btn-world-2, #btn-world-3, #btn-world-4,
 #btn-continue, button.btn-quit, #restart-game, #btn-leaderboard, #close-leaderboard,
-#btn-reload, #generateQr {
+#btn-reload, #generateQr, #get-money {
 	border-radius: 3vh;
 	margin: 3vh;
 	padding: 20px;
