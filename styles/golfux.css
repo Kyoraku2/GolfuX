@@ -211,6 +211,10 @@ button#btn-multi-online:hover, #creer-partie button.btn-start:hover,
 	background-color: rgb(150, 0, 0);
 }
 
+#btn-world-5.unlock:hover, .background-w6 {
+	background-color: rgb(255, 200, 255);
+}
+
 .background-online {
 	background-color: rgb(0, 0, 90);
 }

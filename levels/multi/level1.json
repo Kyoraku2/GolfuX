@@ -1,0 +1,44 @@
+{
+    "backgroundColor":"rgb(0,153,0)",
+    "obstacles":{
+        "spawn":[
+            {
+                "middle_pos":{"x":11.5, "y":2.5},
+                "heightWidth" : {"width": 1.5, "height":1}
+            }
+        ],
+        "wall":[
+            {
+                "middle_pos":{"x":11.5, "y":0},
+                "shape": "box",
+                "heightWidth" : {"width": 6.5, "height":0.25},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":11.5, "y":31},
+                "shape": "box",
+                "heightWidth" : {"width": 6.5, "height":0.25},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":5, "y":15.5},
+                "shape": "box",
+                "heightWidth" : {"width": 0.25, "height":15.75},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":18, "y":15.5},
+                "shape": "box",
+                "heightWidth" : {"width": 0.25, "height":15.75},
+                "angle":0
+            }
+        ]
+    },
+    "holes":[
+        {
+            "pos":{"x":11.5, "y":25},
+            "radius":0.5
+        }
+    ]
+
+}

@@ -1,0 +1,73 @@
+{
+    "backgroundColor":"rgb(0,153,0)",
+    "obstacles":{
+        "spawn":[
+            {
+                "middle_pos":{"x":6, "y":2.5},
+                "heightWidth" : {"width": 1.5, "height":1}
+            }
+        ],
+        "wall":[
+            {
+                "middle_pos":{"x":6, "y":0},
+                "shape": "box",
+                "heightWidth" : {"width": 6, "height":0.25},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":11.5, "y":31},
+                "shape": "box",
+                "heightWidth" : {"width": 11.5, "height":0.25},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":0, "y":15.5},
+                "shape": "box",
+                "heightWidth" : {"width": 0.25, "height":15.75},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":12, "y":10.75},
+                "shape": "box",
+                "heightWidth" : {"width": 0.25, "height":11},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":17.5, "y":10.5},
+                "shape": "box",
+                "heightWidth" : {"width": 5.5, "height":0.25},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":23, "y":20.75},
+                "shape": "box",
+                "heightWidth" : {"width": 0.25, "height":10.5},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":0, "y":0},
+                "shape": "polygon",
+                "vectrices":[
+                    {"x":0, "y":27},
+                    {"x":5, "y":32},
+                    {"x":0, "y":32}
+                ]
+            },
+            {
+                "middle_pos":{"x":0, "y":0},
+                "shape": "polygon",
+                "vectrices":[
+                    {"x":23, "y":27},
+                    {"x":23, "y":32},
+                    {"x":18, "y":32}
+                ]
+            }
+        ]
+    },
+    "holes":[
+        {
+            "pos":{"x":18, "y":14},
+            "radius":0.5
+        }
+    ]
+}
