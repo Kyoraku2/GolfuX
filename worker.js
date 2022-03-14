@@ -38,8 +38,7 @@ const ASSETS = [
     '/hole.js',
     '/index.js',
     '/level.js',
-    '/Obstacle.js',
-    '/index.html'
+    '/Obstacle.js'
 ];
 
 const levels = []
