@@ -70,8 +70,12 @@ class Level{
         this.obstacles["spawn"].push(new SpawnArea(middle_pos,hx,hy));
     }
 
-    async createFromJSON(level){
-        var response = await fetch("/levels/solo/"+level+".json");
+    async createFromJSON(level,solo){
+        if(solo){
+            var response = await fetch("/levels/solo/"+level+".json");
+        }else{
+            var response = await fetch("/levels/multi/"+level+".json");
+        }
         if (response.status == 200) {
 
             var data = await response.json();

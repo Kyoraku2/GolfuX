@@ -124,19 +124,19 @@ io.on('connection', function (socket) {
         socket.emit("gameList",generateGameList());
     });
 
-    socket.on("joinGameByLink",function(id){
+    socket.on("joinGameByLink",function(obj){
         if(game !== null){
             socket.emit("error", {message: "Erreur, une partie est déjà en cours."});
             return;
         }
-        var joinGame = findGameByCode(id);
+        var joinGame = findGameByCode(obj.id);
         if(joinGame == null){
             socket.emit("error", {message: "Erreur, partie innexistante."});
             return;
         }
 
         if(games[joinGame] && games[joinGame].joueurs.length < games[joinGame].nbPlayers){
-            games[joinGame].joueurs[games[joinGame].joueurs.length] = {socket: socket, points: 0, inHole:false, pos:null, turn:0, name:"player", disconnected:false};
+            games[joinGame].joueurs[games[joinGame].joueurs.length] = {socket: socket, points: 0, inHole:false, pos:null, turn:0, name:obj.name, disconnected:false};
             game = joinGame;
             console.log("Joueur connecté à l'indice "+(games[game].joueurs.length-1));
             socket.emit("waiting",{
