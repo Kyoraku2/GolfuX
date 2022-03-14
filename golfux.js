@@ -600,6 +600,9 @@ Golfux.prototype.step = function(){
             }else{
                 ball.isMoving = true;
             }
+            if(ball.body.GetLinearVelocity().Length() < 0.1){
+                ball.body.SetLinearVelocity(0);
+            }
             if(ball.body.GetLinearVelocity().Length() !== 0){
                 allStopped = false;
             }
