@@ -35,7 +35,7 @@ function readLevel(level){
 let games = {};
 let counter = 0;
 let bMinLevels = 1; // TODO : à changer quand on ajoute/supprime des niveaux
-let bMaxLevels = 10;
+let bMaxLevels = 29;
 const TURN_LIMIT = 12;
 
 function createPassword(){
