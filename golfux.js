@@ -4,11 +4,11 @@ class Golfux{
         this.click_up=null;
         this.balls = [];
         this.level = new Level(11);
-        this.level.createFromJSON('level1'); //Default
+        this.level.createFromJSON('level1',true); //Default
         addEventListener(this.balls,this.level);
     }
 
-    changeLevel(level) {
+    changeLevel(level,solo) {
         if ( world != null ) 
             Box2D.destroy(world);
             
@@ -29,7 +29,7 @@ class Golfux{
             }
         }
 
-        this.level.createFromJSON('level'+level)
+        this.level.createFromJSON('level'+level,solo)
         addEventListener(this.balls,this.level);
         draw();
 
