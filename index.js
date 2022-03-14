@@ -26,10 +26,6 @@ var iceSound = new Audio('./sounds/ice.mp3');
 var portalSound = new Audio('./sounds/portal7.mp3');
 var bubblegumSound = new Audio('./sounds/bubblegum.mp3');
 
-
-
-
-
 var world = null;
 var canvas;
 var context;
@@ -271,7 +267,6 @@ function createWorld() {
     if (localStorage.getItem("level") == null) {
         golfux.save_progression(1);
     }
-    //golfux.save_progression(15); //TODO Supprimer après c'est pour le debug
 }
 
 function resetScene() {
@@ -345,7 +340,7 @@ let replacementStack = [];
 
 if('serviceWorker' in navigator){
     navigator.serviceWorker
-        .register('./worker.js?v=1',{scope: "/"})
+        .register('./worker.js?v=2',{scope: "/"})
         .then(console.log('Worker v1 here !'));
 };
 
@@ -401,6 +396,12 @@ document.addEventListener("DOMContentLoaded", function() {
 
     //Menu fin continuer
     document.getElementById("btn-continue").addEventListener('click', function(e){
+        if (playType == 0 && golfux.level.num == NUM_LEVELS) {
+            document.getElementById("win-solo").style.display = "block";
+            document.getElementById("game").style.display = "none";
+            change_world(1);
+            confetti.start(); //Lancer les confetti via le script éponyme
+        }
         golfux.changeLevel(parseInt(golfux.level.num) + 1);
         if(playType == 1){
             for(var i=0 ; i<localNbPlayers ; ++i){
@@ -421,6 +422,18 @@ document.addEventListener("DOMContentLoaded", function() {
             window.location.reload();
         });
     }
+
+    //Win solo - récupérer le prix
+    document.getElementById("get-money").addEventListener('mouseover', function(e){
+        document.getElementById("get-money").innerHTML = "\uD83D\uDCB0 RÉCUPÉRER LE PRIX<br>(0 \u20ac)";
+    });
+    document.getElementById("get-money").addEventListener('mouseout', function(e){
+        document.getElementById("get-money").innerHTML = "\uD83D\uDCB0 RÉCUPÉRER LE PRIX<br>(1 000 000 \u20ac)";
+    });
+    document.getElementById("get-money").addEventListener('click', function(e){
+        //alert("Ah comme c'est dommage ! Il n'y a plus rien à gagner suite à la trésorerie vide de GolfuX Corporation... \uD83D\uDC40 Peut-être faire un don éventuellement ?");
+        window.location.href = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
+    });
 
     //Leaderboard
     document.getElementById("btn-leaderboard").addEventListener('click', function(e){
@@ -570,15 +583,17 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     function display_X() {
-        document.getElementById("x").style.opacity = "1";
-        document.getElementById("x").classList.add("sizeX");
         if (Xgenerate == false) {
+            document.getElementById("x").style.opacity = "1";
+            document.getElementById("x").classList.add("sizeX");
             setTimeout(x_later0, 1000);
-        } else {
+            setTimeout(x_later2, 1500);
+            Xgenerate = true;
+        }/* else {
             setTimeout(x_later1, 1000);
-        }
-        setTimeout(x_later2, 1500);
-        Xgenerate = ! Xgenerate;
+        }*/
+        
+        //
         function x_later0() {
             document.getElementById("x").classList.remove("sizeX");
             document.querySelector("header img").src = "./textures/grux.png";
@@ -603,38 +618,12 @@ document.addEventListener("DOMContentLoaded", function() {
                 '<span class="animated bounce bounce-11">JUBE&nbsp;</span>'+
                 '<span class="animated bounce bounce-12">!</span>';
             document.querySelector("footer p").innerHTML =
-                '<p>&copy; GruX Corporation&trade; - 2022<br>Éric GruX<br>CMI GruX - <em>Université de Franche-Comté</em>'+
-                '<br><br><span id="version">[ver. G.R.U.X]</span></p>';
-        }
-        function x_later1() {
-            document.getElementById("x").classList.remove("sizeX");
-            document.querySelector("header img").src = "./textures/logo.PNG";
-            document.querySelector("header img").style.height = '22vw';
-            document.querySelector("header img").style.width = '60vw';
-            document.getElementById("x").style.left = "68%";
-
-            document.getElementById("btn-play-solo").innerHTML = "\uD83C\uDFC6 MODE SOLO";
-            document.getElementById("btn-multi-local").innerHTML = "\uD83D\uDC68\u200D\uD83D\uDC69\u200D\uD83D\uDC67\u200D\uD83D\uDC66 MULTIJOUEUR LOCAL";
-            document.getElementById("btn-multi-online").innerHTML = "\uD83C\uDF0D MULTIJOUEUR EN LIGNE";
-            document.querySelector("h1").innerHTML = 
-                '<span class="animated bounce bounce-1">LE&nbsp;</span>'+
-                '<span class="animated bounce bounce-2">JEU&nbsp;</span>'+
-                '<span class="animated bounce bounce-3">DE&nbsp;</span>'+
-                '<span class="animated bounce bounce-4">GOLF&nbsp;</span>'+
-                '<span class="animated bounce bounce-5">PC&nbsp;</span>'+
-                '<span class="animated bounce bounce-6">ET&nbsp;</span>'+
-                '<span class="animated bounce bounce-7">MOBILE&nbsp;</span>'+
-                '<span class="animated bounce bounce-8">À&nbsp;</span>'+
-                '<span class="animated bounce bounce-9">JOUER&nbsp;</span>'+
-                '<span class="animated bounce bounce-10">ENTRE&nbsp;</span>'+
-                '<span class="animated bounce bounce-11">AMIS&nbsp;</span>'+
-                '<span class="animated bounce bounce-12">!</span>';
-            document.querySelector("footer p").innerHTML =
-                '<p>&copy; GolfuX Corporation&trade; - 2022<br>Arthur BETARD, Robin GRAPPE, Tayeb HAKKAR<br>CMI Informatique - <em>Université de Franche-Comté</em>'+
-                '<br><br><span id="version">[ver. 1.0.0]</span></p>';
+                '<p>&copy; GruX Corporation&trade; - 2022<br>Éric GruX<br>CMI GruX - <em>Université de Franche-Comté</em>';
+                //'<br><br><span id="version">[ver. G.R.U.X]</span></p>';
         }
         function x_later2() {
             document.getElementById("x").style.opacity = "0";
+            document.getElementById("x").style.cursor = "initial";
         }
     }
 
@@ -724,30 +713,20 @@ function create_levels_btn(lvl_number) {
         var button = document.createElement("button");
         button.dataset["index"] = i+1;
         var content;
-        var stars = document.createElement("span");
-        stars.classList.add("stars");
         if (i+1 <= max_lvl || i+1 == 1) {
+            if (num_lvl == "10") { num_lvl = "\u2694\uFE0F"}
             content = world_lvl +"-"+ num_lvl;
             button.classList.add("unlock");
             button.title = "Niveau "+content;
-            //stars.appendChild(document.createTextNode("\n\u2B50\u2B50\u2B50"));
         } else {
             content = "\uD83D\uDD12";
             button.title = "Verrouillé";
         }
         var txt = document.createTextNode(content);
         button.appendChild(txt);
-        button.appendChild(stars);
         levels.appendChild(button);
     }
 }
-
-/*function save_progression(last_lvl) {
-    var progress = localStorage.getItem("level");
-    progress = (!progress) ? {} : JSON.parse(progress);
-    progress = last_lvl;
-    localStorage.setItem("level", JSON.stringify(progress));
-}*/
 
 function change_world(num_world) {
     document.querySelector("body").classList = [];

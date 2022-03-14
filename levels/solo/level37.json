@@ -1,0 +1,357 @@
+{
+    "backgroundColor":"rgb(100, 100, 100)",
+    "obstacles":{
+        "spawn":[
+            {
+                "middle_pos":{"x":11.5, "y":8},
+                "heightWidth" : {"width": 10, "height":1}
+            }
+        ],
+        "wall":[
+            {
+                "middle_pos":{"x":11.5, "y":0},
+                "shape": "box",
+                "heightWidth" : {"width": 11.5, "height":0.25},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":11.5, "y":31},
+                "shape": "box",
+                "heightWidth" : {"width": 11.5, "height":0.25},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":0, "y":15.5},
+                "shape": "box",
+                "heightWidth" : {"width": 0.25, "height":15.75},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":23, "y":15.5},
+                "shape": "box",
+                "heightWidth" : {"width": 0.25, "height":15.75},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":4, "y":3},
+                "shape": "box",
+                "heightWidth" : {"width": 4, "height":3},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":19, "y":3},
+                "shape": "box",
+                "heightWidth" : {"width": 4, "height":3},
+                "angle":0
+            }
+        ],
+        "bubblegum":[
+            {
+                "middle_pos":{"x":11.5, "y":5},
+                "shape": "box",
+                "heightWidth" : {"width": 3.5, "height":1},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":2.5, "y":30},
+                "shape": "box",
+                "heightWidth" : {"width": 1.5, "height":1},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":20.5, "y":30},
+                "shape": "box",
+                "heightWidth" : {"width": 1.5, "height":1},
+                "angle":0
+            }
+        ],
+        "void":[
+            {
+                "middle_pos":{"x":0.5, "y":18},
+                "shape": "box",
+                "heightWidth" : {"width": 0.5, "height":13},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":22.5, "y":18},
+                "shape": "box",
+                "heightWidth" : {"width": 0.5, "height":13},
+                "angle":0
+            }
+        ],
+        "portal":[
+            {
+                "enter_pos":{"x":11.5,"y":12},
+                "exit_pos":{"x":11.5,"y":0.5},
+                "userdata":203,
+                "bidirectional":false,
+                "hx1": 1,
+                "hy1": 1,
+                "hx2": 2.5,
+                "hy2": 0.25,
+                "direction1":"N",
+                "direction2":"N"
+            },
+            {
+                "enter_pos":{"x":7,"y":12},
+                "exit_pos":{"x":11.5,"y":0.5},
+                "userdata":203,
+                "bidirectional":false,
+                "hx1": 1,
+                "hy1": 1,
+                "hx2": 2.5,
+                "hy2": 0.25,
+                "direction1":"N",
+                "direction2":"N"
+            },
+            {
+                "enter_pos":{"x":2.5,"y":12},
+                "exit_pos":{"x":11.5,"y":0.5},
+                "userdata":203,
+                "bidirectional":false,
+                "hx1": 1,
+                "hy1": 1,
+                "hx2": 2.5,
+                "hy2": 0.25,
+                "direction1":"N",
+                "direction2":"N"
+            },
+            {
+                "enter_pos":{"x":16,"y":12},
+                "exit_pos":{"x":11.5,"y":0.5},
+                "userdata":203,
+                "bidirectional":false,
+                "hx1": 1,
+                "hy1": 1,
+                "hx2": 2.5,
+                "hy2": 0.25,
+                "direction1":"N",
+                "direction2":"N"
+            },
+            {
+                "enter_pos":{"x":20.5,"y":12},
+                "exit_pos":{"x":11.5,"y":0.5},
+                "userdata":203,
+                "bidirectional":false,
+                "hx1": 1,
+                "hy1": 1,
+                "hx2": 2.5,
+                "hy2": 0.25,
+                "direction1":"N",
+                "direction2":"N"
+            },
+            {
+                "enter_pos":{"x":11.5,"y":17},
+                "exit_pos":{"x":11.5,"y":0.5},
+                "userdata":203,
+                "bidirectional":false,
+                "hx1": 2.5,
+                "hy1": 1,
+                "hx2": 2.5,
+                "hy2": 0.25,
+                "direction1":"N",
+                "direction2":"N"
+            },
+            {
+                "enter_pos":{"x":2.5,"y":17},
+                "exit_pos":{"x":11.5,"y":0.5},
+                "userdata":203,
+                "bidirectional":false,
+                "hx1": 2.5,
+                "hy1": 1,
+                "hx2": 2.5,
+                "hy2": 0.25,
+                "direction1":"N",
+                "direction2":"N"
+            },
+            {
+                "enter_pos":{"x":20.5,"y":17},
+                "exit_pos":{"x":11.5,"y":0.5},
+                "userdata":203,
+                "bidirectional":false,
+                "hx1": 2.5,
+                "hy1": 1,
+                "hx2": 2.5,
+                "hy2": 0.25,
+                "direction1":"N",
+                "direction2":"N"
+            },
+            {
+                "enter_pos":{"x":11.5,"y":22},
+                "exit_pos":{"x":11.5,"y":0.5},
+                "userdata":203,
+                "bidirectional":false,
+                "hx1": 8,
+                "hy1": 1,
+                "hx2": 2.5,
+                "hy2": 0.25,
+                "direction1":"N",
+                "direction2":"N"
+            },
+            {
+                "enter_pos":{"x":4.5,"y":28.5},
+                "exit_pos":{"x":11.5,"y":0.5},
+                "userdata":203,
+                "bidirectional":false,
+                "hx1": 1,
+                "hy1": 2.5,
+                "hx2": 2.5,
+                "hy2": 0.25,
+                "direction1":"E",
+                "direction2":"N"
+            },
+            {
+                "enter_pos":{"x":18.5,"y":28.5},
+                "exit_pos":{"x":11.5,"y":0.5},
+                "userdata":203,
+                "bidirectional":false,
+                "hx1": 1,
+                "hy1": 2.5,
+                "hx2": 2.5,
+                "hy2": 0.25,
+                "direction1":"W",
+                "direction2":"N"
+            },
+            {
+                "enter_pos":{"x":11.5,"y":26.5},
+                "exit_pos":{"x":11.5,"y":0.5},
+                "userdata":203,
+                "bidirectional":false,
+                "hx1": 8,
+                "hy1": 1,
+                "hx2": 2.5,
+                "hy2": 0.25,
+                "direction1":"N",
+                "direction2":"N"
+            },
+            {
+                "enter_pos":{"x":11.5,"y":24.25},
+                "exit_pos":{"x":11.5,"y":30.5},
+                "userdata":203,
+                "bidirectional":false,
+                "hx1": 1.5,
+                "hy1": 1.5,
+                "hx2": 2.5,
+                "hy2": 0.25,
+                "direction1":"E",
+                "direction2":"S"
+            }
+        ],
+        "wind":[
+            {
+                "middle_pos":{"x":18.25, "y":12},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 3,
+                "direction":{"x":0, "y":1}
+            },
+            {
+                "middle_pos":{"x":13.75, "y":12},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 3,
+                "direction":{"x":0, "y":1}
+            },
+            {
+                "middle_pos":{"x":9.25, "y":12},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 3,
+                "direction":{"x":0, "y":1}
+            },
+            {
+                "middle_pos":{"x":4.75, "y":12},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 3,
+                "direction":{"x":0, "y":1}
+            },
+            {
+                "middle_pos":{"x":6.25, "y":17},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 3,
+                "direction":{"x":0, "y":-1}
+            },
+            {
+                "middle_pos":{"x":7.75, "y":17},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 3,
+                "direction":{"x":0, "y":-1}
+            },
+            {
+                "middle_pos":{"x":15.25, "y":17},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 3,
+                "direction":{"x":0, "y":-1}
+            },
+            {
+                "middle_pos":{"x":16.75, "y":17},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 3,
+                "direction":{"x":0, "y":-1}
+            },
+            {
+                "middle_pos":{"x":20.75, "y":22},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 3,
+                "direction":{"x":0, "y":1}
+            },
+            {
+                "middle_pos":{"x":20.75, "y":20.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 3,
+                "direction":{"x":0, "y":1}
+            },
+            {
+                "middle_pos":{"x":20.75, "y":19},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 3,
+                "direction":{"x":0, "y":1}
+            },
+            {
+                "middle_pos":{"x":2.25, "y":22},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 3,
+                "direction":{"x":0, "y":1}
+            },
+            {
+                "middle_pos":{"x":2.25, "y":20.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 3,
+                "direction":{"x":0, "y":1}
+            },
+            {
+                "middle_pos":{"x":2.25, "y":19},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 3,
+                "direction":{"x":0, "y":1}
+            },
+            {
+                "middle_pos":{"x":6.25, "y":24.25},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 3,
+                "direction":{"x":1, "y":0}
+            },
+            {
+                "middle_pos":{"x":7.75, "y":24.25},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 3,
+                "direction":{"x":1, "y":0}
+            },
+            {
+                "middle_pos":{"x":15.25, "y":24.25},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 3,
+                "direction":{"x":-1, "y":0.00001}
+            },
+            {
+                "middle_pos":{"x":16.75, "y":24.25},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 3,
+                "direction":{"x":-1, "y":0.00001}
+            }
+        ]
+    },
+    "holes":[
+        {
+            "pos":{"x":11.5, "y":28.5},
+            "radius":0.5
+        }
+    ]
+}

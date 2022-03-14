@@ -1,0 +1,87 @@
+{
+    "backgroundColor":"rgb(255, 200, 150)",
+    "obstacles":{
+        "spawn":[
+            {
+                "middle_pos":{"x":6, "y":2.5},
+                "heightWidth" : {"width": 1.5, "height":1}
+            }
+        ],
+        "wall":[
+            {
+                "middle_pos":{"x":11.5, "y":0},
+                "shape": "box",
+                "heightWidth" : {"width": 11.5, "height":0.25},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":11.5, "y":31},
+                "shape": "box",
+                "heightWidth" : {"width": 11.5, "height":0.25},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":0, "y":15.5},
+                "shape": "box",
+                "heightWidth" : {"width": 0.25, "height":15.75},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":23, "y":15.5},
+                "shape": "box",
+                "heightWidth" : {"width": 0.25, "height":15.75},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":11.5, "y":12},
+                "shape": "box",
+                "heightWidth" : {"width": 0.25, "height":12},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":0, "y":0},
+                "shape": "polygon",
+                "vectrices":[
+                    {"x":0, "y":27},
+                    {"x":5, "y":32},
+                    {"x":0, "y":32}
+                ]
+            },
+            {
+                "middle_pos":{"x":0, "y":0},
+                "shape": "polygon",
+                "vectrices":[
+                    {"x":23, "y":27},
+                    {"x":23, "y":32},
+                    {"x":18, "y":32}
+                ]
+            },
+            {
+                "middle_pos":{"x":11.5, "y":12},
+                "shape": "box",
+                "heightWidth" : {"width": 3, "height":3},
+                "angle":0.79
+            }
+        ],
+        "sand":[
+            {
+                "middle_pos":{"x":11.5, "y":23},
+                "shape": "circle",
+                "heightWidth" : {"width": 2.5, "height":1.5},
+                "radius": 5
+            },
+            {
+                "middle_pos":{"x":17.5, "y":1.5},
+                "shape": "box",
+                "heightWidth" : {"width": 6, "height":1.5},
+                "angle":0
+            }
+        ]
+    },
+    "holes":[
+        {
+            "pos":{"x":17, "y":5},
+            "radius":0.5
+        }
+    ]
+}

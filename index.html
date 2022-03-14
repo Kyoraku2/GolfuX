@@ -20,6 +20,7 @@
         <script src="./level.js?v=0"></script>
         <script src="./Obstacle.js?v=0"></script>
         <script src="./hole.js?v=0"></script>
+        <script src="./confetti.js?v=0"></script>
         
         <script>  
             var Box2D;
@@ -45,6 +46,7 @@
         </script>
         <script src="/socket.io/socket.io.js"></script>
     </head>
+
     <body>
         <!-- TITRE DE LA PAGE -->
         <header>
@@ -105,6 +107,27 @@
                 <button class="unlock" id="btn-world-3" data-world="3" title="Aller au monde 3">&#129482; MONDE 3</button>
                 <button class="unlock" id="btn-world-4" data-world="4" title="Aller au monde 4">&#127984; MONDE 4</button><br>
                 <button class="btn-retour unlock" title="Retourner au menu principal">&#8617; RETOUR</button>
+            </div>
+
+            <!-- WIN SCREEN -->
+            <div id="win-solo">
+                <h2 class="subtitle">
+                    <span class="animated bounce bounce-1">&#127942; </span>
+                    <span class="animated bounce bounce-2">BRAVO </span>
+                    <span class="animated bounce bounce-3">! </span>
+                    <span class="animated bounce bounce-4">VOUS </span>
+                    <span class="animated bounce bounce-5">AVEZ </span>
+                    <span class="animated bounce bounce-6">REMPORTÉ </span>
+                    <span class="animated bounce bounce-7">LE </span>
+                    <span class="animated bounce bounce-8"><em>TROPHUX</em> </span>
+                    <span class="animated bounce bounce-9">!!! </span>
+                    <span class="animated bounce bounce-10">&#127942;</span>
+                </h2>
+                <p>Vous n'êtes désormais plus un <em>Petit Joueur</em>. À vous maintenant d'aller jouer sur nos niveaux <u>en ligne</u> afin de voir à quelle sauce vous serez mangé... &#127858;<br>
+                &#128182; N'oubliez pas de récupérer votre <u>prix</u> avant de partir ! (ceci n'est pas du tout un troll)</p>
+                <img src="./textures/trophux.png"><br>
+                <button id="get-money" class="unlock" title="Avoir beaucoup d'argent">&#128176; RÉCUPÉRER LE PRIX<br>(1 000 000 &euro;)</button>
+                <button class="unlock btn-quit" title="Retourner au menu principal">&#10060; QUITTER<br>(CE SERAIT DOMMAGE)</button>
             </div>
 
             <!-- MENU CRÉATION PARTIE LOCALE -->
@@ -284,7 +307,7 @@
         <!-- BAS DE PAGE -->
         <footer>
             <p>&copy; GolfuX Corporation&trade; - 2022<br>Arthur BETARD, Robin GRAPPE, Tayeb HAKKAR<br>CMI Informatique - <em>Université de Franche-Comté</em>
-            <br><br><span id="version">[ver. 1.0.0]</span></p>
+            <!--<br><br><span id="version">[ver. 1.0.0]</span></p>-->
         </footer>
         <div id="x">X</div>
     </body>

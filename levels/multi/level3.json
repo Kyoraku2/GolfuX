@@ -1,0 +1,92 @@
+{
+    "backgroundColor":"rgb(0,153,0)",
+    "obstacles":{
+        "spawn":[
+            {
+                "middle_pos":{"x":11.75, "y":13},
+                "heightWidth" : {"width": 1.5, "height":1}
+            }
+        ],
+        "wall":[
+            {
+                "middle_pos":{"x":11.5, "y":0},
+                "shape": "box",
+                "heightWidth" : {"width": 11.5, "height":0.25},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":11.5, "y":31},
+                "shape": "box",
+                "heightWidth" : {"width": 11.5, "height":0.25},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":0, "y":15.5},
+                "shape": "box",
+                "heightWidth" : {"width": 0.25, "height":15.75},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":23, "y":15.5},
+                "shape": "box",
+                "heightWidth" : {"width": 0.25, "height":15.75},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":8, "y":15.5},
+                "shape": "box",
+                "heightWidth" : {"width": 0.25, "height":8.75},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":15.5, "y":15.5},
+                "shape": "box",
+                "heightWidth" : {"width": 0.25, "height":8.75},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":11.5, "y":15},
+                "shape": "box",
+                "heightWidth" : {"width": 3.75, "height":0.25},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":0, "y":0},
+                "shape": "polygon",
+                "vectrices":[
+                    {"x":23, "y":7},
+                    {"x":23, "y":13},
+                    {"x":19, "y":10}
+                ]
+            },
+            {
+                "middle_pos":{"x":0, "y":0},
+                "shape": "polygon",
+                "vectrices":[
+                    {"x":15.5, "y":17},
+                    {"x":19.5, "y":20},
+                    {"x":15.5, "y":23}
+                    
+                ]
+            },
+            {
+                "middle_pos":{"x":6, "y":10},
+                "shape": "box",
+                "heightWidth" : {"width": 2, "height":0.25},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":2, "y":20},
+                "shape": "box",
+                "heightWidth" : {"width": 2, "height":0.25},
+                "angle":0
+            }
+        ]
+    },
+    "holes":[
+        {
+            "pos":{"x":11.75, "y":17},
+            "radius":0.5
+        }
+    ]
+}

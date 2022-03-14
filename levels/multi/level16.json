@@ -1,0 +1,710 @@
+{
+    "backgroundColor":"rgb(255, 200, 150)",
+    "obstacles":{
+        "spawn":[
+            {
+                "middle_pos":{"x":2.5, "y":27},
+                "heightWidth" : {"width": 1.5, "height":1}
+            }
+        ],
+        "wall":[
+            {
+                "middle_pos":{"x":11.5, "y":0},
+                "shape": "box",
+                "heightWidth" : {"width": 11.5, "height":0.25},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":11.5, "y":31},
+                "shape": "box",
+                "heightWidth" : {"width": 11.5, "height":0.25},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":0, "y":15.5},
+                "shape": "box",
+                "heightWidth" : {"width": 0.25, "height":15.75},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":23, "y":15.5},
+                "shape": "box",
+                "heightWidth" : {"width": 0.25, "height":15.75},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":6, "y":25},
+                "shape": "box",
+                "heightWidth" : {"width": 6, "height":0.25},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":11.5, "y":17.25},
+                "shape": "box",
+                "heightWidth" : {"width": 0.5, "height":8},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":14.25, "y":9.5},
+                "shape": "box",
+                "heightWidth" : {"width": 2.25, "height":0.25},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":20.5, "y":9.5},
+                "shape": "box",
+                "heightWidth" : {"width": 2.25, "height":0.25},
+                "angle":0
+            }
+        ],
+        "sand":[
+            {
+                "middle_pos":{"x":9, "y":24.5},
+                "shape": "box",
+                "heightWidth" : {"width": 3, "height":3},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":17, "y":1},
+                "shape": "box",
+                "heightWidth" : {"width": 6, "height":1},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":6, "y":2},
+                "shape": "box",
+                "heightWidth" : {"width": 6, "height":2},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":11.5, "y":2},
+                "shape": "circle",
+                "heightWidth" : {"width": 2.5, "height":1.5},
+                "radius": 2
+            }
+        ],
+        "bumper":[
+            {
+                "middle_pos":{"x":11.5, "y":4},
+                "shape": "circle",
+                "isstatic":true,
+                "heightWidth" : {"width": 2.5, "height":1.5},
+                "radius": 0.75
+            }
+        ],
+        "wind":[
+            {
+                "middle_pos":{"x":17.4, "y":10},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":0, "y":-1}
+            },
+            {
+                "middle_pos":{"x":17.4, "y":11.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":0, "y":-1}
+            },
+            {
+                "middle_pos":{"x":17.4, "y":13},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":0, "y":-1}
+            },
+            {
+                "middle_pos":{"x":17.4, "y":14.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":-0.3, "y":-1}
+            },
+            {
+                "middle_pos":{"x":17.4, "y":16},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":-0.3, "y":-1}
+            },
+            {
+                "middle_pos":{"x":17.4, "y":17.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":-0.3, "y":-1}
+            },
+            {
+                "middle_pos":{"x":17.4, "y":19},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":-0.3, "y":-1}
+            },
+            {
+                "middle_pos":{"x":17.4, "y":20.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":-0.3, "y":-1}
+            },
+            {
+                "middle_pos":{"x":17.4, "y":22},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":-0.3, "y":-1}
+            },
+            {
+                "middle_pos":{"x":17.4, "y":23.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":-0.3, "y":-1}
+            },
+            {
+                "middle_pos":{"x":15.9, "y":14.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":-0.3, "y":-1}
+            },
+            {
+                "middle_pos":{"x":15.9, "y":16},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":-0.3, "y":-1}
+            },
+            {
+                "middle_pos":{"x":15.9, "y":17.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":-0.3, "y":-1}
+            },
+            {
+                "middle_pos":{"x":15.9, "y":19},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":-0.3, "y":-1}
+            },
+            {
+                "middle_pos":{"x":15.9, "y":20.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":-0.3, "y":-1}
+            },
+            {
+                "middle_pos":{"x":15.9, "y":22},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":-0.3, "y":-1}
+            },
+            {
+                "middle_pos":{"x":15.9, "y":23.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":-0.3, "y":-1}
+            },
+            {
+                "middle_pos":{"x":14.4, "y":14.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":-0.3, "y":-1}
+            },
+            {
+                "middle_pos":{"x":14.4, "y":16},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":-0.3, "y":-1}
+            },
+            {
+                "middle_pos":{"x":14.4, "y":17.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":-0.3, "y":-1}
+            },
+            {
+                "middle_pos":{"x":14.4, "y":19},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":-0.3, "y":-1}
+            },
+            {
+                "middle_pos":{"x":14.4, "y":20.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":-0.3, "y":-1}
+            },
+            {
+                "middle_pos":{"x":14.4, "y":22},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":-0.3, "y":-1}
+            },
+            {
+                "middle_pos":{"x":14.4, "y":23.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":-0.3, "y":-1}
+            },
+            {
+                "middle_pos":{"x":12.9, "y":14.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":-0.3, "y":-1}
+            },
+            {
+                "middle_pos":{"x":12.9, "y":16},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":-0.3, "y":-1}
+            },
+            {
+                "middle_pos":{"x":12.9, "y":17.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":-0.3, "y":-1}
+            },
+            {
+                "middle_pos":{"x":12.9, "y":19},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":-0.3, "y":-1}
+            },
+            {
+                "middle_pos":{"x":12.9, "y":20.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":-0.3, "y":-1}
+            },
+            {
+                "middle_pos":{"x":12.9, "y":22},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":-0.3, "y":-1}
+            },
+            {
+                "middle_pos":{"x":12.9, "y":23.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":-0.3, "y":-1}
+            },
+            {
+                "middle_pos":{"x":18.9, "y":14.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":-0.3, "y":-1}
+            },
+            {
+                "middle_pos":{"x":18.9, "y":16},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":-0.3, "y":-1}
+            },
+            {
+                "middle_pos":{"x":18.9, "y":17.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":-0.3, "y":-1}
+            },
+            {
+                "middle_pos":{"x":18.9, "y":19},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":-0.3, "y":-1}
+            },
+            {
+                "middle_pos":{"x":18.9, "y":20.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":-0.3, "y":-1}
+            },
+            {
+                "middle_pos":{"x":18.9, "y":22},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":-0.3, "y":-1}
+            },
+            {
+                "middle_pos":{"x":18.9, "y":23.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":-0.3, "y":-1}
+            },
+            {
+                "middle_pos":{"x":20.4, "y":14.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":-0.3, "y":-1}
+            },
+            {
+                "middle_pos":{"x":20.4, "y":16},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":-0.3, "y":-1}
+            },
+            {
+                "middle_pos":{"x":20.4, "y":17.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":-0.3, "y":-1}
+            },
+            {
+                "middle_pos":{"x":20.4, "y":19},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":-0.3, "y":-1}
+            },
+            {
+                "middle_pos":{"x":20.4, "y":20.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":-0.3, "y":-1}
+            },
+            {
+                "middle_pos":{"x":20.4, "y":22},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":-0.3, "y":-1}
+            },
+            {
+                "middle_pos":{"x":20.4, "y":23.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":-0.3, "y":-1}
+            },
+            {
+                "middle_pos":{"x":21.9, "y":14.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":-0.3, "y":-1}
+            },
+            {
+                "middle_pos":{"x":21.9, "y":16},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":-0.3, "y":-1}
+            },
+            {
+                "middle_pos":{"x":21.9, "y":17.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":-0.3, "y":-1}
+            },
+            {
+                "middle_pos":{"x":21.9, "y":19},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":-0.3, "y":-1}
+            },
+            {
+                "middle_pos":{"x":21.9, "y":20.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":-0.3, "y":-1}
+            },
+            {
+                "middle_pos":{"x":21.9, "y":22},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":-0.3, "y":-1}
+            },
+            {
+                "middle_pos":{"x":21.9, "y":23.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":-0.3, "y":-1}
+            },
+            {
+                "middle_pos":{"x":1.1, "y":19},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":0.3, "y":1}
+            },
+            {
+                "middle_pos":{"x":2.6, "y":19},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":0.3, "y":1}
+            },
+            {
+                "middle_pos":{"x":4.1, "y":19},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":0.3, "y":1}
+            },
+            {
+                "middle_pos":{"x":5.6, "y":19},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":0.3, "y":1}
+            },
+            {
+                "middle_pos":{"x":7.1, "y":19},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":0.3, "y":1}
+            },
+            {
+                "middle_pos":{"x":8.6, "y":19},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":0.3, "y":1}
+            },
+            {
+                "middle_pos":{"x":10.1, "y":19},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":0.3, "y":1}
+            },
+            {
+                "middle_pos":{"x":1.1, "y":17.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":0.3, "y":1}
+            },
+            {
+                "middle_pos":{"x":2.6, "y":17.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":0.3, "y":1}
+            },
+            {
+                "middle_pos":{"x":4.1, "y":17.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":0.3, "y":1}
+            },
+            {
+                "middle_pos":{"x":5.6, "y":17.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":0.3, "y":1}
+            },
+            {
+                "middle_pos":{"x":7.1, "y":17.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":0.3, "y":1}
+            },
+            {
+                "middle_pos":{"x":8.6, "y":17.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":0.3, "y":1}
+            },
+            {
+                "middle_pos":{"x":10.1, "y":17.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":0.3, "y":1}
+            },
+            {
+                "middle_pos":{"x":1.1, "y":16},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":0.3, "y":1}
+            },
+            {
+                "middle_pos":{"x":2.6, "y":16},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":0.3, "y":1}
+            },
+            {
+                "middle_pos":{"x":4.1, "y":16},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":0.3, "y":1}
+            },
+            {
+                "middle_pos":{"x":5.6, "y":16},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":0.3, "y":1}
+            },
+            {
+                "middle_pos":{"x":7.1, "y":16},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":0.3, "y":1}
+            },
+            {
+                "middle_pos":{"x":8.6, "y":16},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":0.3, "y":1}
+            },
+            {
+                "middle_pos":{"x":10.1, "y":16},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":0.3, "y":1}
+            },
+            {
+                "middle_pos":{"x":1.1, "y":14.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":0.3, "y":1}
+            },
+            {
+                "middle_pos":{"x":2.6, "y":14.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":0.3, "y":1}
+            },
+            {
+                "middle_pos":{"x":4.1, "y":14.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":0.3, "y":1}
+            },
+            {
+                "middle_pos":{"x":5.6, "y":14.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":0.3, "y":1}
+            },
+            {
+                "middle_pos":{"x":7.1, "y":14.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":0.3, "y":1}
+            },
+            {
+                "middle_pos":{"x":8.6, "y":14.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":0.3, "y":1}
+            },
+            {
+                "middle_pos":{"x":10.1, "y":14.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":0.3, "y":1}
+            },
+            {
+                "middle_pos":{"x":1.1, "y":13},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":0.3, "y":1}
+            },
+            {
+                "middle_pos":{"x":2.6, "y":13},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":0.3, "y":1}
+            },
+            {
+                "middle_pos":{"x":4.1, "y":13},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":0.3, "y":1}
+            },
+            {
+                "middle_pos":{"x":5.6, "y":13},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":0.3, "y":1}
+            },
+            {
+                "middle_pos":{"x":7.1, "y":13},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":0.3, "y":1}
+            },
+            {
+                "middle_pos":{"x":8.6, "y":13},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":0.3, "y":1}
+            },
+            {
+                "middle_pos":{"x":10.1, "y":13},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":0.3, "y":1}
+            },
+            {
+                "middle_pos":{"x":1.1, "y":11.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":0.3, "y":1}
+            },
+            {
+                "middle_pos":{"x":2.6, "y":11.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":0.3, "y":1}
+            },
+            {
+                "middle_pos":{"x":4.1, "y":11.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":0.3, "y":1}
+            },
+            {
+                "middle_pos":{"x":5.6, "y":11.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":0.3, "y":1}
+            },
+            {
+                "middle_pos":{"x":7.1, "y":11.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":0.3, "y":1}
+            },
+            {
+                "middle_pos":{"x":8.6, "y":11.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":0.3, "y":1}
+            },
+            {
+                "middle_pos":{"x":10.1, "y":11.5},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":0.3, "y":1}
+            },
+            {
+                "middle_pos":{"x":1.1, "y":10},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":0.3, "y":1}
+            },
+            {
+                "middle_pos":{"x":2.6, "y":10},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":0.3, "y":1}
+            },
+            {
+                "middle_pos":{"x":4.1, "y":10},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":0.3, "y":1}
+            },
+            {
+                "middle_pos":{"x":5.6, "y":10},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":0.3, "y":1}
+            },
+            {
+                "middle_pos":{"x":7.1, "y":10},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":0.3, "y":1}
+            },
+            {
+                "middle_pos":{"x":8.6, "y":10},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":0.3, "y":1}
+            },
+            {
+                "middle_pos":{"x":10.1, "y":10},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 0.5,
+                "direction":{"x":0.3, "y":1}
+            }
+        ]
+    },
+    "holes":[
+        {
+            "pos":{"x":3, "y":23},
+            "radius":0.5
+        }
+    ]
+}

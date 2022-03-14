@@ -10,6 +10,7 @@ const ASSETS = [
     '/textures/logo.PNG',
     '/textures/grux.png',
     '/textures/sand.png',
+    '/textures/trophux.png',
     '/textures/void.jpg',
     '/textures/wall.jpg',
     '/textures/water.jpg',
@@ -34,6 +35,7 @@ const ASSETS = [
     '/build/Box2D_v2.3.1_min.wasm.js',
     '/build/Box2D_v2.3.1_min.wasm.wasm',
     '/ball.js',
+    '/confetti.js',
     '/golfux.js',
     '/hole.js',
     '/index.js',
@@ -42,8 +44,11 @@ const ASSETS = [
 ];
 
 const levels = []
-for(var i = 1 ; i<29 ; ++i){
-    levels.push('/levels/solo/level'+i+'.json');
+for(var i = 1 ; i<=40 ; ++i){
+  levels.push('/levels/solo/level'+i+'.json');
+}
+for(var i = 1 ; i<=29 ; ++i){
+  levels.push('/levels/multi/level'+i+'.json');
 }
 
 const contentToCache = ASSETS.concat(levels);

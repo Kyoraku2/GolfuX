@@ -1,5 +1,5 @@
 {
-    "backgroundColor":"rgb(100, 100, 100)",
+    "backgroundColor":"rgb(0,153,0)",
     "obstacles":{
         "spawn":[
             {
@@ -33,9 +33,15 @@
                 "angle":0
             },
             {
-                "middle_pos":{"x":11.5, "y":5},
+                "middle_pos":{"x":8, "y":5},
                 "shape": "box",
-                "heightWidth" : {"width": 11.5, "height":0.25},
+                "heightWidth" : {"width": 8, "height":0.25},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":21, "y":5},
+                "shape": "box",
+                "heightWidth" : {"width": 2, "height":0.25},
                 "angle":0
             },
             {
@@ -57,13 +63,19 @@
                 "angle":0
             },
             {
-                "middle_pos":{"x":5, "y":21},
+                "middle_pos":{"x":5, "y":18.25},
                 "shape": "box",
-                "heightWidth" : {"width": 0.25, "height":10},
+                "heightWidth" : {"width": 0.25, "height":7},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":5, "y":29.5},
+                "shape": "box",
+                "heightWidth" : {"width": 0.25, "height":1.5},
                 "angle":0
             }
         ],
-        "void":[
+        "water":[
             {
                 "middle_pos":{"x":21.5, "y":2.5},
                 "shape": "box",
@@ -83,9 +95,9 @@
                 "angle":0
             },
             {
-                "middle_pos":{"x":9.5, "y":6.5},
+                "middle_pos":{"x":8, "y":6.5},
                 "shape": "box",
-                "heightWidth" : {"width": 9.5, "height":1.5},
+                "heightWidth" : {"width": 8, "height":1.5},
                 "angle":0
             },
             {
@@ -93,146 +105,63 @@
                 "shape": "box",
                 "heightWidth" : {"width": 2.5, "height":1.5},
                 "angle":0
+            }
+        ],
+        "bumper":[
+            {
+                "middle_pos":{"x":10.5, "y":17},
+                "shape": "circle",
+                "isstatic":true,
+                "heightWidth" : {"width": 2.5, "height":1.5},
+                "radius": 0.75
             },
             {
-                "middle_pos":{"x":21.5, "y":15},
-                "shape": "box",
-                "heightWidth" : {"width": 2, "height":2},
-                "angle":0
+                "middle_pos":{"x":8, "y":13},
+                "shape": "circle",
+                "isstatic":true,
+                "heightWidth" : {"width": 2.5, "height":1.5},
+                "radius": 0.75
             },
             {
-                "middle_pos":{"x":10.5, "y":15},
-                "shape": "box",
-                "heightWidth" : {"width": 5.5, "height":3},
-                "angle":0
+                "middle_pos":{"x":13, "y":13},
+                "shape": "circle",
+                "isstatic":true,
+                "heightWidth" : {"width": 2.5, "height":1.5},
+                "radius": 0.75
             },
             {
                 "middle_pos":{"x":3.5, "y":15},
                 "shape": "circle",
+                "isstatic":true,
                 "heightWidth" : {"width": 2.5, "height":1.5},
                 "radius": 0.75
             },
             {
                 "middle_pos":{"x":1.5, "y":19},
                 "shape": "circle",
+                "isstatic":true,
                 "heightWidth" : {"width": 2.5, "height":1.5},
                 "radius": 0.75
             },
             {
                 "middle_pos":{"x":3.5, "y":23},
                 "shape": "circle",
+                "isstatic":true,
                 "heightWidth" : {"width": 2.5, "height":1.5},
                 "radius": 0.75
             },
             {
                 "middle_pos":{"x":13, "y":28},
                 "shape": "circle",
-                "heightWidth" : {"width": 2.5, "height":1.5},
-                "radius": 0.75
-            },
-            {
-                "middle_pos":{"x":9, "y":28},
-                "shape": "circle",
-                "heightWidth" : {"width": 2.5, "height":1.5},
-                "radius": 0.75
-            }
-        ],
-        "bumper":[
-            {
-                "middle_pos":{"x":10.5, "y":3.5},
-                "shape": "circle",
                 "isstatic":true,
                 "heightWidth" : {"width": 2.5, "height":1.5},
                 "radius": 0.75
-            },
-            {
-                "middle_pos":{"x":7, "y":1.5},
-                "shape": "circle",
-                "isstatic":true,
-                "heightWidth" : {"width": 2.5, "height":1.5},
-                "radius": 0.75
-            },
-            {
-                "middle_pos":{"x":14, "y":1.5},
-                "shape": "circle",
-                "isstatic":true,
-                "heightWidth" : {"width": 2.5, "height":1.5},
-                "radius": 0.75
-            },
-            {
-                "middle_pos":{"x":10.5, "y":10},
-                "shape": "circle",
-                "isstatic":true,
-                "heightWidth" : {"width": 2.5, "height":1.5},
-                "radius": 0.75
-            }
-        ],
-        "portal":[
-            {
-                "enter_pos":{"x":10.5,"y":0.5},
-                "exit_pos":{"x":21.1,"y":5.5},
-                "userdata":203,
-                "bidirectional":true,
-                "hx1": 1.5,
-                "hy1": 0.25,
-                "hx2": 1.5,
-                "hy2": 0.25,
-                "direction1":"S",
-                "direction2":"N"
-            },
-            {
-                "enter_pos":{"x":17.5,"y":4.5},
-                "exit_pos":{"x":5.5,"y":20},
-                "userdata":203,
-                "bidirectional":true,
-                "hx1": 1.5,
-                "hy1": 0.25,
-                "hx2": 0.25,
-                "hy2": 1.5,
-                "direction1":"N",
-                "direction2":"E"
-            },
-            {
-                "enter_pos":{"x":18.75,"y":20},
-                "exit_pos":{"x":21.1,"y":24.5},
-                "userdata":203,
-                "bidirectional":true,
-                "hx1": 0.25,
-                "hy1": 1.5,
-                "hx2": 1.5,
-                "hy2": 0.25,
-                "direction1":"E",
-                "direction2":"S"
-            },
-            {
-                "enter_pos":{"x":18.75,"y":10},
-                "exit_pos":{"x":15.25,"y":10},
-                "userdata":203,
-                "bidirectional":true,
-                "hx1": 0.25,
-                "hy1": 1.5,
-                "hx2": 0.25,
-                "hy2": 1.5,
-                "direction1":"E",
-                "direction2":"W"
-            },
-            {
-                "enter_pos":{"x":0.5,"y":26.5},
-                "exit_pos":{"x":5.5,"y":28},
-                "userdata":203,
-                "bidirectional":true,
-                "hx1": 0.25,
-                "hy1": 1.5,
-                "hx2": 0.25,
-                "hy2": 1.5,
-                "direction1":"W",
-                "direction2":"E"
             }
         ]
     },
     "holes":[
         {
-            "pos":{"x":17, "y":28},
+            "pos":{"x":16, "y":28},
             "radius":0.5
         }
     ]

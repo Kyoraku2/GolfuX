@@ -1,0 +1,300 @@
+{
+    "backgroundColor":"rgb(100, 100, 100)",
+    "obstacles":{
+        "spawn":[
+            {
+                "middle_pos":{"x":11.5, "y":1.75},
+                "heightWidth" : {"width": 3.5, "height":1}
+            }
+        ],
+        "wall":[
+            {
+                "middle_pos":{"x":11.5, "y":0},
+                "shape": "box",
+                "heightWidth" : {"width": 5, "height":0.25},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":11.5, "y":31},
+                "shape": "box",
+                "heightWidth" : {"width": 5, "height":0.25},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":3.4, "y":15.5},
+                "shape": "box",
+                "heightWidth" : {"width": 3.4, "height":15.75},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":19.6, "y":15.5},
+                "shape": "box",
+                "heightWidth" : {"width": 3.40, "height":15.75},
+                "angle":0
+            }
+        ],
+        "void":[
+            {
+                "middle_pos":{"x":11.5, "y":6},
+                "shape": "box",
+                "heightWidth" : {"width": 5.5, "height":0.5},
+                "angle":0.5
+            },
+            {
+                "middle_pos":{"x":8, "y":9},
+                "shape": "circle",
+                "heightWidth" : {"width": 5.5, "height":0.5},
+                "radius": 2
+            },
+            {
+                "middle_pos":{"x":11.5, "y":12.5},
+                "shape": "box",
+                "heightWidth" : {"width": 5.5, "height":0.5},
+                "angle":-0.2
+            },
+            {
+                "middle_pos":{"x":11.5, "y":15.5},
+                "shape": "box",
+                "heightWidth" : {"width": 5.5, "height":0.5},
+                "angle":-0.3
+            },
+            {
+                "middle_pos":{"x":13, "y":19},
+                "shape": "box",
+                "heightWidth" : {"width": 3, "height":0.5},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":10, "y":27},
+                "shape": "box",
+                "heightWidth" : {"width": 3, "height":0.5},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":11.5, "y":23},
+                "shape": "box",
+                "heightWidth" : {"width": 1.5, "height":4},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":10, "y":22},
+                "shape": "box",
+                "heightWidth" : {"width": 3, "height":0.5},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":13, "y":24},
+                "shape": "box",
+                "heightWidth" : {"width": 3, "height":0.5},
+                "angle":0
+            },
+            {
+                "middle_pos":{"x":12.5, "y":29},
+                "shape": "box",
+                "heightWidth" : {"width": 0.5, "height":2},
+                "angle":0
+            }
+        ],
+        "portal":[
+            {
+                "enter_pos":{"x":7,"y":15},
+                "exit_pos":{"x":16,"y":15},
+                "userdata":203,
+                "bidirectional":true,
+                "hx1": 0.25,
+                "hy1": 1,
+                "hx2": 0.25,
+                "hy2": 1,
+                "direction1":"W",
+                "direction2":"E"
+            },
+            {
+                "enter_pos":{"x":7,"y":13},
+                "exit_pos":{"x":16,"y":13},
+                "userdata":203,
+                "bidirectional":true,
+                "hx1": 0.25,
+                "hy1": 1,
+                "hx2": 0.25,
+                "hy2": 1,
+                "direction1":"W",
+                "direction2":"E"
+            },
+            {
+                "enter_pos":{"x":7,"y":11},
+                "exit_pos":{"x":16,"y":11},
+                "userdata":203,
+                "bidirectional":true,
+                "hx1": 0.25,
+                "hy1": 1,
+                "hx2": 0.25,
+                "hy2": 1,
+                "direction1":"W",
+                "direction2":"E"
+            },
+            {
+                "enter_pos":{"x":7,"y":9},
+                "exit_pos":{"x":16,"y":9},
+                "userdata":203,
+                "bidirectional":true,
+                "hx1": 0.25,
+                "hy1": 1,
+                "hx2": 0.25,
+                "hy2": 1,
+                "direction1":"W",
+                "direction2":"E"
+            },
+            {
+                "enter_pos":{"x":7,"y":7},
+                "exit_pos":{"x":16,"y":7},
+                "userdata":203,
+                "bidirectional":true,
+                "hx1": 0.25,
+                "hy1": 1,
+                "hx2": 0.25,
+                "hy2": 1,
+                "direction1":"W",
+                "direction2":"E"
+            },
+            {
+                "enter_pos":{"x":7,"y":5},
+                "exit_pos":{"x":16,"y":5},
+                "userdata":203,
+                "bidirectional":true,
+                "hx1": 0.25,
+                "hy1": 1,
+                "hx2": 0.25,
+                "hy2": 1,
+                "direction1":"W",
+                "direction2":"E"
+            },
+            {
+                "enter_pos":{"x":7,"y":3},
+                "exit_pos":{"x":16,"y":3},
+                "userdata":203,
+                "bidirectional":true,
+                "hx1": 0.25,
+                "hy1": 1,
+                "hx2": 0.25,
+                "hy2": 1,
+                "direction1":"W",
+                "direction2":"E"
+            },
+            {
+                "enter_pos":{"x":7,"y":1},
+                "exit_pos":{"x":16,"y":1},
+                "userdata":203,
+                "bidirectional":true,
+                "hx1": 0.25,
+                "hy1": 1,
+                "hx2": 0.25,
+                "hy2": 1,
+                "direction1":"W",
+                "direction2":"E"
+            },
+            {
+                "enter_pos":{"x":7,"y":17},
+                "exit_pos":{"x":16,"y":17},
+                "userdata":203,
+                "bidirectional":true,
+                "hx1": 0.25,
+                "hy1": 1,
+                "hx2": 0.25,
+                "hy2": 1,
+                "direction1":"W",
+                "direction2":"E"
+            },
+            {
+                "enter_pos":{"x":7,"y":19},
+                "exit_pos":{"x":16,"y":19},
+                "userdata":203,
+                "bidirectional":true,
+                "hx1": 0.25,
+                "hy1": 1,
+                "hx2": 0.25,
+                "hy2": 1,
+                "direction1":"W",
+                "direction2":"E"
+            },
+            {
+                "enter_pos":{"x":7,"y":21},
+                "exit_pos":{"x":16,"y":21},
+                "userdata":203,
+                "bidirectional":true,
+                "hx1": 0.25,
+                "hy1": 1,
+                "hx2": 0.25,
+                "hy2": 1,
+                "direction1":"W",
+                "direction2":"E"
+            },
+            {
+                "enter_pos":{"x":7,"y":23},
+                "exit_pos":{"x":16,"y":23},
+                "userdata":203,
+                "bidirectional":true,
+                "hx1": 0.25,
+                "hy1": 1,
+                "hx2": 0.25,
+                "hy2": 1,
+                "direction1":"W",
+                "direction2":"E"
+            },
+            {
+                "enter_pos":{"x":7,"y":25},
+                "exit_pos":{"x":16,"y":25},
+                "userdata":203,
+                "bidirectional":true,
+                "hx1": 0.25,
+                "hy1": 1,
+                "hx2": 0.25,
+                "hy2": 1,
+                "direction1":"W",
+                "direction2":"E"
+            },
+            {
+                "enter_pos":{"x":7,"y":27},
+                "exit_pos":{"x":16,"y":27},
+                "userdata":203,
+                "bidirectional":true,
+                "hx1": 0.25,
+                "hy1": 1,
+                "hx2": 0.25,
+                "hy2": 1,
+                "direction1":"W",
+                "direction2":"E"
+            },
+            {
+                "enter_pos":{"x":7,"y":29},
+                "exit_pos":{"x":16,"y":29},
+                "userdata":203,
+                "bidirectional":true,
+                "hx1": 0.25,
+                "hy1": 1,
+                "hx2": 0.25,
+                "hy2": 1,
+                "direction1":"W",
+                "direction2":"E"
+            },
+            {
+                "enter_pos":{"x":7,"y":31},
+                "exit_pos":{"x":16,"y":31},
+                "userdata":203,
+                "bidirectional":true,
+                "hx1": 0.25,
+                "hy1": 1,
+                "hx2": 0.25,
+                "hy2": 1,
+                "direction1":"W",
+                "direction2":"E"
+            }
+        ]
+    },
+    "holes":[
+        {
+            "pos":{"x":10, "y":29},
+            "radius":0.5
+        }
+    ]
+
+}
