@@ -1,31 +1,34 @@
 const cacheName = 'GolfuX-v1';
+const STRUCT = [
+  '/textures/ball.png',
+  '/textures/ball_pink.png',
+  '/textures/ball_red.png',
+  '/textures/ball_blue.png',
+  '/textures/bubblegum.png',
+  '/textures/ice.jpg',
+  '/textures/lava.png',
+  '/textures/logo.PNG',
+  '/textures/grux.png',
+  '/textures/sand.png',
+  '/textures/trophux.png',
+  '/textures/void.jpg',
+  '/textures/wall.jpg',
+  '/textures/water.jpg',
+  '/textures/wind.png',
+  '/styles/golfux.css',
+  '/sounds/bonk.mp3',
+  '/sounds/hole.mp3',
+  '/sounds/lava.mp3',
+  '/sounds/sand.mp3',
+  '/sounds/shoot.mp3',
+  '/sounds/water.mp3',
+  '/sounds/ice.mp3',
+  '/sounds/bubblegum.mp3',
+  '/sounds/wind.mp3',
+  '/sounds/portal7.mp3',
+  '/index.html'
+];
 const ASSETS = [
-    '/textures/ball.png',
-    '/textures/ball_pink.png',
-    '/textures/ball_red.png',
-    '/textures/ball_blue.png',
-    '/textures/bubblegum.png',
-    '/textures/ice.jpg',
-    '/textures/lava.png',
-    '/textures/logo.PNG',
-    '/textures/grux.png',
-    '/textures/sand.png',
-    '/textures/trophux.png',
-    '/textures/void.jpg',
-    '/textures/wall.jpg',
-    '/textures/water.jpg',
-    '/textures/wind.png',
-    '/styles/golfux.css',
-    '/sounds/bonk.mp3',
-    '/sounds/hole.mp3',
-    '/sounds/lava.mp3',
-    '/sounds/sand.mp3',
-    '/sounds/shoot.mp3',
-    '/sounds/water.mp3',
-    '/sounds/ice.mp3',
-    '/sounds/bubblegum.mp3',
-    '/sounds/wind.mp3',
-    '/sounds/portal7.mp3',
     '/helpers/embox2d-helpers.js',
     '/helpers/embox2d-html5canvas-debugDraw.js',
     '/build/Box2D_v2.2.1_min.js',
@@ -41,7 +44,6 @@ const ASSETS = [
     '/index.js',
     '/level.js',
     '/Obstacle.js',
-    '/index.html'
 ];
 
 const levels = []
@@ -68,7 +70,7 @@ self.addEventListener('install', (e) => {
     e.waitUntil((async () => {
       const cache = await caches.open(cacheName);
       //console.log('[Service Worker] Caching all: GolfuX files');
-      await cache.addAll(contentToCache);
+      await cache.addAll(STRUCT);
     })());
 });
 
