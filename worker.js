@@ -74,13 +74,15 @@ self.addEventListener('install', (e) => {
 
 self.addEventListener('fetch', function (event) {
   event.respondWith(
-    caches.open(cacheName).then(function (cache) {
+    caches.open(cacheName).then(async function (cache) {
       return cache.match(event.request).then(function (response) {
-        var fetchPromise = fetch(event.request).then(function (networkResponse) {
-          cache.put(event.request, networkResponse.clone());
-          return networkResponse;
-        });
-        return response || fetchPromise;
+        return (
+          response ||
+          fetch(event.request).then(function (response) {
+            cache.put(event.request, response.clone());
+            return response;
+          })
+        );
       });
     }),
   );
