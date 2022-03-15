@@ -60,8 +60,7 @@ self.addEventListener('install', (e) => {
     console.log('[Service Worker] Install');
     e.waitUntil((async () => {
       const cache = await caches.open(cacheName);
-      //console.log('[Service Worker] Caching all: GolfuX files');
-      await cache.addAll(STRUCT);
+      await cache.addAll(contentToCache);
     })());
 });
 
