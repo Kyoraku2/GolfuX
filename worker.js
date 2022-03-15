@@ -29,21 +29,21 @@ const STRUCT = [
   '/index.html'
 ];
 const ASSETS = [
-    '/helpers/embox2d-helpers.js',
-    '/helpers/embox2d-html5canvas-debugDraw.js',
-    '/build/Box2D_v2.2.1_min.js',
-    '/build/Box2D_v2.2.1_min.wasm.js',
-    '/build/Box2D_v2.2.1_min.wasm.wasm',
-    '/build/Box2D_v2.3.1_min.js',
-    '/build/Box2D_v2.3.1_min.wasm.js',
-    '/build/Box2D_v2.3.1_min.wasm.wasm',
-    '/ball.js',
-    '/confetti.js',
-    '/golfux.js',
-    '/hole.js',
-    '/index.js',
-    '/level.js',
-    '/Obstacle.js',
+  '/helpers/embox2d-helpers.js',
+  '/helpers/embox2d-html5canvas-debugDraw.js',
+  '/build/Box2D_v2.2.1_min.js',
+  '/build/Box2D_v2.2.1_min.wasm.js',
+  '/build/Box2D_v2.2.1_min.wasm.wasm',
+  '/build/Box2D_v2.3.1_min.js',
+  '/build/Box2D_v2.3.1_min.wasm.js',
+  '/build/Box2D_v2.3.1_min.wasm.wasm',
+  '/ball.js',
+  '/confetti.js',
+  '/golfux.js',
+  '/hole.js',
+  '/index.js',
+  '/level.js',
+  '/Obstacle.js',
 ];
 
 const levels = []
@@ -56,15 +56,6 @@ for(var i = 1 ; i<=29 ; ++i){
 
 const contentToCache = STRUCT.concat(levels);
 
-self.addEventListener('activate', (e) => {
-  e.waitUntil(caches.keys().then((keyList) => {
-    return Promise.all(keyList.map((key) => {
-      if (key === cacheName) { return; }
-      return caches.delete(key);
-    }))
-  }));
-});
-
 self.addEventListener('install', (e) => {
     console.log('[Service Worker] Install');
     e.waitUntil((async () => {
@@ -75,7 +66,7 @@ self.addEventListener('install', (e) => {
 });
 
 self.addEventListener('fetch', function (event) {
-  event.respondWith(
+  /*event.respondWith(
     caches.open(cacheName).then(async function (cache) {
       return cache.match(event.request).then(function (response) {
         return (
@@ -87,7 +78,7 @@ self.addEventListener('fetch', function (event) {
         );
       });
     }),
-  );
+  );*/
 });
 /*
 self.addEventListener('fetch', function (event) {
