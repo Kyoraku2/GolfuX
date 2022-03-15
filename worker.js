@@ -1,4 +1,4 @@
-const cacheName = 'GolfuX-v1';
+const cacheName = 'GolfuX-v2';
 const ASSETS = [
     '/textures/ball.png',
     '/textures/ball_pink.png',
