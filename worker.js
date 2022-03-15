@@ -1,4 +1,4 @@
-var STATIC_CACHE_VERSION = '1';
+var STATIC_CACHE_VERSION = '2';
 const cacheName = 'GolfuX';
 const ASSETS = [
     '/textures/ball.png',
