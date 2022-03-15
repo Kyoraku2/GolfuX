@@ -61,6 +61,7 @@ self.addEventListener('activate', function(event) {
       .then(function(keyList) {
         return Promise.all(keyList.map(function(key) {
           if (key !== 'static-' + STATIC_CACHE_VERSION) {
+            console.log("update");
             return caches.delete(key);
           }
         }));
@@ -75,7 +76,7 @@ self.addEventListener('install', (e) => {
       const cache = await caches.open(cacheName);
       console.log('[Service Worker] Caching all: GolfuX files');
       await cache.addAll(contentToCache);
-      console.log("put");
+      console.log(contentToCache);
     })());
 });
 
