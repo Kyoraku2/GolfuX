@@ -349,7 +349,7 @@ if('serviceWorker' in navigator){
 };
 
 document.addEventListener("DOMContentLoaded", function() {
-    alert("helo");
+    alert("helobis");
     /* Join by link */
     var gameId = (window.location.href.split("?").length == 2 && window.location.href.split("?")[1].match("gameId\=.*")) ? window.location.href.split("?")[1].split('=')[1] : "";
     if(gameId){
