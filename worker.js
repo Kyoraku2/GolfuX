@@ -55,10 +55,10 @@ for(var i = 1 ; i<=29 ; ++i){
 const contentToCache = ASSETS.concat(levels);
 
 self.addEventListener('install', (e) => {
-    //console.log('[Service Worker] Install');
+    console.log('[Service Worker] Install');
     e.waitUntil((async () => {
       const cache = await caches.open(cacheName);
-      //console.log('[Service Worker] Caching all: GolfuX files');
+      console.log('[Service Worker] Caching all: GolfuX files');
       await cache.addAll(contentToCache);
       console.log("put");
     })());
