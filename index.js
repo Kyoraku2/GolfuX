@@ -344,8 +344,8 @@ let replacementStack = [];
 
 if('serviceWorker' in navigator){
     navigator.serviceWorker
-        .register('./worker.js?v=3',{scope: "/"})
-        .then(console.log('Worker v3 here !'));
+        .register('./worker.js?v=1',{scope: "/"})
+        .then(console.log('Worker v1 here !'));
 };
 
 document.addEventListener("DOMContentLoaded", function() {

@@ -1,3 +1,4 @@
+var STATIC_CACHE_VERSION = '1';
 const cacheName = 'GolfuX';
 const ASSETS = [
     '/textures/ball.png',
@@ -53,6 +54,20 @@ for(var i = 1 ; i<=29 ; ++i){
 }
 
 const contentToCache = ASSETS.concat(levels);
+
+self.addEventListener('activate', function(event) {
+  event.waitUntil(
+    caches.keys()
+      .then(function(keyList) {
+        return Promise.all(keyList.map(function(key) {
+          if (key !== 'static-' + STATIC_CACHE_VERSION) {
+            return caches.delete(key);
+          }
+        }));
+      })
+  );
+  return self.clients.claim();
+});
 
 self.addEventListener('install', (e) => {
     console.log('[Service Worker] Install');
