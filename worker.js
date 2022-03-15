@@ -1,4 +1,4 @@
-const cacheName = 'GolfuX-v3';
+const cacheName = 'GolfuX-v1';
 const ASSETS = [
     '/textures/ball.png',
     '/textures/ball_pink.png',
@@ -72,7 +72,29 @@ self.addEventListener('install', (e) => {
     })());
 });
 
-
+self.addEventListener('fetch', function (event) {
+  event.respondWith(
+    caches.open(cacheName).then(function (cache) {
+      return cache.match(event.request).then(function (response) {
+        var fetchPromise = fetch(event.request).then(function (networkResponse) {
+          cache.put(event.request, networkResponse.clone());
+          return networkResponse;
+        });
+        return response || fetchPromise;
+      });
+    }),
+  );
+});
+/*
+self.addEventListener('fetch', function (event) {
+  event.respondWith(
+    fetch(event.request).catch(function () {
+      return caches.match(event.request);
+    }),
+  );
+});
+*/
+/*
 self.addEventListener('fetch', (e) => {
     e.respondWith((async () => {
       const r = await caches.match(e.request);
@@ -86,3 +108,4 @@ self.addEventListener('fetch', (e) => {
       return response;
     })());
   });
+  */
