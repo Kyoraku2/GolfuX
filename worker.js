@@ -1,4 +1,4 @@
-const cacheName = 'GolfuX-v1';
+const cacheName = 'GolfuX-v3';
 const STRUCT = [
   '/textures/ball.png',
   '/textures/ball_pink.png',
@@ -26,7 +26,8 @@ const STRUCT = [
   '/sounds/bubblegum.mp3',
   '/sounds/wind.mp3',
   '/sounds/portal7.mp3',
-  '/index.html'
+  '/index.html',
+  'favicon.ico'
 ];
 const ASSETS = [
   '/helpers/embox2d-helpers.js',
@@ -56,50 +57,64 @@ for(var i = 1 ; i<=29 ; ++i){
 
 const contentToCache = STRUCT.concat(levels);
 
-self.addEventListener('install', (e) => {
-    console.log('[Service Worker] Install');
-    e.waitUntil((async () => {
-      const cache = await caches.open(cacheName);
-      await cache.addAll(contentToCache);
-    })());
+self.addEventListener('install', function(e) {
+  console.log('[Service Worker] Install');
+  e.waitUntil(caches.open(cacheName).then(function(cache) {
+      console.log('[Service Worker] Caching application content & data');
+      return cache.addAll(contentToCache);
+  }));
 });
 
-self.addEventListener('fetch', function (event) {
-  /*event.respondWith(
-    caches.open(cacheName).then(async function (cache) {
-      return cache.match(event.request).then(function (response) {
-        return (
-          response ||
-          fetch(event.request).then(function (response) {
-            cache.put(event.request, response.clone());
+self.addEventListener('fetch', (e) => {
+  // Stratégie initiale : cache ou network avec mise en cache (le "false &&" empêche son application) 
+  false && e.respondWith(
+    caches.match(e.request).then((r) => {
+      console.log('[Service Worker] Fetching resource: '+e.request.url);
+        return r || fetch(e.request).then((response) => {
+          return caches.open(CACHE_NAME).then((cache) => {
+            console.log('[Service Worker] Caching new resource: '+e.request.url);
+            cache.put(e.request, response.clone());
             return response;
-          })
-        );
+        });
       });
-    }),
-  );*/
+    })
+  );
+  
+  // Stratégie cache-only
+  if(contentToCache.some(file => e.request.url.endsWith(file.substring(2)))) {
+    console.log('[Service Worker] Loading from cache: '+e.request.url);
+    e.respondWith(caches.match(e.request));
+  }else {
+    // Stratégie network + mise en cache, ou alors cache, ou réponse par défaut  
+    e.respondWith(fetch(e.request)
+      .then((response) => {
+        return caches.open(cacheName).then((cache) => {
+          console.log('[Service Worker] Fetching from network and caching resource: '+e.request.url);
+          cache.put(e.request, response.clone());
+          return response;
+        });
+      })
+      .catch(function() { 
+        return caches.match(e.request).then((r) => {
+          console.log('[Service Worker] Looking for resource in cache: '+e.request.url);
+          return r; // || new Response(JSON.stringify({ error: 1 }), { headers: { 'Content-Type': 'application/json' } }); <-- si on veut renvoyer un JSON indiquant l'erreur au lieu de laisser une erreur d'accès être capturée par l'application. 
+        })
+      })
+    );
+  }
 });
-/*
-self.addEventListener('fetch', function (event) {
-  event.respondWith(
-    fetch(event.request).catch(function () {
-      return caches.match(event.request);
-    }),
+
+
+self.addEventListener('activate', (e) => {
+  e.waitUntil(
+      // cleaning previous caches
+      caches.keys().then((keyList) => {
+          return Promise.all(keyList.map((key) => {
+              if(cacheName.indexOf(key) === -1) {
+                  console.log("[Service Worker] Cleaning old cache");
+                  return caches.delete(key);
+              }
+        }));
+      })
   );
 });
-*/
-/*
-self.addEventListener('fetch', (e) => {
-    e.respondWith((async () => {
-      const r = await caches.match(e.request);
-      //console.log(`[Service Worker] Fetching resource: ${e.request.url}`);
-      if (r) { return r; }
-      if(!(e.request.url.startsWith('http'))){return;}
-      const response = await fetch(e.request);
-      const cache = await caches.open(cacheName);
-      //console.log(`[Service Worker] Caching new resource: ${e.request.url}`);
-      cache.put(e.request, response.clone());
-      return response;
-    })());
-  });
-  */
