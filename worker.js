@@ -54,7 +54,7 @@ for(var i = 1 ; i<=29 ; ++i){
   levels.push('/levels/multi/level'+i+'.json');
 }
 
-const contentToCache = ASSETS.concat(levels);
+const contentToCache = STRUCT.concat(levels);
 
 self.addEventListener('activate', (e) => {
   e.waitUntil(caches.keys().then((keyList) => {
