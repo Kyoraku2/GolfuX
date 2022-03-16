@@ -516,6 +516,18 @@
                 "direction":{"x":0, "y":-1}
             },
             {
+                "middle_pos":{"x":10.75, "y":24},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 1,
+                "direction":{"x":0, "y":-1}
+            },
+            {
+                "middle_pos":{"x":12.25, "y":24},
+                "heightWidth" : {"width": 0.75, "height":0.75},
+                "acceleration": 1,
+                "direction":{"x":0, "y":-1}
+            },
+            {
                 "middle_pos":{"x":11.5, "y":5.5},
                 "heightWidth" : {"width": 0.75, "height":0.75},
                 "acceleration": 7.5,
