@@ -1110,7 +1110,7 @@ function playVoidSound(){
 }
 
 function playIceSound(){
-    voidSound.play();
+    iceSound.play();
 }
 
 function playWaterSound(){
