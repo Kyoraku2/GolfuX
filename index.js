@@ -13,7 +13,7 @@ const MANCHES_MAX = 18;
 var stopMovements = false;
 var QRgenerate = false;
 var Xgenerate = false;
-var nb_x = 0;
+var player_name = "Moi";
 const TURN_LIMIT = 12;
 var shootSound = new Audio('./sounds/shoot.mp3');
 var bonkSound = new Audio('./sounds/bonk.mp3');
@@ -349,7 +349,6 @@ if('serviceWorker' in navigator){
 };
 
 document.addEventListener("DOMContentLoaded", function() {
-    //alert("helo");
     /* Join by link */
     var gameId = (window.location.href.split("?").length == 2 && window.location.href.split("?")[1].match("gameId\=.*")) ? window.location.href.split("?")[1].split('=')[1] : "";
     if(gameId){
@@ -555,8 +554,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
     //Créer partie
     document.getElementById("btn-creer-partie").addEventListener('click', function(e){
-        var pseudo = document.getElementById("pseudo").value;
-        if (pseudo.trim() != "") {
+        player_name = document.getElementById("pseudo").value;
+        if (player_name.trim() != "") {
             document.getElementById("multi-online").style.display = "none";
             document.getElementById("creer-partie").style.display = "block";
         } else {
@@ -581,10 +580,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     //X ???
     document.getElementById("x").addEventListener('click', function(e){
-        nb_x++;
-        //if (nb_x % 3 == 0 && nb_x != 0) {
-            display_X();
-        //}
+        display_X();
     });
 
     function display_X() {
@@ -873,9 +869,9 @@ function setUpSocket(){
 
     gameList.addEventListener("click",function(e){
         if(e.target.dataset.id){
-            var name = document.getElementById("pseudo").value;
-            if (name.trim() != "") {
-                sock.emit("JoinPublicGame",{id:e.target.dataset.id,name:name});
+            player_name = document.getElementById("pseudo").value;
+            if (player_name.trim() != "") {
+                sock.emit("JoinPublicGame",{id:e.target.dataset.id,name:player_name});
             } else {
                 alert("Vous ne pouvez pas rejoindre une partie sans surnom. Veuillez renseigner ce dernier s'il vous plaît.");
             }
@@ -883,9 +879,9 @@ function setUpSocket(){
     });
 
     joinPrivateGame.addEventListener("click",function(e){
-        var name = document.getElementById("pseudo").value;
-        if (name.trim() != "") {
-            sock.emit("JoinPrivateGame",{code:document.getElementById("code").value,name:name});
+        player_name = document.getElementById("pseudo").value;
+        if (player_name.trim() != "") {
+            sock.emit("JoinPrivateGame",{code:document.getElementById("code").value,name:player_name});
         } else {
             alert("Vous ne pouvez pas rejoindre une partie sans surnom. Veuillez renseigner ce dernier s'il vous plaît.");
         }
@@ -928,7 +924,7 @@ function setUpSocket(){
         stopMovements = true;
         //document.getElementById("end-menu").style.display = "block";
         if (msg_display == false) {
-            var rigolo_msg = [
+            /*var rigolo_msg = [
                 "Bien joué <em>Little Player</em> ! Un jour tu deviendras plus grand... &#128170;",
                 "Peut mieux faire... Non non je ne juge pas. &#128064;",
                 "Mouais après le niveau était simple nan ? &#129300;",
@@ -941,7 +937,7 @@ function setUpSocket(){
                 "+ 1000000 social crédits. &#128200;"
             ];
             var rand = Math.floor(Math.random() * rigolo_msg.length);
-            document.querySelector("#end-menu p").innerHTML = rigolo_msg[rand];
+            document.querySelector("#end-menu p").innerHTML = rigolo_msg[rand];*/
             //TODO : afficher leaderBoard
             document.getElementById("btn-continue").style.display = "none";
             msg_display = true;
@@ -949,6 +945,10 @@ function setUpSocket(){
             document.getElementById("close-leaderboard").style.display = "none";
             document.getElementById("quit-leaderboard").style.display = "block";
             document.getElementById("game-interface").style.display = "none";
+            var first = document.getElementById("leaderboard").children[1].children[0].innerHTML;
+            if (first.search(player_name) != -1) {
+                confetti.start();
+            }
         }
     });
 
