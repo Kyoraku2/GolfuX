@@ -305,7 +305,7 @@ function addEventListener(balls, level){
             }else{
                 balls[idB].collide = false;
                 balls[idB].isInHole = false;
-                balls[idB].body.SetLinearDamping(1);
+                balls[idB].body.SetLinearDamping(1); // pb ici
                 balls[idB].body.GetFixtureList().SetSensor(false);
             }
         }
