@@ -102,6 +102,15 @@ function getPlayerFromSock(game,sock){
     return undefined;
 }
 
+function updateName(game,name){
+    for(var i=0 ; i<game.joueurs.length ; ++i){
+        if(game.joueurs[i].name == String(name)){
+            return updateName(game,String(name)+"1");
+        }
+    }
+    return name;
+}
+
 function computeScores(game){
     var pos = {};
     for(var i=0 ; i<game.joueurs.length ; ++i){
@@ -136,8 +145,8 @@ io.on('connection', function (socket) {
         }
 
         if(games[joinGame] && games[joinGame].joueurs.length < games[joinGame].nbPlayers){
-            games[joinGame].joueurs[games[joinGame].joueurs.length] = {socket: socket, points: 0, inHole:false, pos:null, turn:0, name:obj.name, disconnected:false};
             game = joinGame;
+            games[joinGame].joueurs[games[joinGame].joueurs.length] = {socket: socket, points: 0, inHole:false, pos:null, turn:0, name:updateName(games[game],obj.name), disconnected:false};
             console.log("Joueur connecté à l'indice "+(games[game].joueurs.length-1));
             socket.emit("waiting",{
                 name: games[game].name,
@@ -203,8 +212,8 @@ io.on('connection', function (socket) {
         }
 
         if(games[obj.id] && games[obj.id].joueurs.length < games[obj.id].nbPlayers){
-            games[obj.id].joueurs[games[obj.id].joueurs.length] = {socket: socket, points: 0, inHole:false, pos:null, turn:0, name:obj.name, disconnected:false};
             game = obj.id;
+            games[obj.id].joueurs[games[obj.id].joueurs.length] = {socket: socket, points: 0, inHole:false, pos:null, turn:0, name:updateName(games[game],obj.name), disconnected:false};
             console.log("Joueur connecté à l'indice "+(games[game].joueurs.length-1));
             socket.emit("waiting",{
                 name: games[game].name,
@@ -240,8 +249,8 @@ io.on('connection', function (socket) {
 
 
         if(games[gameId] && games[gameId].joueurs.length < games[gameId].nbPlayers){
-            games[gameId].joueurs[games[gameId].joueurs.length] = {socket: socket, points: 0, inHole:false, pos:null, turn:0, name:obj.name};
             game = gameId;
+            games[gameId].joueurs[games[gameId].joueurs.length] = {socket: socket, points: 0, inHole:false, pos:null, turn:0, name:updateName(games[game],obj.name)};
             console.log("Joueur connecté à l'indice "+(games[game].joueurs.length-1));
             socket.emit("waiting",{
                 name: games[game].name,

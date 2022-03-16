@@ -635,6 +635,26 @@ Golfux.prototype.step = function(){
         endLevel = false;
     }
 
+    if(playType === 1 && allStopped && ballIndex>=0 && this.balls[ballIndex] && this.balls[ballIndex].shot){
+        if(localTurns[ballIndex] >= TURN_LIMIT){
+            localScores[ballIndex].score+=2;
+            updateLeaderScores(localScores);
+        }
+        this.balls[ballIndex].shot = false;
+        var oldBallIndex = ballIndex;
+        ballIndex = (ballIndex < localNbPlayers-1) ? ballIndex+1 : 0;
+        while((ballIndex>=0 && this.balls[ballIndex] && this.balls[ballIndex].isInHole) || localTurns[ballIndex] === TURN_LIMIT){
+            ballIndex = (ballIndex < localNbPlayers-1) ? ballIndex+1 : 0;
+            if(oldBallIndex == ballIndex){
+                break;
+            }
+        }
+        if(localTurns[ballIndex] >= TURN_LIMIT ){
+            endLevel = true;
+            stopMovements = true;
+        }
+    }
+
     if(endLevel && this.balls.length !=0 && playType != 2){
         if (playType === 0) {
             document.getElementById("end-menu").style.display = "block";
@@ -681,57 +701,6 @@ Golfux.prototype.step = function(){
             endPos.push({index:index,pos:{x:ball.body.GetPosition().x,y:ball.body.GetPosition().y}});
         });
         sock.emit("endPos",endPos);
-    }
-
-    if(playType === 1 && allStopped && ballIndex>=0 && this.balls[ballIndex] && this.balls[ballIndex].shot){
-        this.balls[ballIndex].shot = false;
-        var oldBallIndex = ballIndex;
-        ballIndex = (ballIndex < localNbPlayers-1) ? ballIndex+1 : 0;
-        while((ballIndex>=0 && this.balls[ballIndex] && this.balls[ballIndex].isInHole) || localTurns[ballIndex] === TURN_LIMIT){
-            ballIndex = (ballIndex < localNbPlayers-1) ? ballIndex+1 : 0;
-            if(oldBallIndex == ballIndex){
-                break;
-            }
-        }
-        if(oldBallIndex === ballIndex && localTurns[ballIndex] === TURN_LIMIT){
-            localScores[ballIndex].score+=2;
-            updateLeaderScores(localScores);
-            //document.getElementById("end-menu").style.display = "block";
-            document.getElementById("leaderboard").style.display = "block";
-            document.getElementById("close-leaderboard").style.display = "none";
-            document.getElementById("quit-leaderboard").style.display = "block";
-            if (this.level.num == NUM_LEVELS && playType == 0) {
-                document.querySelector("#end-menu .btn-quit").style.display = "none";
-            }
-            document.getElementById("game-interface").style.display = "none";
-            document.getElementById("level-num").style.display = "none";
-            if (msg_display == false) {
-                var rigolo_msg = [
-                    "Bien joué <em>Little Player</em> ! Un jour tu deviendras plus grand... &#128170;",
-                    "Peut mieux faire... Non non je ne juge pas. &#128064;",
-                    "Mouais après le niveau était simple nan ? &#129300;",
-                    "Le <em>TrophuX</em> est à portée de main ! &#129351;",
-                    "Sans doûte un niveau de petit joueur ! &#128526;",
-                    "Trop lent à finir ce niveau : pire que Jube et ses copies... &#128195;",
-                    "C'est une première étape, mais il reste encore beaucoup de chemin à faire... &#128579;",
-                    "Brillant ! Autant de talent, beauté et intelligence que ceux qui ont conçu le jeu. &#129321;",
-                    "Quelle magnifique performance ! Seul un jeu en JavaScript peut nous apporter ça. &#129394;",
-                    "+ 1000000 social crédits. &#128200;"
-                ];
-                var rand = Math.floor(Math.random() * rigolo_msg.length);
-                document.querySelector("#end-menu p").innerHTML = rigolo_msg[rand];
-                if(playType == 1 && localCurrManche >= localNbManches-1){
-                    //TODO : afficher leaderBoard
-                    document.getElementById("btn-continue").style.display = "none";
-                }
-                msg_display = true;
-            }
-            //this.changeLevel(parseInt(this.level.num) + 1);
-            document.getElementById("leaderboard").style.display = "block";
-
-            stopMovements = true;
-            return;
-        }
     }
 
     if(allStopped && playType == 2){
