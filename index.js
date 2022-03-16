@@ -313,7 +313,11 @@ function animate() {
     step();
     if(joinedByLink !== undefined && golfux !== undefined){
         setUpSocket();
-        sock.emit("joinGameByLink",joinedByLink);
+        var name = prompt("Choisir un nom :");
+        while(name == "" || name == null){
+            name = prompt("Choisir un nom :");
+        }
+        sock.emit("joinGameByLink",{id:joinedByLink,name:name});
         joinedByLink = undefined;
     }
 }
@@ -340,8 +344,8 @@ let replacementStack = [];
 
 if('serviceWorker' in navigator){
     navigator.serviceWorker
-        .register('./worker.js?v=2',{scope: "/"})
-        .then(console.log('Worker v1 here !'));
+        .register('./worker.js?v=3',{scope: "/"})
+        .then(console.log('Worker v3 here !'));
 };
 
 document.addEventListener("DOMContentLoaded", function() {
@@ -381,7 +385,7 @@ document.addEventListener("DOMContentLoaded", function() {
             if (parseInt(e.target.dataset["index"]) <= max_lvl || parseInt(e.target.dataset["index"]) == 1) {
                 document.getElementById("solo").style.display = "none";
                 //Charger level X
-                golfux.changeLevel(e.target.dataset["index"]);
+                golfux.changeLevel(e.target.dataset["index"],true);
                 document.getElementById("game").style.display = "block";
             } else {
                 alert("Vous n'avez pas encore débloqué ce niveau.");
@@ -391,7 +395,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     //Recommencer
     document.getElementById("restart-game").addEventListener('click', function(e){
-        golfux.changeLevel(parseInt(golfux.level.num));
+        golfux.changeLevel(parseInt(golfux.level.num),true);
     });
 
     //Menu fin continuer
@@ -402,7 +406,7 @@ document.addEventListener("DOMContentLoaded", function() {
             change_world(1);
             confetti.start(); //Lancer les confetti via le script éponyme
         }
-        golfux.changeLevel(parseInt(golfux.level.num) + 1);
+        golfux.changeLevel(parseInt(golfux.level.num) + 1,true);
         if(playType == 1){
             for(var i=0 ; i<localNbPlayers ; ++i){
                 localTurns[i] = 0;
@@ -416,8 +420,8 @@ document.addEventListener("DOMContentLoaded", function() {
     var btns_quit = document.getElementsByClassName("btn-quit");
     for (var i = 0; i < btns_quit.length; i++) {
         btns_quit[i].addEventListener('click', function(e){
-            if (e.target.id != "quit-game") {
-                golfux.changeLevel(parseInt(golfux.level.num) + 1);
+            if (e.target.id != "quit-game" || e.target.id != "quit-leaderboard") {
+                golfux.changeLevel(parseInt(golfux.level.num) + 1,true);
             }
             window.location.reload();
         });
@@ -912,7 +916,7 @@ function setUpSocket(){
     });
 
     sock.on("gameStart",function(obj){
-        golfux.changeLevel(obj.level);
+        golfux.changeLevel(obj.level,false);
         onlineNbPlayer = obj.players;
         updateLeaderNbPlayers(onlineNbPlayer);
         display_game();
@@ -921,7 +925,7 @@ function setUpSocket(){
 
     sock.on("endGame",function(obj){
         stopMovements = true;
-        document.getElementById("end-menu").style.display = "block";
+        //document.getElementById("end-menu").style.display = "block";
         if (msg_display == false) {
             var rigolo_msg = [
                 "Bien joué <em>Little Player</em> ! Un jour tu deviendras plus grand... &#128170;",
@@ -941,6 +945,9 @@ function setUpSocket(){
             document.getElementById("btn-continue").style.display = "none";
             msg_display = true;
             document.getElementById("leaderboard").style.display = "block";
+            document.getElementById("close-leaderboard").style.display = "none";
+            document.getElementById("quit-leaderboard").style.display = "block";
+            document.getElementById("game-interface").style.display = "none";
         }
     });
 
@@ -978,7 +985,7 @@ function setUpSocket(){
         impulsionStack = [];
         replacementStack = [];
         setTimeout(function(game,level){
-            game.changeLevel(level);
+            game.changeLevel(level,false);
         },1000,golfux,level);
     });
 

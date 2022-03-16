@@ -271,7 +271,7 @@ button#btn-multi-online:hover, #creer-partie button.btn-start:hover,
 button.btn-retour, button.btn-start, #btn-creer-partie, button.btn-retour-2,
 button.btn-wait, #btn-room-quit, #btn-world-1, #btn-world-2, #btn-world-3, #btn-world-4,
 #btn-continue, button.btn-quit, #restart-game, #btn-leaderboard, #close-leaderboard,
-#btn-reload, #generateQr, #get-money {
+#btn-reload, #generateQr, #get-money, #quit-leaderboard {
 	border-radius: 3vh;
 	margin: 3vh;
 	padding: 20px;
@@ -446,6 +446,13 @@ input[type="text"]#code {
  	user-select: none;
 }
 
+#your-turn {
+	-moz-user-select: none;
+ 	-webkit-user-select: none;
+ 	-ms-user-select: none;
+ 	user-select: none;
+}
+
 #leaderboard {
 	background-color: rgba(0, 0, 0, 0.5);
 	padding: 3vw;
@@ -471,7 +478,7 @@ input[type="text"]#code {
 	color: #f7894a
 }
 
-#leaderboard :nth-child(4) {
+#leaderboard :nth-child(4):not(button) {
 	color: #e81224
 }
 
@@ -486,6 +493,13 @@ input[type="text"]#code {
 
 #quit-game, #restart-game {
 	float: right;
+}
+
+#quit-leaderboard {
+	display: none;
+	width: auto;
+	margin: auto;
+	margin-top: 3vh;
 }
 
 #quit-game:hover, #restart-game:hover, #btn-leaderboard:hover {
