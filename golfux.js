@@ -602,6 +602,9 @@ Golfux.prototype.step = function(){
             }else{
                 ball.isMoving = true;
             }
+            if(ball.body.GetLinearVelocity().Length() < 0.1){
+                ball.body.SetLinearVelocity(0);
+            }
             if(ball.body.GetLinearVelocity().Length() !== 0){
                 allStopped = false;
             }
@@ -633,7 +636,13 @@ Golfux.prototype.step = function(){
     }
 
     if(endLevel && this.balls.length !=0 && playType != 2){
-        document.getElementById("end-menu").style.display = "block";
+        if (playType === 0) {
+            document.getElementById("end-menu").style.display = "block";
+        } else {
+            document.getElementById("leaderboard").style.display = "block";
+            document.getElementById("close-leaderboard").style.display = "none";
+            document.getElementById("quit-leaderboard").style.display = "block";
+        }
         if (this.level.num == NUM_LEVELS && playType == 0) {
             document.querySelector("#end-menu .btn-quit").style.display = "none";
         }
@@ -687,7 +696,10 @@ Golfux.prototype.step = function(){
         if(oldBallIndex === ballIndex && localTurns[ballIndex] === TURN_LIMIT){
             localScores[ballIndex].score+=2;
             updateLeaderScores(localScores);
-            document.getElementById("end-menu").style.display = "block";
+            //document.getElementById("end-menu").style.display = "block";
+            document.getElementById("leaderboard").style.display = "block";
+            document.getElementById("close-leaderboard").style.display = "none";
+            document.getElementById("quit-leaderboard").style.display = "block";
             if (this.level.num == NUM_LEVELS && playType == 0) {
                 document.querySelector("#end-menu .btn-quit").style.display = "none";
             }
@@ -716,6 +728,7 @@ Golfux.prototype.step = function(){
             }
             //this.changeLevel(parseInt(this.level.num) + 1);
             document.getElementById("leaderboard").style.display = "block";
+
             stopMovements = true;
             return;
         }
