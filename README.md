@@ -3,6 +3,7 @@ Projet minigolf, projet de fin de licence
 
 TODO :
 - Ajouter des (vrais) sons
+- Différencier les noms
 - Tester beaucoup
 
 Bonus :
