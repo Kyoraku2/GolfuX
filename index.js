@@ -420,7 +420,7 @@ document.addEventListener("DOMContentLoaded", function() {
     var btns_quit = document.getElementsByClassName("btn-quit");
     for (var i = 0; i < btns_quit.length; i++) {
         btns_quit[i].addEventListener('click', function(e){
-            if (e.target.id != "quit-game" || e.target.id != "quit-leaderboard") {
+            if (e.target.id != "quit-game") {
                 golfux.changeLevel(parseInt(golfux.level.num) + 1,true);
             }
             window.location.reload();
