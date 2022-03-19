@@ -317,6 +317,7 @@ function animate() {
         while(name == "" || name == null){
             name = prompt("Choisir un nom :");
         }
+        console.log(joinedByLink);
         sock.emit("joinGameByLink",{id:joinedByLink,name:name});
         joinedByLink = undefined;
     }
@@ -900,8 +901,9 @@ function setUpSocket(){
     });
 
     sock.on("playerJoined",function(game){
-        alert("update"); // TODO ça casse le QR code
-        display_waiting_room(game);
+        if(document.getElementById("wait-room").style.display == "block"){
+            display_waiting_room(game);
+        }
     });
 
     sock.on("canForceStart",function(){
@@ -921,32 +923,17 @@ function setUpSocket(){
     });
 
     sock.on("endGame",function(obj){
+        updateLeaderScores(obj.scores);
         stopMovements = true;
-        //document.getElementById("end-menu").style.display = "block";
         if (msg_display == false) {
-            /*var rigolo_msg = [
-                "Bien joué <em>Little Player</em> ! Un jour tu deviendras plus grand... &#128170;",
-                "Peut mieux faire... Non non je ne juge pas. &#128064;",
-                "Mouais après le niveau était simple nan ? &#129300;",
-                "Le <em>TrophuX</em> est à portée de main ! &#129351;",
-                "Sans doûte un niveau de petit joueur ! &#128526;",
-                "Trop lent à finir ce niveau : pire que Jube et ses copies... &#128195;",
-                "C'est une première étape, mais il reste encore beaucoup de chemin à faire... &#128579;",
-                "Brillant ! Autant de talent, beauté et intelligence que ceux qui ont conçu le jeu. &#129321;",
-                "Quelle magnifique performance ! Seul un jeu en JavaScript peut nous apporter ça. &#129394;",
-                "+ 1000000 social crédits. &#128200;"
-            ];
-            var rand = Math.floor(Math.random() * rigolo_msg.length);
-            document.querySelector("#end-menu p").innerHTML = rigolo_msg[rand];*/
-            //TODO : afficher leaderBoard
             document.getElementById("btn-continue").style.display = "none";
             msg_display = true;
             document.getElementById("leaderboard").style.display = "block";
             document.getElementById("close-leaderboard").style.display = "none";
             document.getElementById("quit-leaderboard").style.display = "block";
             document.getElementById("game-interface").style.display = "none";
-            var first = document.getElementById("leaderboard").children[1].children[0].innerHTML;
-            if (first.search(player_name) != -1) {
+            console.log(obj)
+            if (obj.victory > 0) {
                 confetti.start();
             }
         }
@@ -992,7 +979,6 @@ function setUpSocket(){
 
     sock.on("results",function(scores){
         updateLeaderScores(scores);
-        // TODO : update l'affichage, coté serveur manque les noms et un soucis avec le calcul izou
     });
 }
 
@@ -1006,16 +992,16 @@ function updateLeaderScores(scores){
     for(var i = 0, l = sorted.length ; i < l ; ++i){
         switch(i){
             case 0:
-                leaderBoard.children[1].children[i].innerHTML = "&#129351; "+sorted[i].name+" : "+sorted[i].score+"&nbsp;pts";
+                leaderBoard.children[1].children[i].innerHTML = "&#129351; "+sorted[i].name+" : "+sorted[i].score+"&nbsp;tirs";
                 break;
             case 1:
-                leaderBoard.children[1].children[i].innerHTML = "&#129352; "+sorted[i].name+" : "+sorted[i].score+"&nbsp;pts";
+                leaderBoard.children[1].children[i].innerHTML = "&#129352; "+sorted[i].name+" : "+sorted[i].score+"&nbsp;tirs";
                 break;
             case 2:
-                leaderBoard.children[1].children[i].innerHTML = "&#129353; "+sorted[i].name+" : "+sorted[i].score+"&nbsp;pts";
+                leaderBoard.children[1].children[i].innerHTML = "&#129353; "+sorted[i].name+" : "+sorted[i].score+"&nbsp;tirs";
                 break;
             case 3:
-                leaderBoard.children[1].children[i].innerHTML = "&#127851; "+sorted[i].name+" : "+sorted[i].score+"&nbsp;pts";
+                leaderBoard.children[1].children[i].innerHTML = "&#127851; "+sorted[i].name+" : "+sorted[i].score+"&nbsp;tirs";
                 break;
         }
     }

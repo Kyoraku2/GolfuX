@@ -303,6 +303,7 @@ function addEventListener(balls, level){
                 balls[idA].body.SetLinearDamping(1);
                 balls[idA].body.GetFixtureList().SetSensor(false);
             }else{
+                console.log(balls);
                 balls[idB].collide = false;
                 balls[idB].isInHole = false;
                 balls[idB].body.SetLinearDamping(1); // pb ici
@@ -684,12 +685,10 @@ Golfux.prototype.step = function(){
             var rand = Math.floor(Math.random() * rigolo_msg.length);
             document.querySelector("#end-menu p").innerHTML = rigolo_msg[rand];
             if(playType == 1 && localCurrManche >= localNbManches-1){
-                //TODO : afficher leaderBoard
                 document.getElementById("btn-continue").style.display = "none";
             }
             msg_display = true;
         }
-        //this.changeLevel(parseInt(this.level.num) + 1);
         return;
     }
 

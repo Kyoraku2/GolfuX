@@ -1,4 +1,5 @@
 // Chargement des modules 
+const { ifError } = require('assert');
 var express = require('express');
 var app = express();
 
@@ -122,6 +123,31 @@ function computeScores(game){
     return pos;
 }
 
+function getWinners(game){
+    var lower;
+    for(var i=0 ; i<game.joueurs.length ; ++i){
+        if(!game.joueurs[i].disconnected){
+            if(lower === undefined){
+                lower = game.joueurs[i].points;
+            }else{
+                if(game.joueurs[i].points < lower){
+                    lower = game.joueurs[i].points;
+                }
+            }
+        }
+    }
+    if(lower === undefined){
+        return [];
+    }
+    var winners = [];
+    for(var i=0 ; i<game.joueurs.length ; ++i){
+        if(game.joueurs[i].points == lower){
+            winners.push(i);
+        }
+    }
+    return winners;
+}
+
 
 io.on('connection', function (socket) {
     console.log("Un client s'est connecté");
@@ -185,6 +211,7 @@ io.on('connection', function (socket) {
         }
         games[game] = obj.partie;
         games[game].code = code;
+        games[game].start = false;
         games[game].levels = getRandomLevels(games[game].nbManches);
         games[game]["current"] = -1;
         games[game].joueurs = [];
@@ -274,9 +301,13 @@ io.on('connection', function (socket) {
     });
 
     socket.on("leaveRoom",function(){
+        if(game === null || !games[game]){
+            socket.emit("error", {message: "Erreur, pas de partie en cours."});
+            return;
+        }
         var playerId = getPlayerFromSock(games[game],socket);
-        if(game === null  || playerId === undefined || !games[game]){
-            socket.emit("error", {message: "Erreur, vous n'êtes pas dans la partie"});
+        if(playerId === undefined){
+            socket.emit("error", {message: "Erreur, pas de partie en cours."});
             return;
         }
         if(playerId == 0){
@@ -304,14 +335,27 @@ io.on('connection', function (socket) {
     });
 
     socket.on("forceStart",function(){
+        if(game === null || !games[game]){
+            socket.emit("error", {message: "Erreur, pas de partie en cours."});
+            return;
+        }
+        var playerId = getPlayerFromSock(games[game],socket);
+        if(playerId === undefined){
+            socket.emit("error", {message: "Erreur, pas de partie en cours."});
+            return;
+        }
         games[game].nbPlayers = games[game].joueurs.length;
         startGame();
     });
 
     socket.on("placeBall",function(pos){
+        if(game === null || !games[game]){
+            socket.emit("error", {message: "Erreur, pas de partie en cours."});
+            return;
+        }
         var playerId = getPlayerFromSock(games[game],socket);
-        if(game === null  || playerId === undefined || !games[game]){
-            socket.emit("error", {message: "Erreur, vous n'êtes pas dans la partie"});
+        if(playerId === undefined){
+            socket.emit("error", {message: "Erreur, pas de partie en cours."});
             return;
         }
         if(games[game].current != playerId){
@@ -327,9 +371,13 @@ io.on('connection', function (socket) {
     });
 
     socket.on("shoot",function(impulse){
+        if(game === null || !games[game]){
+            socket.emit("error", {message: "Erreur, pas de partie en cours."});
+            return;
+        }
         var playerId = getPlayerFromSock(games[game],socket);
-        if(game === null || playerId === undefined || !games[game]){
-            socket.emit("error", {message: "Erreur, vous n'êtes pas dans la partie"});
+        if(playerId === undefined){
+            socket.emit("error", {message: "Erreur, pas de partie en cours."});
             return;
         }
         if(games[game].current != playerId){
@@ -348,9 +396,13 @@ io.on('connection', function (socket) {
     });
 
     socket.on("endPos",function(allPos){
+        if(game === null || !games[game]){
+            socket.emit("error", {message: "Erreur, pas de partie en cours."});
+            return;
+        }
         var playerId = getPlayerFromSock(games[game],socket);
-        if(game === null || playerId === undefined || !games[game]){
-            socket.emit("error", {message: "Erreur, vous n'êtes pas dans la partie"});
+        if(playerId === undefined){
+            socket.emit("error", {message: "Erreur, pas de partie en cours."});
             return;
         }
         if(games[game].current != playerId){
@@ -384,11 +436,12 @@ io.on('connection', function (socket) {
                   || games[game].joueurs[games[game].current].disconnected);
 
             if(oldCurrent === games[game].current && games[game].joueurs[games[game].current].turn === TURN_LIMIT){
-                console.log(games[game].joueurs)
                 endGame();
                 return;
             }
             
+            console.log("ici1") // PB ICi
+            console.log(computeScores(games[game]))
             games[game].joueurs[games[game].current].socket.emit("yourTurn",games[game].current);
             games[game].joueurs[games[game].current].turn++;
             for(var i=0 ; i<games[game].nbPlayers ; ++i){
@@ -401,10 +454,13 @@ io.on('connection', function (socket) {
     });
 
     socket.on("inHole",function(id){
+        if(game === null || !games[game]){
+            socket.emit("error", {message: "Erreur, pas de partie en cours."});
+            return;
+        }
         var playerId = getPlayerFromSock(games[game],socket);
-        console.log(playerId)
-        if(game === null || playerId===undefined || !games[game]){
-            socket.emit("error", {message: "Erreur, vous n'êtes pas dans la partie"});
+        if(playerId === undefined){
+            socket.emit("error", {message: "Erreur, pas de partie en cours."});
             return;
         }
         games[game].joueurs[id].inHole = true;
@@ -421,21 +477,47 @@ io.on('connection', function (socket) {
 
     socket.on("disconnect", function() {
         console.log("Déconnexion d'un client");
+        if(game === null || !games[game]){
+            socket.emit("error", {message: "Erreur, pas de partie en cours."});
+            return;
+        }
+        var playerId = getPlayerFromSock(games[game],socket);
+        if(playerId === undefined){
+            socket.emit("error", {message: "Erreur, pas de partie en cours."});
+            return;
+        }
         if(game !== null && games[game]){
-            var playerId = getPlayerFromSock(games[game],socket);
-            if(playerId===undefined || !games[game]){
-                return;
-            }
-            games[game].joueurs[playerId].disconnected = true;
-            var allDisconnected = true;
-            for(player of games[game].joueurs){
-                if(!player.disconnected){
-                    allDisconnected = false
+            if(games[game].start == false){
+                games[game].joueurs.splice(playerId,1);
+                if(games[game].joueurs.length === 0){
+                    deleteGame(game);
+                    game = null;
+                    return;
+                }
+                for(var i=0, l=games[game].joueurs.length ; i<l ; ++i){
+                    games[game].joueurs[i].socket.emit("playerJoined",{
+                        name: games[game].name,
+                        nbPlayers: games[game].joueurs.length,
+                        maxPlayers: games[game].nbPlayers,
+                        nbManches: games[game].nbManches,
+                        code: games[game].code
+                    });
+                }
+            }else{
+                games[game].joueurs[playerId].disconnected = true;
+                var allDisconnected = true;
+                for(player of  games[game].joueurs){
+                    if(!player.disconnected){
+                        allDisconnected = false; 
+                    }
+                }
+                if(allDisconnected){
+                    deleteGame(game);
+                    game = null;
+                    return;
                 }
             }
-            if(allDisconnected){
-                deleteGame(game);
-            }
+
             game = null;
         }
     });
@@ -445,6 +527,7 @@ io.on('connection', function (socket) {
     *****************/
 
     function startGame(){
+        games[game].start = true;
         games[game].current = Math.floor(Math.random() * games[game].nbPlayers);
         for(var i=0 ; i<games[game].nbPlayers ; ++i){
             games[game].joueurs[i].socket.emit("gameStart",{level:games[game].levels[0],players:games[game].joueurs.length});
@@ -455,6 +538,8 @@ io.on('connection', function (socket) {
             games[game].joueurs[i].socket.emit("results",computeScores(games[game]));
         }
         games[game].levels.splice(0,1);
+        console.log("ici3")
+        games[game].joueurs[games[game].current].turn++;
         games[game].joueurs[games[game].current].socket.emit("yourTurn",games[game].current);
         clearTimeout(games[game].turnTimer);
         setTurnTimer(game);
@@ -471,6 +556,7 @@ io.on('connection', function (socket) {
                 player.socket.emit("nextManche",games[game].levels[0]);
             }
             games[game].joueurs[games[game].current].socket.emit("notYourTurn");
+            console.log("ici3")
             games[game].joueurs[games[game].current].socket.emit("yourTurn",games[game].current);
             for(var i=0 ; i<games[game].nbPlayers ; ++i){
                 games[game].joueurs[i].socket.emit("isPlaying",games[game].current);
@@ -485,13 +571,16 @@ io.on('connection', function (socket) {
                     player.points+=2;
                 }
             }
-            for(player of  games[game].joueurs){
-                player.socket.emit("endGame",computeScores(games[game]));
+            var winners = getWinners(games[game]);
+            var scores = computeScores(games[game]);
+            for(var i=0 ; i<games[game].joueurs.length ; ++i){
+                if(winners.includes(i)){
+                    games[game].joueurs[i].socket.emit("endGame",{scores:scores, victory:1});
+                }else{
+                    games[game].joueurs[i].socket.emit("endGame",{scores:scores, victory:-1});
+                }
             }
             clearTimeout(games[game].turnTimer);
-            for(player of  games[game].joueurs){
-                player.socket.emit("results",computeScores(games[game]));
-            }
             deleteGame(game);
         }
     }
@@ -536,7 +625,6 @@ io.on('connection', function (socket) {
                     endGame();
                     return;
                 }
-
                 games[game].joueurs[games[game].current].socket.emit("yourTurn",games[game].current);
                 games[game].joueurs[games[game].current].turn++;
                 games[game].joueurs[games[game].current].points++;
