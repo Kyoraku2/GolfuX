@@ -653,10 +653,28 @@ Golfux.prototype.step = function(){
         if(localTurns[ballIndex] >= TURN_LIMIT ){
             endLevel = true;
             stopMovements = true;
+            /*if(localNbManches.length>0){
+                this.changeLevel(localLevels[0],false);
+                localLevels.splice(0,1);
+                return;
+            }*/
         }
     }
 
     if(endLevel && this.balls.length !=0 && playType != 2){
+        var allInHole = true;
+        for(var i=0 ; i<this.balls.length ; ++i){
+            if(!(this.balls[i].isInHole || localTurns[i] >= TURN_LIMIT)){
+                allInHole = false;
+            }
+            if(allInHole){
+                if(localLevels.length>0){
+                    this.changeLevel(localLevels[0],false);
+                    localLevels.splice(0,1);
+                    return;
+                } 
+            }
+        }
         if (playType === 0) {
             document.getElementById("end-menu").style.display = "block";
         } else {
@@ -684,9 +702,6 @@ Golfux.prototype.step = function(){
             ];
             var rand = Math.floor(Math.random() * rigolo_msg.length);
             document.querySelector("#end-menu p").innerHTML = rigolo_msg[rand];
-            if(playType == 1 && localCurrManche >= localNbManches-1){
-                document.getElementById("btn-continue").style.display = "none";
-            }
             msg_display = true;
         }
         return;

@@ -9,6 +9,9 @@ const NUM_LEVELS = 40;
 const NUM_WORLDS = Math.floor(NUM_LEVELS/10);
 var max_lvl = parseInt(localStorage.getItem("level"));
 const MANCHES_MAX = 18;
+let bMinLevels = 1; // TODO : à changer quand on ajoute/supprime des niveaux
+let bMaxLevels = 29;
+
 
 var stopMovements = false;
 var QRgenerate = false;
@@ -339,6 +342,7 @@ let localCurrManche = 0;
 let localPlacedBalls = [];
 let localScores = [];
 let localTurns = [];
+let localLevels = [];
 
 let impulsionStack = [];
 let replacementStack = [];
@@ -550,6 +554,9 @@ document.addEventListener("DOMContentLoaded", function() {
             localScores[i] = {name:"Player"+(i+1),score:0};
             localTurns[i] = 0;
         }
+        localLevels = getRandomLevels(localNbManches);
+        golfux.changeLevel(localLevels[0],false);
+        localLevels.splice(0,1);
         updateLeaderNbPlayers(localNbPlayers);
     });
 
@@ -1030,4 +1037,18 @@ function displayYouTurn() {
     function stopDisplay2() {
         document.getElementById("your-turn").style.display = "none";
     }
+}
+
+function getRandomLevels(n){
+    var levels = [];
+    var levelsBank = [];
+    for(var i = bMinLevels ; i <= bMaxLevels ; ++i){
+        levelsBank.push(i);
+    }
+    for(var i = 0 ; i < n ; ++i){
+        var id = Math.floor(Math.random() * levelsBank.length);
+        levels.push(levelsBank[id]);
+        levelsBank.splice(id,1);
+    }
+    return levels;
 }
